@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include "simple_logger.h"
+
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
@@ -43,6 +44,8 @@ int main(int argc, char * argv[])
 
 	ent = entity_new();
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png", 128, 128, 16);
+	ent->frameRate = 0.1;
+	ent->frameCount = 16;
 
     /*main game loop*/
     while(!done)
@@ -54,9 +57,7 @@ int main(int argc, char * argv[])
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
 
-		ent->frame += 0.1;
-		if (ent->frame >= 16)
-			ent->frame = 0;
+		entity_manager_update_entities();
         
 		ent->position.x++;
 
@@ -65,7 +66,7 @@ int main(int argc, char * argv[])
             //backgrounds drawn first
             gf2d_sprite_draw_image(sprite,vector2d(0,0));
             
-			entity_draw(ent);
+			entity_manager_draw_entities();
 
             //UI elements last
             gf2d_sprite_draw(

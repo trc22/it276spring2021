@@ -5,12 +5,20 @@
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
 
-typedef struct
+typedef struct Entity_s
 {
-	Bool _inuse;
-	Vector2D position;
-	Sprite *sprite;
-	float frame;
+	Bool	   _inuse;
+	Vector2D	position;
+	Vector2D	velocity;
+	Sprite	   *sprite;
+	float		frame;
+	float		frameRate;
+	int			frameCount;
+	void	  (*update)(struct Entity *self);
+	void	  (*think)(struct Entity *self);
+	void	  (*draw)(struct Entity *self);
+	void	  (*free)(struct Entity *self);
+	void	   *data;	
 }Entity;
 
 /**
@@ -18,6 +26,16 @@ typedef struct
  * @param max_entities how many concurrent entities to support
 */
 void entity_manager_init(Uint32 max_entities);
+
+/**
+* @brief calls update function on all entities
+*/
+void entity_manager_update_entities();
+
+/**
+* @brief call draw on all entities
+*/
+void entity_manager_draw_entities();
 
 /**
 * @brief free all entities in the system and destroy entity manager

@@ -1,5 +1,4 @@
 #include <stdlib.h>
-
 #include "simple_logger.h"
 
 #include "entity.h"
@@ -7,26 +6,26 @@
 typedef struct
 {
 	Entity *entity_list;
-	Uint32 max_entities;
+	Uint32  max_entities;
 }EntityManager;
 
-static EntityManager entity_manager = {0};
+static EntityManager entity_manager = { 0 };
 
 void entity_manager_init(Uint32 max_entities)
 {
 	if (max_entities == 0)
 	{
-		slog("Cannot allocate 0 entities!");
+		slog("cannot allocate 0 entities!");
 		return;
 	}
 	if (entity_manager.entity_list != NULL)
 	{
 		entity_manager_free();
 	}
-	entity_manager.entity_list = (Entity *)gfc_allocate_array(sizeof(Entity), max_entities);
+	entity_manager.entity_list = (Entity *)gfc_allocate_array(sizeof (Entity), max_entities);
 	if (entity_manager.entity_list == NULL)
 	{
-		slog("failed to allocate entity list");
+		slog("failed to allocate entity list!");
 		return;
 	}
 	entity_manager.max_entities = max_entities;
@@ -44,6 +43,48 @@ void entity_manager_free()
 	slog("entity system closed");
 }
 
+void entity_update(Entity *self)
+{
+	if (!self)return;
+	// DO ANY GENERIC UPDATE CODE
+	vector2d_add(self->position, self->position, self->velocity);
+	self->frame += self->frameRate;
+	if (self->frame >= self->frameCount)self->frame = 0;
+	// IF THERE IS A CUSTOM UPDATE, DO THAT NOW
+	if (self->update)self->update(self);
+}
+
+void entity_manager_update_entities()
+{
+	int i;
+	if (entity_manager.entity_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i]._inuse == 0)continue;
+		entity_update(&entity_manager.entity_list[i]);
+	}
+}
+
+void entity_manager_draw_entities()
+{
+	int i;
+	if (entity_manager.entity_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i]._inuse == 0)continue;
+		entity_draw(&entity_manager.entity_list[i]);
+	}
+}
+
+
 Entity *entity_new()
 {
 	int i;
@@ -54,7 +95,7 @@ Entity *entity_new()
 	}
 	for (i = 0; i < entity_manager.max_entities; i++)
 	{
-		if (entity_manager.entity_list[i]._inuse)continue; //Someone else is using this one
+		if (entity_manager.entity_list[i]._inuse)continue;// someone else is using this one
 		memset(&entity_manager.entity_list[i], 0, sizeof(Entity));
 		entity_manager.entity_list[i]._inuse = 1;
 		return &entity_manager.entity_list[i];
@@ -67,11 +108,11 @@ void entity_free(Entity *ent)
 {
 	if (!ent)
 	{
-		slog("cannot create a null entity");
+		slog("cannot free a NULL entity");
 		return;
 	}
 	gf2d_sprite_free(ent->sprite);
-	ent->sprite = NULL;	
+	ent->sprite = NULL;
 	ent->_inuse = 0;
 }
 
@@ -79,25 +120,31 @@ void entity_draw(Entity *ent)
 {
 	if (!ent)
 	{
-		slog("cannot draw a null entity");
+		slog("cannot draww a NULL entity");
 		return;
 	}
-	if (ent->sprite == NULL)
+	if (ent->draw)
 	{
-		return; //nothing to draw
+		ent->draw(ent);
 	}
-
-	gf2d_sprite_draw(
-		ent->sprite,
-		ent->position,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-		(Uint32)ent->frame);
-
+	else
+	{
+		if (ent->sprite == NULL)
+		{
+			return;// nothing to draw
+		}
+		gf2d_sprite_draw(
+			ent->sprite,
+			ent->position,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			(Uint32)ent->frame);
+	}
 }
+
 
 
 /*eol@eof*/
