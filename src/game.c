@@ -8,6 +8,7 @@
 #include "gf2d_sprite.h"
 
 #include "entity.h"
+#include "player.h"
 
 int main(int argc, char * argv[])
 {
@@ -15,7 +16,6 @@ int main(int argc, char * argv[])
     int done = 0;
     const Uint8 * keys;
     Sprite *sprite;
-	Entity *ent;
     
     int mx,my;
     float mf = 0;
@@ -41,11 +41,7 @@ int main(int argc, char * argv[])
     /*demo setup*/
     sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-
-	ent = entity_new();
-	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png", 128, 128, 16);
-	ent->frameRate = 0.1;
-	ent->frameCount = 16;
+	player_spawn(vector2d(100, 100));
 
     /*main game loop*/
     while(!done)
@@ -58,8 +54,6 @@ int main(int argc, char * argv[])
         if (mf >= 16.0)mf = 0;
 
 		entity_manager_update_entities();
-        
-		ent->position.x++;
 
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
@@ -83,7 +77,6 @@ int main(int argc, char * argv[])
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
-	entity_free(ent);
     slog("---==== END ====---");
     return 0;
 }

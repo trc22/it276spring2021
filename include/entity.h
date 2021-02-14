@@ -10,6 +10,7 @@ typedef struct Entity_s
 	Bool	   _inuse;
 	Vector2D	position;
 	Vector2D	velocity;
+	Vector3D	rotation; //(x, y) = rotation center, z = degrees of rotation
 	Sprite	   *sprite;
 	float		frame;
 	float		frameRate;
