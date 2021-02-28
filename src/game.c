@@ -9,14 +9,15 @@
 
 #include "entity.h"
 #include "player.h"
+#include "level.h"
 
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
-    Sprite *sprite;
-    
+	Level *level;
+
     int mx,my;
     float mf = 0;
     Sprite *mouse;
@@ -36,11 +37,13 @@ int main(int argc, char * argv[])
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
 	entity_manager_init(100);
+
+
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
-    mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+	level = level_load("levels/exampleLevel.json");
+	mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
 	player_spawn(vector2d(100, 100));
 
     /*main game loop*/
@@ -58,7 +61,7 @@ int main(int argc, char * argv[])
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            gf2d_sprite_draw_image(sprite,vector2d(0,0));
+		level_draw(level);
             
 			entity_manager_draw_entities();
 
