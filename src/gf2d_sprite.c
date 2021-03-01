@@ -199,6 +199,20 @@ void gf2d_sprite_draw_image(Sprite *image,Vector2D position)
         0);
 }
 
+//Tim C
+void gf2d_sprite_draw_overlay(Sprite *image, Vector2D position, Vector4D *alphaOptions)
+{
+	gf2d_sprite_draw(
+		image,
+		position,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		alphaOptions,
+		0);
+}
+
 void gf2d_sprite_draw(
     Sprite * sprite,
     Vector2D position,
@@ -283,5 +297,6 @@ void gf2d_sprite_draw(
             255);
     }
 }
+
 
 /*eol@eof*/

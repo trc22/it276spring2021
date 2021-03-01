@@ -23,7 +23,9 @@ int main(int argc, char * argv[])
     int mx,my;
     float mf = 0;
     Sprite *mouse;
+	Sprite *overlay;
     Vector4D mouseColor = {255,100,255,200};
+	Vector4D overlayOpacity = { 255, 255, 255, 222 }; //Opacity for
     
     /*program initializtion*/
     init_logger("gf2d.log");
@@ -47,6 +49,7 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+	overlay = gf2d_sprite_load_all("images/Black.png", 1200, 720, 1);
     level = level_load("levels/exampleLevel.json");
     player_spawn(vector2d(100,100));
     /*main game loop*/
@@ -82,6 +85,8 @@ int main(int argc, char * argv[])
                 NULL,
                 &mouseColor,
                 (int)mf);
+			//Draw overlay
+			gf2d_sprite_draw_overlay(overlay, vector2d(0, 0), &overlayOpacity);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition

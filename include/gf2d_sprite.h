@@ -36,6 +36,14 @@ Sprite *gf2d_sprite_load_image(char *filename);
 void gf2d_sprite_draw_image(Sprite *image,Vector2D position);
 
 /**
+ * @brief draw a simple image to screen at the position provided with transparency
+ * @param image the sprite image to draw
+ * @param position the x and y position to draw the image at (top left corner)
+ * @param alphaOptions the color shift settings
+ */
+void gf2d_sprite_draw_overlay(Sprite *image, Vector2D position, Vector4D *alphaOptions);
+
+/**
  * @brief loads a sprite from file using the sprite system
  * @param filename the sprite sheet to load
  * @param frameWidth the width of an individual sprite frame

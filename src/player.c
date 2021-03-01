@@ -57,10 +57,10 @@ void player_think(Entity *self)
     camera = camera_get_position();
     mx += camera.x;
     my += camera.y;
-    aimdir.x = mx - (self->position.x + 64);
-    aimdir.y = my - (self->position.y + 64);
-    angle = vector_angle(aimdir.x,aimdir.y);
-    self->rotation.z = angle + 90;
+  //  aimdir.x = mx - (self->position.x + 64);
+  //  aimdir.y = my - (self->position.y + 64);
+  //  angle = vector_angle(aimdir.x,aimdir.y);
+  //  self->rotation.z = angle + 90;
 	
     
     // turn aimdir into a unit vector
@@ -75,11 +75,13 @@ void player_think(Entity *self)
 	if (keys[SDL_SCANCODE_A]) // move left
 	{
 		self->velocity.x -= 2.5;
+		self->rotation.z = -90;
 	}
 
 	if (keys[SDL_SCANCODE_D]) // move right
 	{
 		self->velocity.x += 2.5;
+		self->rotation.z = 90;
 	}
     
 
