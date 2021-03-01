@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "player.h"
+#include "camera.h"
 
 void player_update(Entity *self);
 
@@ -26,11 +27,14 @@ Entity *player_spawn(Vector2D position)
 
 void player_update(Entity *self)
 {
-	Vector2D aimdir;
+	Vector2D aimdir, camera;
 	float angle;
 	int mx, my;
 	if (!self)return;
 	SDL_GetMouseState(&mx, &my);
+	camera = camera_get_position();
+	mx += camera.x;
+	my += camera.y;
 	aimdir.x = mx - (self->position.x + 64);
 	aimdir.y = my - (self->position.y + 64);
 	angle = vector_angle(aimdir.x, aimdir.y);

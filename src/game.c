@@ -7,6 +7,7 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
+#include "camera.h"
 #include "entity.h"
 #include "player.h"
 #include "level.h"
@@ -35,6 +36,8 @@ int main(int argc, char * argv[])
         vector4d(0,0,0,255),
         0);
     gf2d_graphics_set_frame_delay(16);
+	camera_set_dimensions(vector2d(1200, 720));
+	camera_set_position(vector2d(0, 0));
     gf2d_sprite_init(1024);
 	entity_manager_init(100);
 
@@ -77,6 +80,26 @@ int main(int argc, char * argv[])
                 (int)mf);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
+		if (keys[SDL_SCANCODE_RIGHT])
+		{
+			camera_move(vector2d(10, 0));
+		}
+
+		if (keys[SDL_SCANCODE_LEFT])
+		{
+			camera_move(vector2d(-10, 0));
+		}
+
+		if (keys[SDL_SCANCODE_UP])
+		{
+			camera_move(vector2d(0, 10));
+		}
+
+		if (keys[SDL_SCANCODE_DOWN])
+		{
+			camera_move(vector2d(0, -10));
+		}
+
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
         //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }

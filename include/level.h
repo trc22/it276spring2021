@@ -10,12 +10,14 @@ typedef enum
 {
 	TT_Empty,
 	TT_Brick,
-	TT_
+	TT_MAX
 }TileTypes;
 
 typedef struct
 {
-	Sprite     *bgImage;     /**<the background image for the level*/
+	Sprite     **bgImage;    /**<the background image for the level*/
+	int         bgImageCount;/**<how many we have*/
+	Vector2D    levelSize;   /**<how large, in pixels, the level is*/
 	Sprite     *tileSet;     /**<sprite for the tileset*/
 	TileTypes  *tileMap;     /**<the tiles for the level*/
 	Uint32      tileCount;
@@ -46,6 +48,12 @@ Level *level_load(const char *filename);
 * @param level a pointer to the level to free
 */
 void level_free(Level *level);
+
+/**
+* @brief perform maintenance for the level.  should be called once a frame
+* @param level the level to update
+*/
+void level_update(Level *level);
 
 
 /**
