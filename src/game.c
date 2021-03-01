@@ -12,13 +12,14 @@
 #include "player.h"
 #include "level.h"
 
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
-	Level *level;
-
+    Level *level;
+    
     int mx,my;
     float mf = 0;
     Sprite *mouse;
@@ -36,19 +37,18 @@ int main(int argc, char * argv[])
         vector4d(0,0,0,255),
         0);
     gf2d_graphics_set_frame_delay(16);
-	camera_set_dimensions(vector2d(1200, 720));
-	camera_set_position(vector2d(0, 0));
+    camera_set_dimensions(vector2d(1200,720));
+    camera_set_position(vector2d(0,0));
     gf2d_sprite_init(1024);
-	entity_manager_init(100);
-
-
+    entity_manager_init(100);
+    
+    
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-	level = level_load("levels/exampleLevel.json");
-	mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	player_spawn(vector2d(100, 100));
-
+    mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+    level = level_load("levels/exampleLevel.json");
+    player_spawn(vector2d(100,100));
     /*main game loop*/
     while(!done)
     {
@@ -58,16 +58,20 @@ int main(int argc, char * argv[])
         SDL_GetMouseState(&mx,&my);
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
+        
+        entity_manager_think_entities();
+        entity_manager_update_entities();
 
-		entity_manager_update_entities();
+        level_update(level);
 
+        
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-		level_draw(level);
+            level_draw(level);
             
-			entity_manager_draw_entities();
-
+            entity_manager_draw_entities();
+            
             //UI elements last
             gf2d_sprite_draw(
                 mouse,
@@ -79,29 +83,9 @@ int main(int argc, char * argv[])
                 &mouseColor,
                 (int)mf);
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-        
-		if (keys[SDL_SCANCODE_RIGHT])
-		{
-			camera_move(vector2d(10, 0));
-		}
-
-		if (keys[SDL_SCANCODE_LEFT])
-		{
-			camera_move(vector2d(-10, 0));
-		}
-
-		if (keys[SDL_SCANCODE_UP])
-		{
-			camera_move(vector2d(0, 10));
-		}
-
-		if (keys[SDL_SCANCODE_DOWN])
-		{
-			camera_move(vector2d(0, -10));
-		}
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-        //slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+//        slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     slog("---==== END ====---");
     return 0;
