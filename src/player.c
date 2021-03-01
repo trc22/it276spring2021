@@ -61,15 +61,26 @@ void player_think(Entity *self)
     aimdir.y = my - (self->position.y + 64);
     angle = vector_angle(aimdir.x,aimdir.y);
     self->rotation.z = angle + 90;
+	
     
     // turn aimdir into a unit vector
     vector2d_normalize (&aimdir);
     // check for motion
-    if (keys[SDL_SCANCODE_W])
+    /*if (keys[SDL_SCANCODE_W])
     {
         vector2d_scale(thrust,aimdir,5);
         vector2d_add(self->velocity,self->velocity,thrust);
-    }
+    }*/
+
+	if (keys[SDL_SCANCODE_A]) // move left
+	{
+		self->velocity.x -= 2.5;
+	}
+
+	if (keys[SDL_SCANCODE_D]) // move right
+	{
+		self->velocity.x += 2.5;
+	}
     
 
     
