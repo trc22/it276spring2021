@@ -24,6 +24,7 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
 	Sprite *overlay;
+	Sprite *blackBars;
     Vector4D mouseColor = {255,100,255,200};
 	Vector4D overlayOpacity = { 255, 255, 255, 255 }; //Opacity for
     
@@ -49,7 +50,8 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	overlay = gf2d_sprite_load_all("images/LightOverlay_small.png", 1200, 1200, 1);
+	overlay = gf2d_sprite_load_all("images/LightOverlay.png", 1200, 1200, 1);
+	blackBars = gf2d_sprite_load_all("images/blackBars.png", 1280, 800, 1);
     level = level_load("levels/exampleLevel.json");
     player_spawn(vector2d(600, 600));
     /*main game loop*/
@@ -76,7 +78,7 @@ int main(int argc, char * argv[])
             entity_manager_draw_entities();
             			//Draw overlay
 			gf2d_sprite_draw_overlay(overlay, vector2d((player_get_position().x - 550) -camera_get_position().x, -250), &overlayOpacity);
-
+			gf2d_sprite_draw_image(blackBars, vector2d(-40,-40));
             //UI elements last
             gf2d_sprite_draw(
                 mouse,
