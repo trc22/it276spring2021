@@ -12,6 +12,7 @@ typedef struct Entity_s
     Vector2D    velocity;
     Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
     Sprite     *sprite; 
+	Sprite	   *overlay;
     float       frame;
     float       frameRate;
     int         frameCount;
@@ -19,6 +20,7 @@ typedef struct Entity_s
     void      (*think)(struct Entity_s *self);
     void      (*draw)(struct Entity_s *self);
     void      (*free)(struct Entity_s *self);
+	void	  (*getPos)(struct Entity_s *self);
     void       *data;
 }Entity;
 

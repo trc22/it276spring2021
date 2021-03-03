@@ -10,4 +10,6 @@
  */
 Entity *player_spawn(Vector2D position);
 
+Vector2D player_get_position();
+
 #endif

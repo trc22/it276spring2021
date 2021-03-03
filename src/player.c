@@ -6,6 +6,8 @@
 void player_update(Entity *self);
 void player_think(Entity *self);
 
+Vector2D player_position;
+
 Entity *player_spawn(Vector2D position)
 {
     Entity *ent;
@@ -23,6 +25,7 @@ Entity *player_spawn(Vector2D position)
     ent->think = player_think;
     ent->rotation.x = 64;
     ent->rotation.y = 64;
+	ent->getPos = player_get_position;
     return ent;
 }
 
@@ -43,6 +46,7 @@ void player_update(Entity *self)
     {
         vector2d_clear(self->velocity);
     }
+	player_position = self->position;
 }
 
 void player_think(Entity *self)
@@ -86,6 +90,11 @@ void player_think(Entity *self)
     
 
     
+}
+
+Vector2D player_get_position()
+{
+	return player_position;
 }
 
 /**/
