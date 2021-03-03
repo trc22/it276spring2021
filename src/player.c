@@ -3,10 +3,13 @@
 #include "player.h"
 #include "camera.h"
 
+#include "overlay.h"
+
 void player_update(Entity *self);
 void player_think(Entity *self);
 
 Vector2D player_position;
+int lightTimer;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -26,6 +29,7 @@ Entity *player_spawn(Vector2D position)
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->getPos = player_get_position;
+	lightTimer = 0;
     return ent;
 }
 
@@ -89,6 +93,16 @@ void player_think(Entity *self)
 	}
     
 
+	if (lightTimer == 10)
+	{
+		if (keys[SDL_SCANCODE_F])
+		{
+			toggle_light(); //turns the light on/off
+			lightTimer = 0;
+		}
+	}
+	else
+		lightTimer++;
     
 }
 
