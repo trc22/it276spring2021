@@ -92,8 +92,8 @@ void player_think(Entity *self)
 		self->rotation.z = 90;
 	}
     
-
-	if (lightTimer == 10)
+	//Overlay/light stuff
+	if (lightTimer == 20)
 	{
 		if (keys[SDL_SCANCODE_F])
 		{

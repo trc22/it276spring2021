@@ -4,11 +4,18 @@
 #include "gf2d_sprite.h"
 
 /**
+* @brief intializes overlay sprites
+*/
+void init_overlay();
+
+/**
+* @brief draws overlay sprites and follows player
+*/
+void draw_light();
+
+/**
 * @brief turns the player's light on and off
 */
-//Tim C
-void init_overlay();
-void draw_light();
 void toggle_light();
 
 #endif

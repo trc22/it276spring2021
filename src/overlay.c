@@ -13,7 +13,7 @@ Vector2D light_offset;
 
 void init_overlay()
 {
-	light = gf2d_sprite_load_all("images/LightOverlay.png", 1200, 1200, 1);
+	light = gf2d_sprite_load_all("images/LightOverlay.png", 1224, 1200, 1);
 	darkness = gf2d_sprite_load_all("images/Black.png", 1200, 720, 1);
 	light_pos = vector2d(0, 0);
 	light_offset.x = 550;
