@@ -25,6 +25,8 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
+	Vector4D lightColor = { 255, 255, 255, 245 };
+
 
     
     /*program initializtion*/
@@ -75,7 +77,7 @@ int main(int argc, char * argv[])
             
             entity_manager_draw_entities();
 
-			draw_light();
+			draw_light(lightColor);
             //UI elements last
             gf2d_sprite_draw(
                 mouse,

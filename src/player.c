@@ -91,7 +91,6 @@ void player_think(Entity *self)
 		self->velocity.x += 2.5;
 		self->rotation.z = 90;
 	}
-    
 	//Overlay/light stuff
 	if (lightTimer == 20)
 	{
@@ -103,7 +102,6 @@ void player_think(Entity *self)
 	}
 	else
 		lightTimer++;
-    
 }
 
 Vector2D player_get_position()

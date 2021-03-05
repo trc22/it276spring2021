@@ -10,8 +10,9 @@ void init_overlay();
 
 /**
 * @brief draws overlay sprites and follows player
+* @param alpha the colorshift/opacity value of the light
 */
-void draw_light();
+void draw_light(Vector4D alpha);
 
 /**
 * @brief turns the player's light on and off

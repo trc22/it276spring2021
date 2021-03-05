@@ -23,18 +23,17 @@ void init_overlay()
 	return;
 }
 
-void draw_light()
+void draw_light(Vector4D alpha)
 {
 	if (_isOn)
 	{
 		light_pos = vector2d((player_get_position().x - light_offset.x) - camera_get_position().x, light_offset.y);
 
-		gf2d_sprite_draw_image(light, light_pos);
-
+		gf2d_sprite_draw(light, light_pos, NULL, NULL, NULL, NULL, &alpha, 0);
 		return;
 	}
 	
-	gf2d_sprite_draw_image(darkness, vector2d(0, 0));
+		gf2d_sprite_draw(darkness, vector2d(0,0), NULL, NULL, NULL, NULL, &alpha, 0);
 	
 
 
