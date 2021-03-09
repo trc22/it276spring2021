@@ -12,7 +12,8 @@ typedef struct Entity_s
     Vector2D    velocity;
     Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
     Sprite     *sprite; 
-	Sprite	   *overlay;
+	SDL_Rect   collisionBox;
+	int			type;
     float       frame;
     float       frameRate;
     int         frameCount;
@@ -20,7 +21,6 @@ typedef struct Entity_s
     void      (*think)(struct Entity_s *self);
     void      (*draw)(struct Entity_s *self);
     void      (*free)(struct Entity_s *self);
-	void	  (*getPos)(struct Entity_s *self);
     void       *data;
 }Entity;
 
@@ -69,5 +69,9 @@ void entity_free(Entity *ent);
  * @param ent the entity to draw
  */
 void entity_draw(Entity *ent);
+
+Bool entity_clip(Entity *a, Entity *b);
+
+void entity_clip_all();
 
 #endif

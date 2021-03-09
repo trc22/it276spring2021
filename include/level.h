@@ -1,10 +1,13 @@
 #ifndef __LEVEL_H__
 #define __LEVEL_H__
 
+#include<SDL_rect.h>
+
 #include "gfc_types.h"
 #include "gfc_text.h"
 
 #include "gf2d_sprite.h"
+#include "entity.h"
 
 typedef enum
 {
@@ -61,5 +64,7 @@ void level_update(Level *level);
  * @param level the level the draw
  */
 void level_draw(Level *level);
+
+Bool tile_collisions(Entity *player, SDL_Rect collisionBox);
 
 #endif

@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "level.h"
 
+#include "player.h"
 
 Level *level_new()
 {
@@ -179,6 +180,7 @@ void level_free(Level *level)
 void level_draw(Level *level)
 {
     SDL_Rect camera;
+	SDL_Rect collisionBox;
     Vector2D offset,drawPosition,parallax;
     int i;
     if (!level)
@@ -228,9 +230,54 @@ void level_draw(Level *level)
             NULL,
             NULL,
             level->tileMap[i] - 1);
-    }
+		drawPosition.x -= offset.x;
+		drawPosition.y -= offset.y;
+		collisionBox = gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h);
+		if (tile_collisions(get_player(), collisionBox))
+			slog("Collision!");
+	}
 }
 
+Bool tile_collisions(Entity *player, SDL_Rect collisionBox)
+{
+	if (player == NULL)
+	{
+		slog("Cannot collide with null entities");
+		return false;
+	}
 
+	int left_a, left_b;
+	int right_a, right_b;
+	int top_a, top_b;
+	int bot_a, bot_b;
 
+	left_a = player->collisionBox.x;
+	right_a = (player->collisionBox.x + player->collisionBox.h);
+	top_a = player->collisionBox.y;
+	bot_a = (player->collisionBox.y + player->collisionBox.h);
+
+	left_b = collisionBox.x;
+	right_b = (collisionBox.x + collisionBox.h);
+	top_b = collisionBox.y;
+	bot_b = (collisionBox.y + collisionBox.h);
+
+	if (bot_a <= top_b)
+	{
+		return false;
+	}
+	if (top_a >= bot_b)
+	{
+		return false;
+	}
+	if (right_a <= left_b)
+	{
+		return false;
+	}
+
+	if (left_a >= right_b)
+	{
+		return false;
+	}
+	return true;
+}
 /*file footer*/

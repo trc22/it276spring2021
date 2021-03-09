@@ -2,6 +2,7 @@
 
 #include "player.h"
 #include "camera.h"
+#include "level.h"
 
 #include "overlay.h"
 
@@ -9,6 +10,7 @@ void player_update(Entity *self);
 void player_think(Entity *self);
 
 Vector2D player_position;
+Entity *player;
 int lightTimer;
 
 Entity *player_spawn(Vector2D position)
@@ -28,8 +30,9 @@ Entity *player_spawn(Vector2D position)
     ent->think = player_think;
     ent->rotation.x = 64;
     ent->rotation.y = 64;
-	ent->getPos = player_get_position;
+	ent->type = 0; //Type 0 = player
 	lightTimer = 0;
+	player = ent;
     return ent;
 }
 
@@ -102,6 +105,12 @@ void player_think(Entity *self)
 	}
 	else
 		lightTimer++;
+
+}
+
+Entity *get_player()
+{
+	return player;
 }
 
 Vector2D player_get_position()

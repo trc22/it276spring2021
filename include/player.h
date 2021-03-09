@@ -1,6 +1,8 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+#include <SDL_rect.h>
+
 #include "entity.h"
 
 /**
@@ -9,6 +11,8 @@
  * @return NULL on error, or a pointer to a new player entity
  */
 Entity *player_spawn(Vector2D position);
+
+Entity *get_player();
 
 Vector2D player_get_position();
 

@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <SDL_rect.h>
+
 #include "simple_logger.h"
 
 #include "camera.h"
@@ -91,16 +93,27 @@ void entity_manager_think_entities()
 void entity_manager_draw_entities()
 {
     int i;
+	int j;
     if (entity_manager.entity_list == NULL)
     {
         slog("entity system does not exist");
         return;
     }
-    for (i = 0; i < entity_manager.max_entities; i++)
+
+	for (i = 0; i < entity_manager.max_entities; i++)
     {
         if (entity_manager.entity_list[i]._inuse == 0)continue;
-        entity_draw(&entity_manager.entity_list[i]);
+		entity_draw(&entity_manager.entity_list[i]);
     }
+	for (j = 0; j < entity_manager.max_entities; j++) //check for collisions
+	{
+		if (&entity_manager.entity_list[j] != NULL && &entity_manager.entity_list[(j + 1)] != NULL)
+		{
+			if (entity_clip(&entity_manager.entity_list[j], &entity_manager.entity_list[(j + 1)]))
+				slog("Collision");
+		}
+	}
+
 }
 
 
@@ -119,7 +132,6 @@ Entity *entity_new()
         entity_manager.entity_list[i]._inuse = 1;
         return &entity_manager.entity_list[i];
     }
-    slog("no free entities available");
     return NULL;
 }
 
@@ -159,6 +171,8 @@ void entity_draw(Entity *ent)
             //entity is off camera, skip
             return;
         }
+		
+
         drawPosition.x = ent->position.x + offset.x;
         drawPosition.y = ent->position.y + offset.y;
 
@@ -172,6 +186,63 @@ void entity_draw(Entity *ent)
             NULL,
             (Uint32)ent->frame);
     }
+	//
+	ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
+}
+
+Bool entity_clip(Entity *a, Entity *b)
+{
+	if (a == NULL || b == NULL)
+	{
+		slog("Cannot collide with null entities");
+		return false;
+	}
+
+	if (a == b)
+	{
+		slog("Cannot collide with self");
+		return false;
+	}
+
+	int left_a, left_b;
+	int right_a, right_b;
+	int top_a, top_b;
+	int bot_a, bot_b;
+
+	left_a = a->collisionBox.x;
+	right_a = (a->collisionBox.x + a->collisionBox.h);
+	top_a = a->collisionBox.y;
+	bot_a = (a->collisionBox.y + a->collisionBox.h);
+
+	left_b = b->collisionBox.x;
+	right_b = (b->collisionBox.x + b->collisionBox.h);
+	top_b = b->collisionBox.y;
+	bot_b = (b->collisionBox.y + b->collisionBox.h);
+
+	if (bot_a <= top_b)
+	{
+		//a->collide(b);
+		return false;
+	}
+	if (top_a >= bot_b)
+	{
+		//a->collide(b);
+		return false;
+	}
+	if (right_a <= left_b)
+	{
+		
+		//a->collide(b);
+		return false;
+	}
+
+	if (left_a >= right_b)
+	{
+		//a->collide(b);
+		return false;	
+	}
+
+	return true;
 }
 
 
