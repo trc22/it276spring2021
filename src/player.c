@@ -11,7 +11,7 @@ void player_think(Entity *self);
 
 Vector2D player_position;
 Entity *player;
-int lightTimer;
+int lightTimer, jumpTimer;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -35,7 +35,8 @@ Entity *player_spawn(Vector2D position)
 	ent->last_collision.x = 0;
 	ent->last_collision.y = 0;
 	ent->_canJump = false;
-	lightTimer = 0;
+	lightTimer = 20;
+	jumpTimer;
 	player = ent;
     return ent;
 }
@@ -89,13 +90,12 @@ void player_think(Entity *self)
 	if (!self->_touchingTile)
 	{
 		self->velocity.y += 1;
+		self->_canJump = false;
 		//slog("Collision");
 	}
 	else if (self->last_collision.y > (self->position.y + 150))
 	{
 		self->_touchingTile = false;
-		self->_canJump = false;
-		slog("Velocity.y: %f", self->velocity.y);
 	}
 	else
 	{
@@ -124,7 +124,13 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_SPACE] && self->_canJump) //jump
 	{
-		self->velocity.y -= 5 * 0.5;
+		jumpTimer = 0;
+		self->_canJump = false;
+	}
+	if (jumpTimer != 20)
+	{
+		self->velocity.y -= 2 * .9;
+		jumpTimer++;
 	}
 	//Overlay/light stuff
 	if (lightTimer == 20)
