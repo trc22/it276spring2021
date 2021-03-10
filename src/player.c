@@ -91,13 +91,24 @@ void player_think(Entity *self)
 		self->velocity.y += 1;
 		//slog("Collision");
 	}
-	/*else if (self->last_collision.y > self->position.y)
+	else if (self->last_collision.y > (self->position.y + 150))
+	{
+		self->_touchingTile = false;
+		self->_canJump = false;
+		slog("Velocity.y: %f", self->velocity.y);
+	}
+	else
+	{
+		self->_canJump = true;
+	}
+	//Accidentally made basic climbing... gonna save this for later
+	/*else if (self->last_collision.y > (self->position.y -5))
 	{
 		self->_touchingTile = false;
 		self->_canJump = false;
 		if (self->velocity.y <= 5)
 			self->velocity.y -= 1;
-	}*/
+	}*/ //Accidentally made basic climbing... gonna save this for later
 
 	if (keys[SDL_SCANCODE_A]) // move left
 	{
@@ -113,7 +124,7 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_SPACE] && self->_canJump) //jump
 	{
-		self->velocity.y -= 3;
+		self->velocity.y -= 5 * 0.5;
 	}
 	//Overlay/light stuff
 	if (lightTimer == 20)
