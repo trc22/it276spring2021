@@ -31,6 +31,10 @@ Entity *player_spawn(Vector2D position)
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->type = 0; //Type 0 = player
+	ent->_touchingTile = false;
+	ent->last_collision.x = 0;
+	ent->last_collision.y = 0;
+	ent->_canJump = false;
 	lightTimer = 0;
 	player = ent;
     return ent;
@@ -59,8 +63,7 @@ void player_update(Entity *self)
 void player_think(Entity *self)
 {
     const Uint8 *keys;
-    Vector2D aimdir,camera,thrust;
-    float angle;
+    Vector2D aimdir,camera;
     int mx,my;
     if (!self)return;
     keys = SDL_GetKeyboardState(NULL);
@@ -83,6 +86,19 @@ void player_think(Entity *self)
         vector2d_add(self->velocity,self->velocity,thrust);
     }*/
 
+	if (!self->_touchingTile)
+	{
+		self->velocity.y += 1;
+		//slog("Collision");
+	}
+	/*else if (self->last_collision.y > self->position.y)
+	{
+		self->_touchingTile = false;
+		self->_canJump = false;
+		if (self->velocity.y <= 5)
+			self->velocity.y -= 1;
+	}*/
+
 	if (keys[SDL_SCANCODE_A]) // move left
 	{
 		self->velocity.x -= 2.5;
@@ -93,6 +109,11 @@ void player_think(Entity *self)
 	{
 		self->velocity.x += 2.5;
 		self->rotation.z = 90;
+	}
+
+	if (keys[SDL_SCANCODE_SPACE] && self->_canJump) //jump
+	{
+		self->velocity.y -= 3;
 	}
 	//Overlay/light stuff
 	if (lightTimer == 20)
@@ -117,5 +138,6 @@ Vector2D player_get_position()
 {
 	return player_position;
 }
+
 
 /**/

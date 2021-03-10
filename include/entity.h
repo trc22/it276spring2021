@@ -8,8 +8,11 @@
 typedef struct Entity_s
 {
     Bool       _inuse;
+	Bool		_touchingTile;
+	Bool		_canJump;
     Vector2D    position;
     Vector2D    velocity;
+	Vector2D	last_collision;
     Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
     Sprite     *sprite; 
 	SDL_Rect   collisionBox;

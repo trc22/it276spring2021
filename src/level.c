@@ -234,7 +234,12 @@ void level_draw(Level *level)
 		drawPosition.y -= offset.y;
 		collisionBox = gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h);
 		if (tile_collisions(get_player(), collisionBox))
-			slog("Collision!");
+		{
+			get_player()->_touchingTile = true;
+			get_player()->last_collision.x = collisionBox.x;
+			get_player()->last_collision.y = collisionBox.y;
+		}
+
 	}
 }
 
