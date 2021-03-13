@@ -116,7 +116,7 @@ void player_think(Entity *self)
 		if (self->last_collision.x > self->position.x)
 			self->_touchingWall = false;
 		if (!self->_touchingWall)
-			self->velocity.x -= 2.5;
+			self->velocity.x -= 2;
 	}
 
 	if (keys[SDL_SCANCODE_D]) // move right
@@ -126,7 +126,7 @@ void player_think(Entity *self)
 		if (self->last_collision.x < self->position.x)
 			self->_touchingWall = false;
 		if (!self->_touchingWall)
-			self->velocity.x += 2.5;;
+			self->velocity.x += 2;
 	}
 
 	if (keys[SDL_SCANCODE_SPACE] && self->_canJump) //jump

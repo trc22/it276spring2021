@@ -186,10 +186,15 @@ void entity_draw(Entity *ent)
             NULL,
             (Uint32)ent->frame);
     }
-	//
-	ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
-	if (ent->type == 0)
+	
+	if (ent->type == 0) //If is player
+	{
 		ent->collisionBoxBody = gfc_sdl_rect(ent->position.x - 10, ent->position.y - 100, ent->sprite->frame_w + 10, ent->sprite->frame_h);
+		ent->collisionBox = gfc_sdl_rect(ent->position.x + 50, ent->position.y, ent->sprite->frame_w - 100, ent->sprite->frame_h);
+	}
+	else
+		ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
+	
 }
 
 Bool entity_clip(Entity *a, Entity *b)
