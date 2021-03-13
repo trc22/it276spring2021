@@ -232,7 +232,7 @@ void level_draw(Level *level)
             level->tileMap[i] - 1);
 		drawPosition.x -= offset.x;
 		drawPosition.y -= offset.y;
-		collisionBox = gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h);
+		collisionBox = gfc_sdl_rect(drawPosition.x, (drawPosition.y + 10), level->tileSet->frame_w, level->tileSet->frame_h);
 		if (tile_collisions(get_player(), collisionBox))
 		{
 			get_player()->_touchingTile = true;

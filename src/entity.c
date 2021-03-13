@@ -187,6 +187,9 @@ void entity_draw(Entity *ent)
             (Uint32)ent->frame);
     }
 	//
+	if (ent->type == 0) //If is the player
+		ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w - 10, ent->sprite->frame_h);
+	else
 	ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
 }
 

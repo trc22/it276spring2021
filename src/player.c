@@ -31,9 +31,8 @@ Entity *player_spawn(Vector2D position)
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->type = 0; //Type 0 = player
-	ent->_touchingTile = false;
-	ent->last_collision.x = 0;
-	ent->last_collision.y = 0;
+	//ent->last_collision.x = 0;
+	//ent->last_collision.y = 0;
 	ent->_canJump = false;
 	lightTimer = 20;
 	jumpTimer;
@@ -89,16 +88,15 @@ void player_think(Entity *self)
 
 	if (!self->_touchingTile)
 	{
-		self->velocity.y += 1;
+		if (!self->_isJumping)
+			self->velocity.y += 1;
 		self->_canJump = false;
 		//slog("Collision");
 	}
-	else if (self->last_collision.y > (self->position.y + 150))
-	{
-		self->_touchingTile = false;
-	}
 	else
 	{
+		self->_touchingTile = false;
+		self->_isJumping = false;
 		self->_canJump = true;
 	}
 	//Accidentally made basic climbing... gonna save this for later
@@ -126,12 +124,17 @@ void player_think(Entity *self)
 	{
 		jumpTimer = 0;
 		self->_canJump = false;
+		self->_isJumping = true;
 	}
-	if (jumpTimer != 20)
+	if (jumpTimer <= 20)
 	{
-		self->velocity.y -= 2 * .9;
+		self->_isJumping = true;
+		self->velocity.y -= 2 * .75;
 		jumpTimer++;
 	}
+	else
+		self->_isJumping = false;
+
 	//Overlay/light stuff
 	if (lightTimer == 20)
 	{

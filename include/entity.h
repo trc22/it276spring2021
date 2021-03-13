@@ -10,6 +10,7 @@ typedef struct Entity_s
     Bool       _inuse;
 	Bool		_touchingTile;
 	Bool		_canJump;
+	Bool		_isJumping;
     Vector2D    position;
     Vector2D    velocity;
 	Vector2D	last_collision;
