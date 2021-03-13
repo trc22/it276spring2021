@@ -232,37 +232,36 @@ void level_draw(Level *level)
             level->tileMap[i] - 1);
 		drawPosition.x -= offset.x;
 		drawPosition.y -= offset.y;
-		collisionBox = gfc_sdl_rect(drawPosition.x, (drawPosition.y + 10), level->tileSet->frame_w, level->tileSet->frame_h);
-		if (tile_collisions(get_player(), collisionBox))
+		collisionBox = gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h);
+
+		if (tile_collisions(get_player()->collisionBox, collisionBox))
 		{
 			get_player()->_touchingTile = true;
+		}
+
+		if (tile_collisions(get_player()->collisionBoxBody, collisionBox))
+		{
+			get_player()->_touchingWall = true;
 			get_player()->last_collision.x = collisionBox.x;
 			get_player()->last_collision.y = collisionBox.y;
 		}
-
 	}
 }
 
-Bool tile_collisions(Entity *player, SDL_Rect collisionBox)
+Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox)
 {
-	if (player == NULL)
-	{
-		slog("Cannot collide with null entities");
-		return false;
-	}
-
 	int left_a, left_b;
 	int right_a, right_b;
 	int top_a, top_b;
 	int bot_a, bot_b;
 
-	left_a = player->collisionBox.x;
-	right_a = (player->collisionBox.x + player->collisionBox.h);
-	top_a = player->collisionBox.y;
-	bot_a = (player->collisionBox.y + player->collisionBox.h);
+	left_a = player.x;
+	right_a = (player.x + player.w);
+	top_a = player.y;
+	bot_a = (player.y + player.h);
 
 	left_b = collisionBox.x;
-	right_b = (collisionBox.x + collisionBox.h);
+	right_b = (collisionBox.x + collisionBox.w);
 	top_b = collisionBox.y;
 	bot_b = (collisionBox.y + collisionBox.h);
 
@@ -285,4 +284,5 @@ Bool tile_collisions(Entity *player, SDL_Rect collisionBox)
 	}
 	return true;
 }
+
 /*file footer*/

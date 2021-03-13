@@ -187,10 +187,9 @@ void entity_draw(Entity *ent)
             (Uint32)ent->frame);
     }
 	//
-	if (ent->type == 0) //If is the player
-		ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w - 10, ent->sprite->frame_h);
-	else
 	ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
+	if (ent->type == 0)
+		ent->collisionBoxBody = gfc_sdl_rect(ent->position.x - 10, ent->position.y - 100, ent->sprite->frame_w + 10, ent->sprite->frame_h);
 }
 
 Bool entity_clip(Entity *a, Entity *b)
@@ -213,12 +212,12 @@ Bool entity_clip(Entity *a, Entity *b)
 	int bot_a, bot_b;
 
 	left_a = a->collisionBox.x;
-	right_a = (a->collisionBox.x + a->collisionBox.h);
+	right_a = (a->collisionBox.x + a->collisionBox.w);
 	top_a = a->collisionBox.y;
 	bot_a = (a->collisionBox.y + a->collisionBox.h);
 
 	left_b = b->collisionBox.x;
-	right_b = (b->collisionBox.x + b->collisionBox.h);
+	right_b = (b->collisionBox.x + b->collisionBox.w);
 	top_b = b->collisionBox.y;
 	bot_b = (b->collisionBox.y + b->collisionBox.h);
 

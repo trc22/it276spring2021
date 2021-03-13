@@ -65,6 +65,6 @@ void level_update(Level *level);
  */
 void level_draw(Level *level);
 
-Bool tile_collisions(Entity *player, SDL_Rect collisionBox);
+Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox);
 
 #endif

@@ -11,12 +11,14 @@ typedef struct Entity_s
 	Bool		_touchingTile;
 	Bool		_canJump;
 	Bool		_isJumping;
+	Bool		_touchingWall;
     Vector2D    position;
     Vector2D    velocity;
 	Vector2D	last_collision;
     Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
     Sprite     *sprite; 
 	SDL_Rect   collisionBox;
+	SDL_Rect   collisionBoxBody;
 	int			type;
     float       frame;
     float       frameRate;

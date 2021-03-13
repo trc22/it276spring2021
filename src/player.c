@@ -37,6 +37,7 @@ Entity *player_spawn(Vector2D position)
 	lightTimer = 20;
 	jumpTimer;
 	player = ent;
+	ent->_touchingWall = false;
     return ent;
 }
 
@@ -89,7 +90,7 @@ void player_think(Entity *self)
 	if (!self->_touchingTile)
 	{
 		if (!self->_isJumping)
-			self->velocity.y += 1;
+			self->velocity.y += 1.2;
 		self->_canJump = false;
 		//slog("Collision");
 	}
@@ -110,14 +111,22 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_A]) // move left
 	{
-		self->velocity.x -= 2.5;
 		self->rotation.z = -90;
+
+		if (self->last_collision.x > self->position.x)
+			self->_touchingWall = false;
+		if (!self->_touchingWall)
+			self->velocity.x -= 2.5;
 	}
 
 	if (keys[SDL_SCANCODE_D]) // move right
 	{
-		self->velocity.x += 2.5;
 		self->rotation.z = 90;
+
+		if (self->last_collision.x < self->position.x)
+			self->_touchingWall = false;
+		if (!self->_touchingWall)
+			self->velocity.x += 2.5;;
 	}
 
 	if (keys[SDL_SCANCODE_SPACE] && self->_canJump) //jump
@@ -129,7 +138,7 @@ void player_think(Entity *self)
 	if (jumpTimer <= 20)
 	{
 		self->_isJumping = true;
-		self->velocity.y -= 2 * .75;
+		self->velocity.y -= 2 * .5;
 		jumpTimer++;
 	}
 	else
