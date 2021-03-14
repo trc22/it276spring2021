@@ -51,7 +51,7 @@ void player_update(Entity *self)
     cameraSize = camera_get_dimensions();
     camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
     camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
-    camera_set_position(camera);
+	camera_set_position(camera);
     // apply dampening on velocity
     vector2d_scale(self->velocity,self->velocity,0.75);
     if (vector2d_magnitude_squared(self->velocity) < 2)
@@ -72,20 +72,10 @@ void player_think(Entity *self)
     camera = camera_get_position();
     mx += camera.x;
     my += camera.y;
-  //  aimdir.x = mx - (self->position.x + 64);
-  //  aimdir.y = my - (self->position.y + 64);
-  //  angle = vector_angle(aimdir.x,aimdir.y);
-  //  self->rotation.z = angle + 90;
 	
     
     // turn aimdir into a unit vector
     vector2d_normalize (&aimdir);
-    // check for motion
-    /*if (keys[SDL_SCANCODE_W])
-    {
-        vector2d_scale(thrust,aimdir,5);
-        vector2d_add(self->velocity,self->velocity,thrust);
-    }*/
 
 	if (!self->_touchingTile)
 	{
@@ -100,14 +90,6 @@ void player_think(Entity *self)
 		self->_isJumping = false;
 		self->_canJump = true;
 	}
-	//Accidentally made basic climbing... gonna save this for later
-	/*else if (self->last_collision.y > (self->position.y -5))
-	{
-		self->_touchingTile = false;
-		self->_canJump = false;
-		if (self->velocity.y <= 5)
-			self->velocity.y -= 1;
-	}*/ //Accidentally made basic climbing... gonna save this for later
 
 	if (keys[SDL_SCANCODE_A]) // move left
 	{

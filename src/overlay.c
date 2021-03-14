@@ -17,7 +17,7 @@ void init_overlay()
 	darkness = gf2d_sprite_load_all("images/Black.png", 1200, 720, 1);
 	light_pos = vector2d(0, 0);
 	light_offset.x = 550;
-	light_offset.y = 950;
+	light_offset.y = 550;
 
 	_isOn = true;
 	return;
@@ -27,7 +27,7 @@ void draw_light(Vector4D alpha)
 {
 	if (_isOn)
 	{
-		light_pos = vector2d((player_get_position().x - light_offset.x) - camera_get_position().x, (player_get_position().y - light_offset.y));
+		light_pos = vector2d((player_get_position().x - light_offset.x) - camera_get_position().x, (player_get_position().y - light_offset.y) - camera_get_position().y);
 
 		gf2d_sprite_draw(light, light_pos, NULL, NULL, NULL, NULL, &alpha, 0);
 		return;
