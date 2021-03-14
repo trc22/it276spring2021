@@ -80,7 +80,7 @@ void player_think(Entity *self)
 	if (!self->_touchingTile)
 	{
 		if (!self->_isJumping)
-			self->velocity.y += 1.2;
+			self->velocity.y += 1.5;
 		self->_canJump = false;
 		//slog("Collision");
 	}
@@ -95,7 +95,7 @@ void player_think(Entity *self)
 	{
 		self->rotation.z = -90;
 
-		if (self->last_collision.x > self->position.x)
+		if (self->last_collision.x >= self->position.x)
 			self->_touchingWall = false;
 		if (!self->_touchingWall)
 			self->velocity.x -= 2;
@@ -105,7 +105,7 @@ void player_think(Entity *self)
 	{
 		self->rotation.z = 90;
 
-		if (self->last_collision.x < self->position.x)
+		if (self->last_collision.x <= self->position.x)
 			self->_touchingWall = false;
 		if (!self->_touchingWall)
 			self->velocity.x += 2;
@@ -120,7 +120,10 @@ void player_think(Entity *self)
 	if (jumpTimer <= 20)
 	{
 		self->_isJumping = true;
-		self->velocity.y -= 2 * .5;
+		if (self->velocity.x == 0)
+			self->position.y -= 2;
+		else
+			self->velocity.y -= 1.5;
 		jumpTimer++;
 	}
 	else
