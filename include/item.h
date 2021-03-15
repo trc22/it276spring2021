@@ -13,11 +13,11 @@ typedef struct Item_s
 	int			itemID;
 	int			quantity;
 	int			max_quantity;
-	void		(*update)(struct Item_s *self);
-	void		(*use)(struct Item_s *self);
 	void		(*free)(struct Item_s *self);
 	void         *data;
 }Item;
+
+void load_all_items(Uint32 max_items);
 
 void inventory_init(Uint32 max_items);
 
@@ -32,6 +32,10 @@ void item_free(Item *item);
 void items_free(Item *item);
 
 Item *item_load(Bool usable, char *name, int id, int amount, int max_amount);
+
+Item *get_current_item(int i);
+
+Item *get_item_by_id(int id);
 
 
 #endif

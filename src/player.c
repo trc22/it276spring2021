@@ -5,14 +5,16 @@
 #include "level.h"
 
 #include "overlay.h"
-#include "item.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
 
 Vector2D player_position;
 Entity *player;
+Item *current_item;
+
 int lightTimer, jumpTimer;
+int inventoryPos, cycleTimer;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -23,9 +25,13 @@ Entity *player_spawn(Vector2D position)
         slog("failed to create entity for the player");
         return NULL;
     }
+
 	load_all_items(12);
 	inventory_init(6);
-	inventory_insert(item_load(true, "pizza", 0, 2, 2));
+	inventory_insert(get_item_by_id(0));
+	inventory_insert(get_item_by_id(1));
+	cycleTimer = 35;
+
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
     vector2d_copy(ent->position,position);
     ent->frameRate = 0.1;
@@ -39,7 +45,8 @@ Entity *player_spawn(Vector2D position)
 	//ent->last_collision.y = 0;
 	ent->_canJump = false;
 	lightTimer = 20;
-	jumpTimer;
+	jumpTimer = 25;
+	inventoryPos = 0;
 	player = ent;
 	ent->_touchingWall = false;
     return ent;
@@ -133,6 +140,14 @@ void player_think(Entity *self)
 	else
 		self->_isJumping = false;
 
+	if (keys[SDL_SCANCODE_TAB] && cycleTimer == 35)
+		current_item = cycle_items();
+	else if (cycleTimer != 35)
+		cycleTimer++;
+
+	if (keys[SDL_SCANCODE_E])
+		use_item(current_item);
+
 	//Overlay/light stuff
 	if (lightTimer == 20)
 	{
@@ -145,6 +160,22 @@ void player_think(Entity *self)
 	else
 		lightTimer++;
 
+}
+
+Bool use_item(Item *item)
+{
+	slog("Using %s", item->itemName);
+}
+
+Item *cycle_items()
+{
+	if (inventoryPos < 6)
+		inventoryPos++;
+	else
+		inventoryPos = 0;
+	
+	slog("slot %i selected", inventoryPos);
+	return get_current_item(inventoryPos);
 }
 
 Entity *get_player()

@@ -4,6 +4,7 @@
 #include <SDL_rect.h>
 
 #include "entity.h"
+#include "item.h"
 
 /**
  * @brief spawn a player entity
@@ -11,6 +12,10 @@
  * @return NULL on error, or a pointer to a new player entity
  */
 Entity *player_spawn(Vector2D position);
+
+Bool use_item(Item *item);
+
+Item *cycle_items();
 
 Entity *get_player();
 

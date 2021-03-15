@@ -31,6 +31,9 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
+	item_load(true, "pizza", 0, 2, 2);
+	item_load(false, "flashlight", 1, -1, -1);
+
 }
 
 void inventory_init(Uint32 max_items)
@@ -106,9 +109,9 @@ void inventory_insert(Item *item)
 	for (i = 0; i < inventory.max_items; i++)
 	{
 		if (inventory.item_list[i]._inuse)continue;// someone else is using this one
-		memset(&item_manager.item_list[i], 0, sizeof(item));
+		inventory.item_list[i] = item_manager.item_list[item->itemID];
 		inventory.item_list[i]._inuse = 1;
-		slog("inserting %s into slot %i", item->itemName, i);
+		slog("inserting %s into slot %i", inventory.item_list[i].itemName, i);
 		return;
 	}
 	slog("failed to insert: %s", item->itemName);
@@ -123,5 +126,15 @@ void item_free(Item *item)
 		return;
 	}
 	item->_inuse = 0;
+}
+
+Item *get_current_item(int i)
+{
+	return &inventory.item_list[i];
+}
+
+Item *get_item_by_id(int id)
+{
+	return &item_manager.item_list[id];
 }
 
