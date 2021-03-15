@@ -5,6 +5,7 @@
 #include "level.h"
 
 #include "overlay.h"
+#include "item.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -22,7 +23,8 @@ Entity *player_spawn(Vector2D position)
         slog("failed to create entity for the player");
         return NULL;
     }
-    ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
+
+	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
     vector2d_copy(ent->position,position);
     ent->frameRate = 0.1;
     ent->frameCount = 16;
