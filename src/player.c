@@ -23,7 +23,9 @@ Entity *player_spawn(Vector2D position)
         slog("failed to create entity for the player");
         return NULL;
     }
-
+	load_all_items(12);
+	inventory_init(6);
+	inventory_insert(item_load(true, "pizza", 0, 2, 2));
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
     vector2d_copy(ent->position,position);
     ent->frameRate = 0.1;
