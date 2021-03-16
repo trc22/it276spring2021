@@ -7,11 +7,13 @@
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
 
+#include "font.h"
 #include "camera.h"
 #include "entity.h"
 #include "player.h"
 #include "level.h"
 #include "overlay.h"
+
 
 
 int main(int argc, char * argv[])
@@ -26,7 +28,8 @@ int main(int argc, char * argv[])
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
 	Vector4D lightColor = { 255, 255, 255, 245 };
-
+	Font *font;
+	char *_text;
 
     
     /*program initializtion*/
@@ -44,9 +47,12 @@ int main(int argc, char * argv[])
     camera_set_dimensions(vector2d(1200,720));
     camera_set_position(vector2d(0,0));
     gf2d_sprite_init(1024);
+	font_init(10);
     entity_manager_init(100);
     
-    
+	font = font_load("fonts/Warenhaus-Standard.ttf", 16);
+	_text = "inventory";
+
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
@@ -78,6 +84,9 @@ int main(int argc, char * argv[])
             entity_manager_draw_entities();
 
 			draw_light(lightColor);
+
+			font_render(font, _text, vector2d(32, 32), gfc_color8(255, 0, 0, 255));
+
             //UI elements last
             gf2d_sprite_draw(
                 mouse,
