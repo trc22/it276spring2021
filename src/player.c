@@ -184,16 +184,15 @@ void use_item(Item *item)
 		slog("null item name");
 		return;
 	}
-
 	slog("Using %s", item->itemName);
 	if (item->quantity > 0)
 		item->quantity--;
-	else
+	slog("Quantity: %i", item->quantity);
+	check_empty(item);
+	if (!item->_inuse)
 		return;
-
 	//use item
 			
-	check_empty(item);
 }
 
 Item *cycle_items()

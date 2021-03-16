@@ -142,6 +142,8 @@ void item_free(Item *item)
 		return;
 	}
 	item->_inuse = 0;
+	item->itemID = NULL;
+	item->itemName = NULL;
 }
 
 Item *get_current_item(int i)
