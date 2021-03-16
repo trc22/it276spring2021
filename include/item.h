@@ -13,6 +13,8 @@ typedef struct Item_s
 	int			itemID;
 	int			quantity;
 	int			max_quantity;
+	int			timer;
+	int			timerMax;
 	void		(*free)(struct Item_s *self);
 	void         *data;
 }Item;
@@ -31,7 +33,7 @@ void item_free(Item *item);
 
 void items_free(Item *item);
 
-Item *item_load(Bool usable, char *name, int id, int amount, int max_amount);
+Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer);
 
 Item *get_current_item(int i);
 

@@ -13,8 +13,8 @@ Vector2D player_position;
 Entity *player;
 Item *current_item;
 
-int lightTimer, jumpTimer;
-int inventoryPos, cycleTimer;
+int lightTimer, jumpTimer, cycleTimer, useTimer, consumeTimer;
+int inventoryPos;
 
 Entity *player_spawn(Vector2D position)
 {
@@ -33,7 +33,6 @@ Entity *player_spawn(Vector2D position)
 	inventory_insert(get_item_by_id(1));
 	inventory_insert(get_item_by_id(2));
 	current_item = cycle_items();
-	cycleTimer = 35;
 
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
     vector2d_copy(ent->position,position);
@@ -47,10 +46,13 @@ Entity *player_spawn(Vector2D position)
 	//ent->last_collision.x = 0;
 	//ent->last_collision.y = 0;
 	ent->_canJump = false;
-	lightTimer = 20;
-	jumpTimer = 25;
 	player = ent;
 	ent->_touchingWall = false;
+
+	//init timers
+	jumpTimer = 25;
+	cycleTimer = 35;
+
     return ent;
 }
 
@@ -147,24 +149,21 @@ void player_think(Entity *self)
 		current_item = cycle_items();
 		cycleTimer = 0;
 	}
-	else if (cycleTimer != 35)
-		cycleTimer++;
 
 	if (keys[SDL_SCANCODE_E])
-		use_item(current_item);
-
-	//Overlay/light stuff
-	if (lightTimer == 20)
 	{
-		if (keys[SDL_SCANCODE_F])
-		{
-			toggle_light(); //turns the light on/off
-			lightTimer = 0;
-		}
+		//interact
 	}
-	else
-		lightTimer++;
 
+	//Use item
+	if (keys[SDL_SCANCODE_F])
+	{
+		use_item(current_item);
+	}
+	
+	update_timers();
+	if(cycleTimer != 35)
+		cycleTimer++;
 }
 
 void use_item(Item *item)
@@ -184,15 +183,27 @@ void use_item(Item *item)
 		slog("null item name");
 		return;
 	}
-	slog("Using %s", item->itemName);
-	if (item->quantity > 0)
-		item->quantity--;
-	slog("Quantity: %i", item->quantity);
-	check_empty(item);
 	if (!item->_inuse)
 		return;
+
+	if (item->timer == item->timerMax)
+	{
+		switch (item->itemID)
+		{
+		case 1:
+			slog("Using pizza, only %i left", item->quantity);
+			break;
+		case 2: //Use light
+			toggle_light();
+			break;
+		}
+		if (item->quantity > 0)
+			item->quantity--;
+		item->timer = 0;
+	}
 	//use item
-			
+
+	check_empty(item);
 }
 
 Item *cycle_items()

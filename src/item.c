@@ -31,9 +31,9 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
-	item_load(true, "", 0, 0, 0);
-	item_load(true, "pizza", 1, 4, 5);
-	item_load(true, "flashlight", 2, -1, -1);
+	item_load(true, "", 0, 0, 0, 0);
+	item_load(true, "pizza", 1, 4, 5, 50);
+	item_load(true, "flashlight", 2, -1, -1, 25);
 
 }
 
@@ -80,7 +80,7 @@ void inventory_free()
 	slog("inventory freed");
 }
 
-Item *item_load(Bool usable, char *name, int id, int amount, int max_amount)
+Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer)
 {
 	Item *item;
 
@@ -94,6 +94,8 @@ Item *item_load(Bool usable, char *name, int id, int amount, int max_amount)
 	item->itemID = id;
 	item->quantity = amount;
 	item->max_quantity = max_amount;
+	item->timer = useTimer;
+	item->timerMax = useTimer;
 
 	slog("loading %s, id: %i", item->itemName, item->itemID);
 	return item;
@@ -159,6 +161,23 @@ Item *get_item_by_id(int id)
 void check_empty(Item *item)
 {
 	if (item->quantity == 0 || item == NULL)
-		item_free(item);
+	{
+		slog("Ran out of: %s", item->itemName);
+		item_free(item); 
+	}
+}
+
+void update_timers()
+{
+	int i;
+	Item *item;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		item = &inventory.item_list[i];
+		if (!item->_inuse || item->itemID == NULL)
+			continue;
+		if (item->timer != item->timerMax)
+			item->timer++;
+	}
 }
 
