@@ -13,7 +13,7 @@
  */
 Entity *player_spawn(Vector2D position);
 
-Bool use_item(Item *item);
+void use_item(Item *item);
 
 Item *cycle_items();
 

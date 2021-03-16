@@ -25,11 +25,14 @@ Entity *player_spawn(Vector2D position)
         slog("failed to create entity for the player");
         return NULL;
     }
-
+	inventoryPos = 5;
 	load_all_items(12);
 	inventory_init(6);
 	inventory_insert(get_item_by_id(0));
+	check_empty(get_current_item(0));
 	inventory_insert(get_item_by_id(1));
+	inventory_insert(get_item_by_id(2));
+	current_item = cycle_items();
 	cycleTimer = 35;
 
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
@@ -46,7 +49,6 @@ Entity *player_spawn(Vector2D position)
 	ent->_canJump = false;
 	lightTimer = 20;
 	jumpTimer = 25;
-	inventoryPos = 0;
 	player = ent;
 	ent->_touchingWall = false;
     return ent;
@@ -141,7 +143,10 @@ void player_think(Entity *self)
 		self->_isJumping = false;
 
 	if (keys[SDL_SCANCODE_TAB] && cycleTimer == 35)
+	{
 		current_item = cycle_items();
+		cycleTimer = 0;
+	}
 	else if (cycleTimer != 35)
 		cycleTimer++;
 
@@ -162,18 +167,42 @@ void player_think(Entity *self)
 
 }
 
-Bool use_item(Item *item)
+void use_item(Item *item)
 {
+	if (item == NULL)
+	{
+		slog("Using null item");
+		return;
+	}
+	if(item->itemID == NULL)
+	{
+		slog("null item id");
+		return;
+	}
+	if(item->itemName == NULL)
+	{
+		slog("null item name");
+		return;
+	}
+
 	slog("Using %s", item->itemName);
+	if (item->quantity > 0)
+		item->quantity--;
+	else
+		return;
+
+	//use item
+			
+	check_empty(item);
 }
 
 Item *cycle_items()
 {
-	if (inventoryPos < 6)
+	if (inventoryPos < 5)
 		inventoryPos++;
 	else
 		inventoryPos = 0;
-	
+
 	slog("slot %i selected", inventoryPos);
 	return get_current_item(inventoryPos);
 }

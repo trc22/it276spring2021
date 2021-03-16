@@ -37,5 +37,6 @@ Item *get_current_item(int i);
 
 Item *get_item_by_id(int id);
 
+void check_empty(Item *item);
 
 #endif

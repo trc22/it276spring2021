@@ -31,8 +31,9 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
-	item_load(true, "pizza", 0, 2, 2);
-	item_load(false, "flashlight", 1, -1, -1);
+	item_load(true, "", 0, 0, 0);
+	item_load(true, "pizza", 1, 4, 5);
+	item_load(true, "flashlight", 2, -1, -1);
 
 }
 
@@ -103,12 +104,27 @@ void inventory_insert(Item *item)
 	int i;
 	if (inventory.max_items == NULL)
 	{
-		slog("entity system does not exist");
+		slog("inventory does not exist");
 		return;
 	}
+	if (item == NULL || item->itemName == NULL)
+	{
+		slog("item is not valid, cannot insert");
+		return;
+	}
+
 	for (i = 0; i < inventory.max_items; i++)
 	{
-		if (inventory.item_list[i]._inuse)continue;// someone else is using this one
+		if (item != NULL && item->itemID == inventory.item_list[i].itemID)
+		{
+			inventory.item_list[i].quantity += item->quantity;
+			slog("%s already in inventory, updating quantity", item->itemName);
+			return;
+		}
+
+		if (inventory.item_list[i]._inuse)
+			continue;// someone else is using this one
+
 		inventory.item_list[i] = item_manager.item_list[item->itemID];
 		inventory.item_list[i]._inuse = 1;
 		slog("inserting %s into slot %i", inventory.item_list[i].itemName, i);
@@ -136,5 +152,11 @@ Item *get_current_item(int i)
 Item *get_item_by_id(int id)
 {
 	return &item_manager.item_list[id];
+}
+
+void check_empty(Item *item)
+{
+	if (item->quantity == 0 || item == NULL)
+		item_free(item);
 }
 
