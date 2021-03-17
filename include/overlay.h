@@ -22,5 +22,6 @@ void update_hud_inventory(int inventory_pos);
 
 void inventory_text();
 
+void toggle_inventory();
 
 #endif

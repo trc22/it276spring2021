@@ -7,6 +7,7 @@
 #include "item.h"
 
 Bool _isOn;
+Bool _showInventory;
 Sprite* light;
 Sprite* letterbox;
 Sprite* darkness;
@@ -37,6 +38,7 @@ void init_overlay()
 	currentSlot = 0;
 
 	_isOn = true;
+	_showInventory = false;
 	return;
 }
 
@@ -66,22 +68,25 @@ void update_hud_inventory(int inventory_pos)
 
 void inventory_text()
 {
-	int i;
-	char *slot_text;
-
-	font_render(font_inventory, "Inventory:", vector2d(32, 32), gfc_color8(150, 150, 150, 255)); //draw inventory title
-
-	for (i = 0; i < 6; i++)
+	if (_showInventory)
 	{
-		if (get_current_item(i)->itemID == NULL)
-			slot_text = "empty slot";
-		else
-			slot_text = get_current_item(i)->itemName;
+		int i;
+		char *slot_text;
 
-		if (currentSlot == i)
-			font_render(font_items, slot_text, vector2d(32, 64 + (i * 20)), hud_selected);
-		else
-			font_render(font_items, slot_text, vector2d(32, 64 + (i * 20)), hud_color);
+		font_render(font_inventory, "Inventory:", vector2d(32, 32), gfc_color8(150, 150, 150, 255)); //draw inventory title
+
+		for (i = 0; i < 6; i++)
+		{
+			if (get_current_item(i)->itemID == NULL)
+				slot_text = "empty slot";//continue;
+			else
+				slot_text = get_current_item(i)->itemName;
+
+			if (currentSlot == i)
+				font_render(font_items, slot_text, vector2d(32, 64 + (i * 20)), hud_selected);
+			else
+				font_render(font_items, slot_text, vector2d(32, 64 + (i * 20)), hud_color);
+		}
 	}
 }
 
@@ -99,4 +104,14 @@ void toggle_light()
 		return;
 	}
 	_isOn = true;
+}
+
+void toggle_inventory()
+{
+	if (_showInventory)
+	{
+		_showInventory = false;
+		return;
+	}
+	_showInventory = true;
 }

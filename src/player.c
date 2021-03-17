@@ -13,7 +13,7 @@ Vector2D player_position;
 Entity *player;
 Item *current_item;
 
-int lightTimer, jumpTimer, cycleTimer, useTimer, consumeTimer;
+int jumpTimer, cycleTimer, inventoryTimer;
 int inventoryPos;
 
 Entity *player_spawn(Vector2D position)
@@ -52,6 +52,7 @@ Entity *player_spawn(Vector2D position)
 	//init timers
 	jumpTimer = 25;
 	cycleTimer = 35;
+	inventoryTimer = 35;
 
     return ent;
 }
@@ -160,10 +161,19 @@ void player_think(Entity *self)
 	{
 		use_item(current_item);
 	}
+
+	if (keys[SDL_SCANCODE_I] && inventoryTimer == 35)
+	{
+		toggle_inventory();
+		inventoryTimer = 0;
+	}
+
 	
 	update_timers();
 	if(cycleTimer != 35)
 		cycleTimer++;
+	if (inventoryTimer != 35)
+		inventoryTimer++;
 }
 
 void use_item(Item *item)
