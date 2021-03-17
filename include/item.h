@@ -9,6 +9,7 @@ typedef struct Item_s
 {
 	Bool		_inuse;
 	Bool		_consumable;
+	Bool		_equipped;
 	char		*itemName;
 	int			itemID;
 	int			quantity;

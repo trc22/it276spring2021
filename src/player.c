@@ -214,6 +214,14 @@ Item *cycle_items()
 		inventoryPos = 0;
 
 	slog("slot %i selected", inventoryPos);
+
+	get_current_item(inventoryPos)->_equipped = true; //Equip current item
+	
+	if (inventoryPos < 0 ) 
+		get_current_item(5)->_equipped = false;
+	else
+		get_current_item(inventoryPos - 1)->_equipped = false; //Unequip last item
+	update_hud_inventory(inventoryPos);
 	return get_current_item(inventoryPos);
 }
 
@@ -225,6 +233,11 @@ Entity *get_player()
 Vector2D player_get_position()
 {
 	return player_position;
+}
+
+int player_get_current_item()
+{
+	return inventoryPos;
 }
 
 

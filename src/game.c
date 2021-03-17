@@ -27,9 +27,6 @@ int main(int argc, char * argv[])
     float mf = 0;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
-	Vector4D lightColor = { 255, 255, 255, 245 };
-	Font *font;
-	char *_text;
 
     
     /*program initializtion*/
@@ -50,9 +47,6 @@ int main(int argc, char * argv[])
 	font_init(10);
     entity_manager_init(100);
     
-	font = font_load("fonts/Warenhaus-Standard.ttf", 16);
-	_text = "inventory";
-
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
@@ -83,9 +77,9 @@ int main(int argc, char * argv[])
             
             entity_manager_draw_entities();
 
-			draw_light(lightColor);
 
-			font_render(font, _text, vector2d(32, 32), gfc_color8(255, 0, 0, 255));
+			draw_overlay();
+
 
             //UI elements last
             gf2d_sprite_draw(
