@@ -15,5 +15,8 @@ void fire_pistol(Item *pistol, Vector2D player_position, float player_rotation);
 
 void fire_shotgun(Item *shotgun, Vector2D player_position, float player_rotation);
 
+void fire_rifle(Item *rifle, Vector2D player_position, float player_rotation);
+
+
 
 #endif

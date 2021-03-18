@@ -86,3 +86,24 @@ void fire_shotgun(Item *shotgun, Vector2D player_position, float player_rotation
 	}
 	return;
 }
+
+void fire_rifle(Item *rifle, Vector2D player_position, float player_rotation)
+{
+	Vector2D position;
+	position.y = player_position.y + 64;
+	if (handle_ammo(rifle))
+	{
+		slog("firing rifle!");
+		if (player_rotation == 90)
+		{
+			position.x = player_position.x + 128;
+			fire_projectile(position, vector2d(1, 0));
+		}
+		else
+		{
+			position.x = player_position.x;
+			fire_projectile(position, vector2d(-1, 0));
+		}
+	}
+	return;
+}
