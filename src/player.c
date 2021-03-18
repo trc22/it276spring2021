@@ -26,12 +26,14 @@ Entity *player_spawn(Vector2D position)
         return NULL;
     }
 	inventoryPos = 5;
-	load_all_items(12);
 	inventory_init(6);
 	inventory_insert(get_item_by_id(0));
 	check_empty(get_current_item(0));
 	inventory_insert(get_item_by_id(1));
 	inventory_insert(get_item_by_id(2));
+	inventory_insert(get_item_by_id(12));
+	inventory_insert(get_item_by_id(4));
+	inventory_insert(get_item_by_id(8));
 	current_item = cycle_items();
 
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
@@ -198,6 +200,10 @@ void use_item(Item *item)
 
 	if (item->timer == item->timerMax)
 	{
+		if (item->quantity > 0)
+			item->quantity--;
+		item->timer = 0;
+
 		switch (item->itemID)
 		{
 		case 1:
@@ -206,13 +212,16 @@ void use_item(Item *item)
 		case 2: //Use light
 			toggle_light();
 			break;
+		case 4: //pistol
+			if(handle_ammo(item))
+				slog("Firing");
+			break;
+		case 12: //Lighter
+			break;
+		default:
+			break;
 		}
-		if (item->quantity > 0)
-			item->quantity--;
-		item->timer = 0;
 	}
-	//use item
-
 	check_empty(item);
 }
 

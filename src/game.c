@@ -46,6 +46,7 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
 	font_init(10);
     entity_manager_init(100);
+	load_all_items(20);
     
     SDL_ShowCursor(SDL_DISABLE);
     

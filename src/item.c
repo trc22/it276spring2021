@@ -31,9 +31,26 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
-	item_load(true, "", 0, 0, 0, 0);
-	item_load(true, "pizza", 1, 4, 5, 50);
-	item_load(true, "flashlight", 2, -1, -1, 25);
+	item_load(true, "", 0, 0, 0, 0, false, 0);
+	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
+	item_load(true, "key", 3, -1, -1, 25, false, 0);
+	
+	//Weapons
+	item_load(true, "knife", 3, -1, -1, 25, false, 0);
+	item_load(true, "pistol", 4, -1, -1, 25, true, 8);
+	item_load(true, "shotgun", 5, -1, -1, 25, true, 9);
+	item_load(true, "rifle", 6, -1, -1, 25, true, 10);
+	item_load(true, "dynamite", 7, 0, 0, 0, false, 0);
+
+	//Ammo
+	item_load(false, "pistol ammo", 8, 12, 36, -1, false, 0);
+	item_load(false, "shotgun ammo", 9, 4, 16, -1, false, 0);
+	item_load(false, "rifle ammo", 10, 4, 10, -1, false, 0);
+
+	//tools
+	item_load(true, "flashlight", 2, -1, -1, 25, false, 0);
+	item_load(true, "climbing gear", 11, -1, -1, 100, false, 0);
+	item_load(true, "lighter", 12, 6, 6, 25, false, 0);
 
 }
 
@@ -80,7 +97,7 @@ void inventory_free()
 	slog("inventory freed");
 }
 
-Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer)
+Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer, Bool ammo, int ammoID)
 {
 	Item *item;
 
@@ -90,6 +107,8 @@ Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int
 	item = &item_manager.item_list[id];
 
 	item->_consumable = usable;
+	item->_hasAmmo = ammo;
+	item->ammoID = ammoID;
 	item->itemName = name;
 	item->itemID = id;
 	item->quantity = amount;
@@ -157,6 +176,39 @@ Item *get_item_by_id(int id)
 {
 	return &item_manager.item_list[id];
 }
+
+Item *search_inventory(int id)
+{
+	int i;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		if (inventory.item_list[i].itemID == id)
+			return &inventory.item_list[i];
+	}
+	return NULL;
+
+}
+
+Bool handle_ammo(Item *item)
+{
+	Item *ammo;
+	if (!item->_hasAmmo)
+	{
+		slog("This item does not use ammo!");
+		return false;
+	}
+	ammo = search_inventory(item->ammoID);
+	if (ammo == NULL || ammo->quantity == 0)
+	{
+		slog("No ammo!");
+		return false;
+	}
+	
+	ammo->quantity--;
+	check_empty(ammo);
+	return true;
+}
+
 
 void check_empty(Item *item)
 {

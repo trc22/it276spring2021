@@ -10,12 +10,14 @@ typedef struct Item_s
 	Bool		_inuse;
 	Bool		_consumable;
 	Bool		_equipped;
+	Bool		_hasAmmo;
 	char		*itemName;
 	int			itemID;
 	int			quantity;
 	int			max_quantity;
 	int			timer;
 	int			timerMax;
+	int			ammoID;
 	void		(*free)(struct Item_s *self);
 	void         *data;
 }Item;
@@ -34,11 +36,15 @@ void item_free(Item *item);
 
 void items_free(Item *item);
 
-Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer);
+Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer, Bool ammo, int ammoID);
 
 Item *get_current_item(int i);
 
 Item *get_item_by_id(int id);
+
+Item *search_inventory(int id);
+
+Bool handle_ammo(Item *item);
 
 void check_empty(Item *item);
 
