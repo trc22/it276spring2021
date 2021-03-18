@@ -37,9 +37,9 @@ void load_all_items(Uint32 max_items)
 	
 	//Weapons
 	item_load(true, "knife", 3, -1, -1, 25, false, 0);
-	item_load(true, "pistol", 4, -1, -1, 25, true, 8);
-	item_load(true, "shotgun", 5, -1, -1, 25, true, 9);
-	item_load(true, "rifle", 6, -1, -1, 25, true, 10);
+	item_load(true, "pistol", 4, -1, -1, 40, true, 8);
+	item_load(true, "shotgun", 5, -1, -1, 60, true, 9);
+	item_load(true, "rifle", 6, -1, -1, 80, true, 10);
 	item_load(true, "dynamite", 7, 0, 0, 0, false, 0);
 
 	//Ammo
