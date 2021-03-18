@@ -5,6 +5,7 @@
 #include "level.h"
 
 #include "overlay.h"
+#include "weapons.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -213,8 +214,7 @@ void use_item(Item *item)
 			toggle_light();
 			break;
 		case 4: //pistol
-			if(handle_ammo(item))
-				slog("Firing");
+			fire_pistol(item, player->position, player->rotation.z);
 			break;
 		case 12: //Lighter
 			break;
