@@ -214,7 +214,8 @@ void use_item(Item *item)
 			toggle_light();
 			break;
 		case 4: //pistol
-			fire_pistol(item, player->position, player->rotation.z);
+			if (player->velocity.x == 0)
+				fire_pistol(item, player->position, player->rotation.z);
 			break;
 		case 12: //Lighter
 			break;
