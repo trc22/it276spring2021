@@ -104,15 +104,12 @@ void entity_manager_draw_entities()
     {
         if (entity_manager.entity_list[i]._inuse == 0)continue;
 		entity_draw(&entity_manager.entity_list[i]);
-    }
-	for (j = 0; j < entity_manager.max_entities; j++) //check for collisions
-	{
-		if (&entity_manager.entity_list[j] != NULL && &entity_manager.entity_list[(j + 1)] != NULL)
+		if (&entity_manager.entity_list[i] != NULL && &entity_manager.entity_list[(i + 1)] != NULL)
 		{
-			if (entity_clip(&entity_manager.entity_list[j], &entity_manager.entity_list[(j + 1)]))
+			if (entity_clip(&entity_manager.entity_list[i], &entity_manager.entity_list[(i + 1)]))
 				slog("Collision");
 		}
-	}
+    }
 
 }
 
