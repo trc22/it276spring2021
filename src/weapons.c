@@ -2,6 +2,9 @@
 #include "weapons.h"
 
 void projectile_think(Entity *self);
+void hitbox_think (Entity *self);
+void throw_think(Entity *self);
+
 
 Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 {
@@ -28,7 +31,68 @@ void projectile_think(Entity *self)
 		entity_free(self);
 }
 
-Entity create_hitbox(Vector2D origin, int duration);
+Entity *create_hitbox(Vector2D origin, Vector2D size, int duration)
+{
+	Entity *ent;
+	ent = entity_new();
+	ent->sprite = gf2d_sprite_load_all("images/hitbox_visible.png", size.x, size.y, 1);
+	vector2d_copy(ent->position, origin);
+	ent->frameRate = 0.1;
+	ent->frameCount = 1;
+	ent->think = hitbox_think;
+	ent->rotation.x = 64;
+	ent->rotation.y = 64;
+	ent->type = 6; //hitbox
+	ent->_touchingWall = false;
+	ent->duration = duration;
+	return ent;
+}
+
+void hitbox_think(Entity *self)
+{
+	if (self->duration == 0)
+		entity_free(self);
+	else
+		self->duration--;
+}
+
+Entity *throw_dynamite(Vector2D origin, Vector2D velocity)
+{
+	Entity *ent;
+	ent = entity_new();
+	ent->sprite = gf2d_sprite_load_all("images/bullet.png", 8, 4, 1);
+	vector2d_copy(ent->position, origin);
+	ent->frameRate = 0.1;
+	ent->frameCount = 1;
+	ent->think = throw_think;
+	ent->rotation.x = 64;
+	ent->rotation.y = 64;
+	ent->type = 5; //Bullet
+	ent->velocity = velocity;
+	ent->_touchingWall = false;
+	ent->duration = 80;
+	return ent;
+}
+
+void throw_think(Entity *self)
+{
+	self->velocity.x += self->velocity.x * 0.025;
+	if (self->duration > 40)
+		self->velocity.y -= .025;
+	else
+		self->velocity.y += 0.125;
+
+	if (self->duration == 0)
+	{
+		self->position.x -= 128;
+		self->position.y -= 128;
+		create_hitbox(self->position, vector2d(256, 256), 10);
+		entity_free(self);
+	}
+	else
+		self->duration--;
+}
+
 
 void fire_pistol(Item *pistol, Vector2D player_position, float player_rotation)
 {
@@ -96,7 +160,7 @@ void fire_rifle(Item *rifle, Vector2D player_position, float player_rotation)
 		slog("firing rifle!");
 		if (player_rotation == 90)
 		{
-			position.x = player_position.x + 128;
+			position.x = player_position.x;
 			fire_projectile(position, vector2d(1, 0));
 		}
 		else
@@ -107,3 +171,34 @@ void fire_rifle(Item *rifle, Vector2D player_position, float player_rotation)
 	}
 	return;
 }
+
+void fire_knife(Item *knife, Vector2D player_position, float player_rotation)
+{
+	Vector2D position;
+	position.y = player_position.y + 32;
+	if (player_rotation == 90)
+		position.x = player_position.x + 96;
+	else
+		position.x = player_position.x - 32;
+	create_hitbox(position, vector2d(64, 64), 10);
+	return;
+}
+
+void fire_dynamite(Item *dynamite, Vector2D player_position, float player_rotation)
+{
+	Vector2D position;
+	position.y = player_position.y + 32;
+	if (player_rotation == 90)
+	{
+		position.x = player_position.x + 96;
+		throw_dynamite(position, vector2d(1, 0));
+	}
+	else
+	{
+		position.x = player_position.x - 32;
+		throw_dynamite(position, vector2d(-1, 0));
+	}
+	return;
+}
+
+

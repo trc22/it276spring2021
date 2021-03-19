@@ -20,6 +20,7 @@ typedef struct Entity_s
 	SDL_Rect   collisionBox;
 	SDL_Rect   collisionBoxBody;
 	int			type;
+	int			duration;
     float       frame;
     float       frameRate;
     int         frameCount;
