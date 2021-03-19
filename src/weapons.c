@@ -67,26 +67,26 @@ Entity *throw_dynamite(Vector2D origin, Vector2D velocity)
 	ent->think = throw_think;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
-	ent->type = 5; //Bullet
+	ent->type = 7; //dynamite
 	ent->velocity = velocity;
 	ent->_touchingWall = false;
-	ent->duration = 80;
+	ent->duration = 100;
 	return ent;
 }
 
 void throw_think(Entity *self)
 {
 	self->velocity.x += self->velocity.x * 0.025;
-	if (self->duration > 40)
+	if (self->duration > 50)
 		self->velocity.y -= .025;
 	else
-		self->velocity.y += 0.125;
+		self->velocity.y += 0.075;
 
 	if (self->duration == 0)
 	{
 		self->position.x -= 128;
 		self->position.y -= 128;
-		create_hitbox(self->position, vector2d(256, 256), 10);
+		create_hitbox(self->position, vector2d(256, 256), 10)->type = 8; //create exploision
 		entity_free(self);
 	}
 	else
@@ -133,7 +133,6 @@ void fire_shotgun(Item *shotgun, Vector2D player_position, float player_rotation
 			fire_projectile(position, vector2d(1, 0));
 			position.y += 20;
 			fire_projectile(position, vector2d(1, 0))->rotation.z = 60;
-
 		}
 		else
 		{
