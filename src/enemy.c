@@ -51,6 +51,9 @@ void awake(Entity *enemy)
 
 void enemy_collide(Entity *self, Entity *other)
 {
-	if (other->type == 5)
+	if (other->type == 5) //If hit by bullet
+	{
 		entity_damage(self, 10);
+		entity_free(other);
+	}
 }

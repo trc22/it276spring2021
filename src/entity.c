@@ -204,7 +204,7 @@ void entity_draw(Entity *ent)
 
 Bool entity_clip(Entity *a, Entity *b)
 {
-	if (!a->_canCollide || !b->_canCollide)
+	if (!a->_canCollide || !b->_canCollide || !a->_inuse || !b->_inuse)
 		return false;
 
 	if (a == NULL || b == NULL)
