@@ -5,10 +5,7 @@ void projectile_think(Entity *self);
 void hitbox_think (Entity *self);
 void throw_think(Entity *self);
 
-void projectile_collide(Entity *self, Entity *other);
-void hitbox_collide(Entity *self, Entity *other);
-void throw_collide(Entity *self, Entity *other);
-
+void explosion_collide(Entity *self, Entity *other);
 
 Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 {
@@ -19,7 +16,6 @@ Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;
 	ent->think = projectile_think;
-	ent->collide = projectile_collide;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
 	ent->type = 5; //Bullet
@@ -37,15 +33,6 @@ void projectile_think(Entity *self)
 		entity_free(self);
 }
 
-void projectile_collide(Entity *self, Entity *other)
-{
-	if (other->type == 2)
-	{
-		entity_damage(other, 10);
-		entity_free(self);
-	}
-}
-
 Entity *create_hitbox(Vector2D origin, Vector2D size, int duration)
 {
 	Entity *ent;
@@ -55,7 +42,6 @@ Entity *create_hitbox(Vector2D origin, Vector2D size, int duration)
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;
 	ent->think = hitbox_think;
-	ent->collide = hitbox_collide;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
 	ent->type = 6; //hitbox
@@ -73,11 +59,6 @@ void hitbox_think(Entity *self)
 		self->duration--;
 }
 
-void hitbox_collide(Entity *self, Entity *other)
-{
-	slog("collide");
-}
-
 Entity *throw_dynamite(Vector2D origin, Vector2D velocity)
 {
 	Entity *ent;
@@ -93,6 +74,7 @@ Entity *throw_dynamite(Vector2D origin, Vector2D velocity)
 	ent->velocity = velocity;
 	ent->_touchingWall = false;
 	ent->duration = 100;
+	ent->_canCollide = true;
 	return ent;
 }
 
@@ -108,12 +90,38 @@ void throw_think(Entity *self)
 	{
 		self->position.x -= 128;
 		self->position.y -= 128;
-		create_hitbox(self->position, vector2d(256, 256), 10)->type = 8; //create exploision
 		entity_free(self);
+		create_explosion(self->position, vector2d(256, 256), 10); //create exploision
+		return;
 	}
 	else
 		self->duration--;
 }
+
+Entity *create_explosion(Vector2D origin, Vector2D size, int duration)
+{
+	Entity *ent;
+	ent = entity_new();
+	ent->sprite = gf2d_sprite_load_all("images/hitbox_visible1.png", size.x, size.y, 1);
+	vector2d_copy(ent->position, origin);
+	ent->frameRate = 0.1;
+	ent->frameCount = 1;
+	ent->think = hitbox_think;
+	ent->rotation.x = 64;
+	ent->rotation.y = 64;
+	ent->type = 8; //hitbox
+	ent->_touchingWall = false;
+	ent->duration = duration;
+	ent->_canCollide = true;
+	ent->collide = explosion_collide;
+	return ent;
+}
+
+void explosion_collide(Entity *self, Entity *other)
+{
+	slog("explosion");
+}
+
 
 
 void fire_pistol(Item *pistol, Vector2D player_position, float player_rotation)
@@ -220,6 +228,8 @@ void fire_dynamite(Item *dynamite, Vector2D player_position, float player_rotati
 		throw_dynamite(position, vector2d(-1, 0));
 	}
 	return;
+
 }
+
 
 

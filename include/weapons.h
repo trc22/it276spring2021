@@ -9,6 +9,8 @@ Entity *fire_projectile(Vector2D origin, Vector2D velocity);
 
 Entity *create_hitbox(Vector2D origin, Vector2D size, int duration);
 
+Entity *create_explosion(Vector2D origin, Vector2D size, int duration);
+
 void reload_weapon(Item *weapon);
 
 void fire_pistol(Item *pistol, Vector2D player_position, float player_rotation);

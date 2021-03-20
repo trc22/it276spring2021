@@ -100,7 +100,6 @@ void entity_manager_think_entities()
 void entity_manager_draw_entities()
 {
     int i;
-	int j;
     if (entity_manager.entity_list == NULL)
     {
         slog("entity system does not exist");
