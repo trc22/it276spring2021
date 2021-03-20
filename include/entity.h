@@ -12,6 +12,7 @@ typedef struct Entity_s
 	Bool		_canJump;
 	Bool		_isJumping;
 	Bool		_touchingWall;
+	Bool		_canCollide;
     Vector2D    position;
     Vector2D    velocity;
 	Vector2D	last_collision;
@@ -21,6 +22,8 @@ typedef struct Entity_s
 	SDL_Rect   collisionBoxBody;
 	int			type;
 	int			duration;
+	int			health;
+	int			collisionTimer;
     float       frame;
     float       frameRate;
     int         frameCount;
@@ -28,6 +31,7 @@ typedef struct Entity_s
     void      (*think)(struct Entity_s *self);
     void      (*draw)(struct Entity_s *self);
     void      (*free)(struct Entity_s *self);
+	void	  (*collide)(struct Entity_s *self, struct Entity_s *other);
     void       *data;
 }Entity;
 

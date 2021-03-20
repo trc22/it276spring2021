@@ -57,6 +57,13 @@ void entity_update(Entity *self)
     if (self->update)self->update(self);
 }
 
+void entity_collide(Entity *self, Entity *other)
+{
+	if (!self || !other) return;
+	//Custom collide function:
+	if (self->collide)self->collide(self, other);
+}
+
 void entity_manager_update_entities()
 {
     int i;
@@ -107,7 +114,8 @@ void entity_manager_draw_entities()
 		if (&entity_manager.entity_list[i] != NULL && &entity_manager.entity_list[(i + 1)] != NULL)
 		{
 			if (entity_clip(&entity_manager.entity_list[i], &entity_manager.entity_list[(i + 1)]))
-				slog("Collision");
+				entity_collide(&entity_manager.entity_list[i], & entity_manager.entity_list[(i + 1)]);
+				
 		}
     }
 
@@ -196,6 +204,9 @@ void entity_draw(Entity *ent)
 
 Bool entity_clip(Entity *a, Entity *b)
 {
+	if (!a->_canCollide || !b->_canCollide)
+		return false;
+
 	if (a == NULL || b == NULL)
 	{
 		slog("Cannot collide with null entities");

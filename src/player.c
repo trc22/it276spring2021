@@ -9,6 +9,7 @@
 
 void player_update(Entity *self);
 void player_think(Entity *self);
+void player_collide(Entity *self, Entity *other);
 
 Vector2D player_position;
 Entity *player;
@@ -42,14 +43,18 @@ Entity *player_spawn(Vector2D position)
     ent->frameCount = 16;
     ent->update = player_update;
     ent->think = player_think;
+	ent->collide = player_collide;
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->type = 0; //Type 0 = player
 	//ent->last_collision.x = 0;
 	//ent->last_collision.y = 0;
+	ent->health = 100;
 	ent->_canJump = false;
 	player = ent;
 	ent->_touchingWall = false;
+	ent->_canCollide = true;
+	ent->collisionTimer = 100; //using this for collisions
 
 	//init timers
 	jumpTimer = 25;
@@ -170,13 +175,39 @@ void player_think(Entity *self)
 		inventoryTimer = 0;
 	}
 
+	if (keys[SDL_SCANCODE_R])
+	{
+		slog("player pos: %f, %f", player_get_position().x, player_get_position().y);
+	}
+
+
 	
 	update_timers();
 	if(cycleTimer != 35)
 		cycleTimer++;
 	if (inventoryTimer != 35)
 		inventoryTimer++;
+	if (self->collisionTimer != 100)
+		self->collisionTimer++;
+	else
+		self->_canCollide = true;
 }
+
+void player_collide(Entity *self, Entity *other)
+{
+	if (other->type == 2)
+	{
+		player->health -= 10;
+		player->velocity.y -= 20;
+		if (other->position.x > self->position.x)
+			player->position.x -= 200;
+		else
+			player->position.x += 200;
+	}
+	self->collisionTimer = 0;
+	self->_canCollide = false;
+}
+
 
 void use_item(Item *item)
 {

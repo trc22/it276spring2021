@@ -13,7 +13,7 @@
 #include "player.h"
 #include "level.h"
 #include "overlay.h"
-
+#include "enemy.h"
 
 
 int main(int argc, char * argv[])
@@ -55,6 +55,7 @@ int main(int argc, char * argv[])
     level = level_load("levels/exampleLevel.json");
 	init_overlay();
     player_spawn(vector2d(600, 600));
+	spawn_enemy_regular(vector2d(2274, 1697));
     /*main game loop*/
     while(!done)
     {
