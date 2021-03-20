@@ -22,18 +22,26 @@ Entity *spawn_enemy_regular(Vector2D position)
 	ent->position = position;
 	ent->think = enemy_think_regular;
 	ent->collide = enemy_collide;
+	ent->collisionTimer = 15;
 	ent->_canCollide = true;
 	return ent;
 }
 
 void enemy_think_regular(Entity *self)
 {
-	if (self->position.x - get_player()->position.x < 200)
+	if (self->position.x - get_player()->position.x < 500)
 	{
 		awake(self);
 	}
 	else
 		asleep(self);
+	if (self->collisionTimer == 15)
+		self->_canCollide = true;
+	else
+	{
+		self->_canCollide = false;
+		self->collisionTimer++;
+	}
 }
 
 void asleep(Entity *enemy)
@@ -55,5 +63,13 @@ void enemy_collide(Entity *self, Entity *other)
 	{
 		entity_damage(self, 10);
 		entity_free(other);
+		return;
 	}
+	if (other->type == 6) //If hit by hitbox 
+	{
+		entity_damage(self, 5);
+		self->collisionTimer = 0;
+		return;
+	}
+
 }

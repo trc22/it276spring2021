@@ -55,11 +55,13 @@ Entity *create_hitbox(Vector2D origin, Vector2D size, int duration)
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;
 	ent->think = hitbox_think;
+	ent->collide = hitbox_collide;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
 	ent->type = 6; //hitbox
 	ent->_touchingWall = false;
 	ent->duration = duration;
+	ent->_canCollide = true;
 	return ent;
 }
 
@@ -69,6 +71,11 @@ void hitbox_think(Entity *self)
 		entity_free(self);
 	else
 		self->duration--;
+}
+
+void hitbox_collide(Entity *self, Entity *other)
+{
+	slog("collide");
 }
 
 Entity *throw_dynamite(Vector2D origin, Vector2D velocity)
