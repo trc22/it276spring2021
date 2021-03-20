@@ -85,4 +85,6 @@ Bool entity_clip(Entity *a, Entity *b);
 
 void entity_clip_all();
 
+void entity_damage(Entity *target, int damage);
+
 #endif

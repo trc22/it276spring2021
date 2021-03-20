@@ -260,6 +260,14 @@ Bool entity_clip(Entity *a, Entity *b)
 	return true;
 }
 
+void entity_damage(Entity *target, int damage)
+{
+	target->health -= damage;
+	if (target->health <= 0)
+	{
+		entity_free(target);
+	}
+}
 
 
 /*eol@eof*/

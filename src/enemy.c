@@ -3,6 +3,8 @@
 #include "player.h"
 
 void enemy_think_regular(Entity *self);
+void enemy_collide(Entity *self, Entity *other);
+
 
 Entity *spawn_enemy_regular(Vector2D position)
 {
@@ -16,9 +18,10 @@ Entity *spawn_enemy_regular(Vector2D position)
 	ent->sprite = ent->sprite = gf2d_sprite_load_all("images/enemy.png", 44, 60, 1);
 	vector2d_copy(ent->position, position);
 	ent->type = 2; //enemy
-	ent->health = 50;
+	ent->health = 10;
 	ent->position = position;
 	ent->think = enemy_think_regular;
+	ent->collide = enemy_collide;
 	ent->_canCollide = true;
 	return ent;
 }
@@ -46,7 +49,8 @@ void awake(Entity *enemy)
 		enemy->velocity.x = -1;
 }
 
-void die(Entity *enemy)
+void enemy_collide(Entity *self, Entity *other)
 {
-	entity_free(enemy);
+	if (other->type == 5)
+		entity_damage(self, 10);
 }

@@ -5,6 +5,10 @@ void projectile_think(Entity *self);
 void hitbox_think (Entity *self);
 void throw_think(Entity *self);
 
+void projectile_collide(Entity *self, Entity *other);
+void hitbox_collide(Entity *self, Entity *other);
+void throw_collide(Entity *self, Entity *other);
+
 
 Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 {
@@ -15,11 +19,13 @@ Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;
 	ent->think = projectile_think;
+	ent->collide = projectile_collide;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
 	ent->type = 5; //Bullet
 	ent->velocity = velocity;
 	ent->_touchingWall = false;
+	ent->_canCollide = true;
 	return ent;
 }
 
@@ -29,6 +35,15 @@ void projectile_think(Entity *self)
 	self->velocity.x += (self->velocity.x * .25);
 	if (!camera_rect_on_screen(gfc_sdl_rect(self->position.x, self->position.y, self->sprite->frame_w, self->sprite->frame_h)))
 		entity_free(self);
+}
+
+void projectile_collide(Entity *self, Entity *other)
+{
+	if (other->type == 2)
+	{
+		entity_damage(other, 10);
+		entity_free(self);
+	}
 }
 
 Entity *create_hitbox(Vector2D origin, Vector2D size, int duration)
