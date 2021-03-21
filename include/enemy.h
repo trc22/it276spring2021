@@ -11,4 +11,6 @@ void awake(Entity *enemy);
 
 void die(Entity *enemy);
 
+void enemy_phyiscs(Entity *enemy);
+
 #endif

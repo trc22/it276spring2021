@@ -1,10 +1,10 @@
 #include <stdlib.h>
-#include <SDL_rect.h>
 
 #include "simple_logger.h"
 
 #include "camera.h"
 #include "entity.h"
+#include "level.h"
 
 typedef struct
 {
@@ -100,6 +100,7 @@ void entity_manager_think_entities()
 void entity_manager_draw_entities()
 {
     int i;
+	int j;
     if (entity_manager.entity_list == NULL)
     {
         slog("entity system does not exist");
@@ -110,11 +111,13 @@ void entity_manager_draw_entities()
     {
         if (entity_manager.entity_list[i]._inuse == 0)continue;
 		entity_draw(&entity_manager.entity_list[i]);
-		if (&entity_manager.entity_list[i] != NULL && &entity_manager.entity_list[(i + 1)] != NULL)
+		for (j = 0; j < entity_manager.max_entities; j++)
 		{
-			if (entity_clip(&entity_manager.entity_list[i], &entity_manager.entity_list[(i + 1)]))
-				entity_collide(&entity_manager.entity_list[i], & entity_manager.entity_list[(i + 1)]);
-				
+			if (&entity_manager.entity_list[i] != NULL && &entity_manager.entity_list[j] != NULL && &entity_manager.entity_list[i] != &entity_manager.entity_list[j])
+			{
+				if (entity_clip(&entity_manager.entity_list[i], &entity_manager.entity_list[j]))
+					entity_collide(&entity_manager.entity_list[i], &entity_manager.entity_list[j]);
+			}
 		}
     }
 
@@ -196,6 +199,8 @@ void entity_draw(Entity *ent)
 		ent->collisionBoxBody = gfc_sdl_rect(ent->position.x + 10, ent->position.y, ent->sprite->frame_w - 10, ent->sprite->frame_h / 2);
 		ent->collisionBox = gfc_sdl_rect(ent->position.x + 50, ent->position.y, ent->sprite->frame_w - 100, ent->sprite->frame_h  - 5);
 	}
+	else if (ent->type == 2)
+		ent->collisionBox = gfc_sdl_rect(ent->position.x - 10, ent->position.y, ent->sprite->frame_w + 10, ent->sprite->frame_h);
 	else
 		ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
 	
@@ -268,5 +273,21 @@ void entity_damage(Entity *target, int damage)
 	}
 }
 
+void enemy_physics(SDL_Rect tile)
+{
+	int i;
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i].type != 2 || !entity_manager.entity_list[i]._inuse)
+			continue;
+		if (tile_collisions(entity_manager.entity_list[i].collisionBox, tile))
+		{
+			entity_manager.entity_list[i]._touchingTile = true;
+			entity_manager.entity_list[i].last_collision.x = tile.x;
+			entity_manager.entity_list[i].last_collision.y = tile.y;
+
+		}
+	}
+}
 
 /*eol@eof*/

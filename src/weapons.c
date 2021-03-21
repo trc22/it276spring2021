@@ -5,8 +5,6 @@ void projectile_think(Entity *self);
 void hitbox_think (Entity *self);
 void throw_think(Entity *self);
 
-void explosion_collide(Entity *self, Entity *other);
-
 Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 {
 	Entity *ent;
@@ -113,15 +111,8 @@ Entity *create_explosion(Vector2D origin, Vector2D size, int duration)
 	ent->_touchingWall = false;
 	ent->duration = duration;
 	ent->_canCollide = true;
-	ent->collide = explosion_collide;
 	return ent;
 }
-
-void explosion_collide(Entity *self, Entity *other)
-{
-	slog("explosion");
-}
-
 
 
 void fire_pistol(Item *pistol, Vector2D player_position, float player_rotation)

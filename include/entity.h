@@ -1,9 +1,12 @@
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
+#include <SDL_rect.h>
+
 #include "gfc_types.h"
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
+
 
 typedef struct Entity_s
 {
@@ -86,5 +89,7 @@ Bool entity_clip(Entity *a, Entity *b);
 void entity_clip_all();
 
 void entity_damage(Entity *target, int damage);
+
+void enemy_physics(SDL_Rect tile);
 
 #endif

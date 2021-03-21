@@ -198,8 +198,9 @@ void player_collide(Entity *self, Entity *other)
 {
 	if (other->type == 2)
 	{
+		slog("touching enemy!");
 		entity_damage(self, 10);
-		player->velocity.y -= 20;
+		player->position.y -= 100;
 		if (other->position.x > self->position.x)
 			player->position.x -= 200;
 		else

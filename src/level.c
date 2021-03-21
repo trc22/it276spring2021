@@ -129,7 +129,6 @@ Level *level_load(const char *filename)
     level->levelSize.y = level->levelHeight * level->tileHeight;
     slog("map width: %f, with %i tiles wide, each %i pixels wide", level->levelSize.x, level->levelWidth,level->tileWidth);
     slog("map height: %f, with %i tiles high, each %i pixels tall", level->levelSize.y, level->levelHeight, level->tileHeight);
-    
     sj_free(json);
     return level;
 }
@@ -245,6 +244,9 @@ void level_draw(Level *level)
 			get_player()->last_collision.x = collisionBox.x;
 			get_player()->last_collision.y = collisionBox.y;
 		}
+
+		enemy_physics(collisionBox);
+
 	}
 }
 

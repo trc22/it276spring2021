@@ -25,6 +25,7 @@ Entity *spawn_enemy_regular(Vector2D position)
 	ent->collide = enemy_collide;
 	ent->collisionTimer = 15;
 	ent->_canCollide = true;
+	ent->_touchingTile = false;
 	return ent;
 }
 
@@ -53,14 +54,34 @@ void asleep(Entity *enemy)
 void awake(Entity *enemy)
 {
 	if (get_player()->position.x > enemy->position.x)
+	{
 		enemy->velocity.x = 1;
+		enemy->rotation.y = 0;
+	}
 	else
+	{
 		enemy->velocity.x = -1;
+		enemy->rotation.y = 180;
+	}
+
+	if (!enemy->_touchingTile)
+		enemy->velocity.y = 1;
+	else
+		enemy->velocity.y = 0;
 }
+
+void enemy_phyiscs(Entity *enemy)
+{
+
+}
+
 
 void enemy_collide(Entity *self, Entity *other)
 {
-	slog("collision");
+	if (other->type == 0)
+	{
+		slog("touching player");
+	}
 	if (other->type == 5) //If hit by bullet
 	{
 		entity_damage(self, 10);
