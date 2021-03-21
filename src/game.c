@@ -15,7 +15,7 @@
 #include "overlay.h"
 #include "enemy.h"
 #include "pickup.h"
-
+#include "save.h"
 
 int main(int argc, char * argv[])
 {
@@ -58,6 +58,9 @@ int main(int argc, char * argv[])
     player_spawn(vector2d(600, 600));
 	spawn_enemy_regular(vector2d(2274, 1720));
 	spawn_pickup(vector2d(2200, 1720), 7);
+
+	new_save();
+
     /*main game loop*/
     while(!done)
     {
