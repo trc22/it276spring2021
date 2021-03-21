@@ -178,7 +178,7 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_X])
 	{
-		drop_item(current_item, vector2d(player->position.x - 100, player->position.y));
+		drop_item(current_item, vector2d(player->position.x - 100, player->position.y + 50));
 	}
 
 	if (keys[SDL_SCANCODE_R])
