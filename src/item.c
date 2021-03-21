@@ -232,4 +232,3 @@ void update_timers()
 			item->timer++;
 	}
 }
-

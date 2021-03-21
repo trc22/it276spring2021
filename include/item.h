@@ -4,6 +4,8 @@
 #include "gfc_types.h"
 #include "simple_json.h"
 
+#include "entity.h"
+
 
 typedef struct Item_s
 {
@@ -47,5 +49,6 @@ Item *search_inventory(int id);
 Bool handle_ammo(Item *item);
 
 void check_empty(Item *item);
+
 
 #endif

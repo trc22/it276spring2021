@@ -6,6 +6,7 @@
 #include "gfc_types.h"
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
+#include "item.h"
 
 
 typedef struct Entity_s
@@ -27,6 +28,7 @@ typedef struct Entity_s
 	int			duration;
 	int			health;
 	int			collisionTimer;
+	int			itemID;
     float       frame;
     float       frameRate;
     int         frameCount;

@@ -206,6 +206,13 @@ void player_collide(Entity *self, Entity *other)
 		else
 			player->position.x += 200;
 	}
+
+	if (other->type == 11)
+	{
+		inventory_insert(get_item_by_id(other->itemID));
+		entity_free(other);
+		return;
+	}
 	self->collisionTimer = 0;
 	self->_canCollide = false;
 }
