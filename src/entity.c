@@ -283,9 +283,9 @@ void enemy_physics(SDL_Rect tile)
 		if (tile_collisions(entity_manager.entity_list[i].collisionBox, tile))
 		{
 			entity_manager.entity_list[i]._touchingTile = true;
+			entity_manager.entity_list[i].velocity.y = 0;
 			entity_manager.entity_list[i].last_collision.x = tile.x;
 			entity_manager.entity_list[i].last_collision.y = tile.y;
-
 		}
 	}
 }
