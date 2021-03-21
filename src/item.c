@@ -1,5 +1,6 @@
 #include "simple_logger.h"
 #include "item.h"
+#include "pickup.h"
 
 typedef struct
 {
@@ -231,4 +232,15 @@ void update_timers()
 		if (item->timer != item->timerMax)
 			item->timer++;
 	}
+}
+
+void drop_item(Item *item, Vector2D position)
+{
+	if (item->itemID == NULL || !item)
+	{
+		slog("No item to drop");
+		return;
+	}
+	spawn_pickup(position, item->itemID)->itemQuantity = item->quantity;
+	item_free(item);
 }

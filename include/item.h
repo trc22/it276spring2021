@@ -50,5 +50,7 @@ Bool handle_ammo(Item *item);
 
 void check_empty(Item *item);
 
+void drop_item(Item *item, Vector2D position);
+
 
 #endif

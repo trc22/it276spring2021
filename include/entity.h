@@ -29,6 +29,7 @@ typedef struct Entity_s
 	int			health;
 	int			collisionTimer;
 	int			itemID;
+	int			itemQuantity;
     float       frame;
     float       frameRate;
     int         frameCount;

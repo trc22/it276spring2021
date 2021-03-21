@@ -16,6 +16,7 @@ Entity *spawn_pickup(Vector2D position, int id)
 
 	ent->type = 11;
 	ent->itemID = id;
+	ent->itemQuantity = NULL;
 	ent->_canCollide = true;
 
 	return ent;

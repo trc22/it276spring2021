@@ -176,6 +176,11 @@ void player_think(Entity *self)
 		inventoryTimer = 0;
 	}
 
+	if (keys[SDL_SCANCODE_X])
+	{
+		drop_item(current_item, vector2d(player->position.x - 100, player->position.y));
+	}
+
 	if (keys[SDL_SCANCODE_R])
 	{
 		slog("player pos: %f, %f", player_get_position().x, player_get_position().y);
