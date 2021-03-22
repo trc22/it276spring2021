@@ -232,7 +232,7 @@ void player_collide(Entity *self, Entity *other)
 
 	if (keys[SDL_SCANCODE_E])
 	{
-		if (other->type == 22)
+		if (other->type == 21 || other->type == 22 ) //if button or door
 		{
 			other->_usable = true;
 			other->collide(other, self);

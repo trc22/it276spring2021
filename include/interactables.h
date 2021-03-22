@@ -3,11 +3,9 @@
 
 #include "entity.h"
 
-Entity *spawn_door(Vector2D position);
+Entity *spawn_door(Vector2D position, const char *destination);
 
-void door();
-
-void lever();
+Entity *spawn_button(Vector2D position, const char *destination);
 
 
 #endif
