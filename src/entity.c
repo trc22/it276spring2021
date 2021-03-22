@@ -290,4 +290,11 @@ void enemy_physics(SDL_Rect tile)
 	}
 }
 
+void free_all_entities()
+{
+	int i;
+	for (i = 0; i < entity_manager.max_entities; i++)
+		entity_free(&entity_manager.entity_list[i]);
+	return;
+}
 /*eol@eof*/

@@ -53,13 +53,12 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-    level = level_load("levels/exampleLevel.json");
+	level = level_load("levels/exampleLevel.json", vector2d(600, 600));
 	init_overlay();
-    player_spawn(vector2d(600, 600));
 	spawn_enemy_regular(vector2d(2274, 1720));
 	spawn_pickup(vector2d(2200, 1720), 7);
-
-	load_save("saves/save.json");
+	spawn_door(vector2d(1800, 1720), "levels/exampleLevel.json");
+	//load_save("saves/save.json");
 
     /*main game loop*/
     while(!done)

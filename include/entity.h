@@ -17,6 +17,7 @@ typedef struct Entity_s
 	Bool		_isJumping;
 	Bool		_touchingWall;
 	Bool		_canCollide;
+	Bool		_usable;
     Vector2D    position;
     Vector2D    velocity;
 	Vector2D	last_collision;
@@ -33,6 +34,7 @@ typedef struct Entity_s
     float       frame;
     float       frameRate;
     int         frameCount;
+	const char	*destination;
     void      (*update)(struct Entity_s *self);
     void      (*think)(struct Entity_s *self);
     void      (*draw)(struct Entity_s *self);
@@ -94,5 +96,7 @@ void entity_clip_all();
 void entity_damage(Entity *target, int damage);
 
 void enemy_physics(SDL_Rect tile);
+
+void free_all_entities();
 
 #endif

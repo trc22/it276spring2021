@@ -159,11 +159,6 @@ void player_think(Entity *self)
 		cycleTimer = 0;
 	}
 
-	if (keys[SDL_SCANCODE_E])
-	{
-		//interact
-	}
-
 	//Use item
 	if (keys[SDL_SCANCODE_F])
 	{
@@ -201,6 +196,10 @@ void player_think(Entity *self)
 
 void player_collide(Entity *self, Entity *other)
 {
+	const Uint8 *keys;
+	if (!self)return;
+	keys = SDL_GetKeyboardState(NULL);
+
 	if (other->type == 2)
 	{
 		slog("touching enemy!");
@@ -218,6 +217,16 @@ void player_collide(Entity *self, Entity *other)
 		entity_free(other);
 		return;
 	}
+
+	if (keys[SDL_SCANCODE_E])
+	{
+		if (other->type == 22)
+		{
+			other->_usable = true;
+			other->collide(other, self);
+		}
+	}
+
 	self->collisionTimer = 0;
 	self->_canCollide = false;
 }

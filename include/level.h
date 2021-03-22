@@ -44,7 +44,7 @@ Level *level_new();
  * @param filename the file to load
  * @return NULL on error (See the logs) a loaded level otherwise
  */
-Level *level_load(const char *filename);
+Level *level_load(const char *filename, Vector2D playerSpawn);
 
 /**
  * @brief free up a previously loaded level
@@ -66,5 +66,9 @@ void level_update(Level *level);
 void level_draw(Level *level);
 
 Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox);
+
+void level_transition(Level *level, Entity *door);
+
+Level *get_current_level();
 
 #endif

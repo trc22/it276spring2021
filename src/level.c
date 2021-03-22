@@ -8,6 +8,8 @@
 
 #include "player.h"
 
+Level *currentLevel;
+
 Level *level_new()
 {
     Level *level;
@@ -21,7 +23,7 @@ Level *level_new()
     return level;
 }
 
-Level *level_load(const char *filename)
+Level *level_load(const char *filename, Vector2D playerSpawn)
 {
     const char *string;
     Level *level;
@@ -130,6 +132,8 @@ Level *level_load(const char *filename)
     slog("map width: %f, with %i tiles wide, each %i pixels wide", level->levelSize.x, level->levelWidth,level->tileWidth);
     slog("map height: %f, with %i tiles high, each %i pixels tall", level->levelSize.y, level->levelHeight, level->tileHeight);
     sj_free(json);
+	currentLevel = level;
+	player_spawn(playerSpawn);
     return level;
 }
 
@@ -285,6 +289,21 @@ Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox)
 		return false;
 	}
 	return true;
+}
+
+void level_transition(Level *level, Entity *door)
+{
+	free_all_entities();
+	slog("freed all ents");
+	free(level);
+	slog("freed level");
+	level_load(door->destination, vector2d(600, 600));
+//	slog("loaded new level");
+}
+
+Level *get_current_level()
+{
+	return currentLevel;
 }
 
 /*file footer*/
