@@ -52,6 +52,7 @@ void load_all_items(Uint32 max_items)
 	item_load(true, "flashlight", 2, -1, -1, 25, false, 0);
 	item_load(true, "climbing gear", 11, -1, -1, 100, false, 0);
 	item_load(true, "lighter", 12, 6, 6, 25, false, 0);
+	item_load(true, "tape recorder", 14, 1, 4, 200, false, 0);
 
 }
 

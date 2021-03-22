@@ -46,7 +46,7 @@ void new_save()
 
 
 	sj_free(json);
-	sj_object_free(output);
+	//sj_object_free(output);
 }
 
 Bool load_save(const char *filename)

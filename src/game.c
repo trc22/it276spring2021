@@ -60,7 +60,7 @@ int main(int argc, char * argv[])
 	spawn_pickup(vector2d(300, 1720), 3);
 	spawn_door(vector2d(1800, 1720), "levels/exampleLevel.json");
 	//new_save();
-	load_save("saves/save.json");
+	//load_save("saves/save.json");
 
     /*main game loop*/
     while(!done)

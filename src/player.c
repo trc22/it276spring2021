@@ -6,6 +6,7 @@
 
 #include "overlay.h"
 #include "weapons.h"
+#include "save.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -32,7 +33,7 @@ Entity *player_spawn(Vector2D position)
 	inventory_insert(get_item_by_id(0));
 	check_empty(get_current_item(0));
 	inventory_insert(get_item_by_id(1));
-	inventory_insert(get_item_by_id(2));
+	inventory_insert(get_item_by_id(14));
 	inventory_insert(get_item_by_id(12));
 	inventory_insert(get_item_by_id(7));
 	inventory_insert(get_item_by_id(13));
@@ -280,6 +281,10 @@ void use_item(Item *item)
 			break;
 		case 13: //knife
 			fire_knife(item, player->position, player->rotation.z);
+			break;
+		case 14: //Tape recorder
+			check_empty(item); //Check empty before saving;
+			new_save();
 			break;
 		default:
 			break;
