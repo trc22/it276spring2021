@@ -12,11 +12,14 @@ void player_update(Entity *self);
 void player_think(Entity *self);
 void player_collide(Entity *self, Entity *other);
 
+void player_load_save(const char *filename);
+
+
 Vector2D player_position;
 Entity *player;
 Item *current_item;
 
-int jumpTimer, cycleTimer, inventoryTimer;
+int jumpTimer, cycleTimer, inventoryTimer, loadTimer;
 int inventoryPos;
 
 Entity *player_spawn(Vector2D position)
@@ -62,6 +65,7 @@ Entity *player_spawn(Vector2D position)
 	jumpTimer = 25;
 	cycleTimer = 35;
 	inventoryTimer = 35;
+	loadTimer = 200;
 
     return ent;
 }
@@ -183,12 +187,19 @@ void player_think(Entity *self)
 	}
 
 
+	if (keys[SDL_SCANCODE_L] && loadTimer == 200)
+	{
+		player_load_save("saves/save.json");
+		loadTimer = 0;
+	}
 	
 	update_timers();
 	if(cycleTimer != 35)
 		cycleTimer++;
 	if (inventoryTimer != 35)
 		inventoryTimer++;
+	if (loadTimer != 200)
+		loadTimer++;
 	if (self->collisionTimer != 100)
 		self->collisionTimer++;
 	else
@@ -263,6 +274,8 @@ void use_item(Item *item)
 		{
 		case 1:
 			slog("Using pizza, only %i left", item->quantity);
+			player->health += 20;
+			slog("Player health is now: %i", player->health);
 			break;
 		case 2: //Use light
 			toggle_light();
@@ -325,6 +338,11 @@ Vector2D player_get_position()
 int player_get_current_item()
 {
 	return inventoryPos;
+}
+
+void player_load_save(const char *filename)
+{
+	load_save(filename);
 }
 
 
