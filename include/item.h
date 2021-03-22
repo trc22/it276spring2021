@@ -52,5 +52,7 @@ void check_empty(Item *item);
 
 void drop_item(Item *item, Vector2D position);
 
+void clear_inventory();
+
 
 #endif

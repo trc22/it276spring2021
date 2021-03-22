@@ -59,7 +59,7 @@ int main(int argc, char * argv[])
 	spawn_enemy_regular(vector2d(2274, 1720));
 	spawn_pickup(vector2d(2200, 1720), 7);
 
-	new_save();
+	load_save("saves/save.json");
 
     /*main game loop*/
     while(!done)

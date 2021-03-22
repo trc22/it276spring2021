@@ -6,6 +6,6 @@
 
 void new_save();
 
-void load_save(const char *filename);
+Bool load_save(const char *filename);
 
 #endif

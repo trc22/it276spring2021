@@ -244,3 +244,13 @@ void drop_item(Item *item, Vector2D position)
 	spawn_pickup(position, item->itemID)->itemQuantity = item->quantity;
 	item_free(item);
 }
+
+void clear_inventory()
+{
+	int i;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		item_free(&inventory.item_list[i]);
+	}
+	return;
+}
