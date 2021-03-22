@@ -82,7 +82,16 @@ Bool load_save(const char *filename)
 
 	quantities = sj_array_get_nth(&json[0], 1);
 	slog("quantity array size: %i", sj_array_get_count(quantities));
-
+	for (i = 0; i < 6; i++)
+	{
+		tempJS = sj_array_get_nth(quantities, i);
+		string = sj_get_string_value(tempJS, i);
+		temp = a2i(string);
+		if (temp == 34008 || temp == -1)
+			continue;
+		get_current_item(i)->quantity = temp;
+		slog("Slot %i: = %i", i, temp);
+	}
 	sj_free(json);
 
 	return true;
