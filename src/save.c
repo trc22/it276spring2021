@@ -10,8 +10,9 @@ int a2i(const char *s);
 void new_save()
 {
 	int i;
-	SJson *json, *items, *quantities;
+	SJson *json, *items, *quantities, *output;
 	slog("creating new save");
+	output = sj_object_new();
 	json = sj_array_new();
 	items = sj_array_new();
 	quantities = sj_array_new();
@@ -37,11 +38,12 @@ void new_save()
 
 		sj_array_append(quantities, sj_new_int(get_current_item(i)->quantity));
 	}
-
 	sj_array_append(json, items);
 	sj_array_append(json, quantities);
+	sj_object_insert(output, "inventory", json);
 
-	sj_save(json, "saves/save.json");
+	sj_save(output, "saves/save.json");
+
 
 	sj_free(json);
 
