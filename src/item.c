@@ -254,3 +254,15 @@ void clear_inventory()
 	}
 	return;
 }
+
+Bool check_inventory(int id)
+{
+	int i;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		if (inventory.item_list[i].itemID == id)
+			return true;
+	}
+	return false;
+
+}

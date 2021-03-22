@@ -57,6 +57,7 @@ int main(int argc, char * argv[])
 	init_overlay();
 	spawn_enemy_regular(vector2d(2274, 1720));
 	spawn_pickup(vector2d(2200, 1720), 7);
+	spawn_pickup(vector2d(300, 1720), 3);
 	spawn_door(vector2d(1800, 1720), "levels/exampleLevel.json");
 	//load_save("saves/save.json");
 

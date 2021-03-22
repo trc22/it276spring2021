@@ -38,8 +38,13 @@ void door_collide(Entity *self, Entity *other)
 {
 	if (self->_usable && other->type == 0)
 	{
-		slog("using door");
-		level_transition(get_current_level(), self);
+		if (check_inventory(3)) //if player has key
+		{
+			slog("using door");
+			level_transition(get_current_level(), self);
+		}
+		else
+			slog("You need a key");
 	}
 }
 

@@ -54,5 +54,7 @@ void drop_item(Item *item, Vector2D position);
 
 void clear_inventory();
 
+Bool check_inventory(int id);
+
 
 #endif
