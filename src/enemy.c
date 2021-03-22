@@ -67,11 +67,9 @@ void awake(Entity *enemy)
 	if (!enemy->_touchingTile)
 	{
 		enemy->velocity.y = 1;
-		if (enemy->velocity.x < 0 && enemy->last_collision.x > enemy->position.x)
-			enemy->velocity.x = 0;
-		else if (enemy->velocity.x > 0 && enemy->last_collision.x < enemy->position.x)
-			enemy->velocity.x = 0;
+		enemy->velocity.x = 0;
 	}
+
 	else
 	{
 		enemy->_touchingTile = false;
