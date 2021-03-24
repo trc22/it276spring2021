@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "item.h"
 #include "pickup.h"
+#include "overlay.h"
 
 typedef struct
 {
@@ -242,6 +243,9 @@ void drop_item(Item *item, Vector2D position)
 		slog("No item to drop");
 		return;
 	}
+	if (item->itemID == 2 && get_light_on)
+		toggle_light;
+
 	spawn_pickup(position, item->itemID)->itemQuantity = item->quantity;
 	item_free(item);
 }
