@@ -108,7 +108,6 @@ void awake_small(Entity *enemy)
 		enemy->velocity.y = 1;
 		enemy->velocity.x = 0;
 	}
-
 	else
 	{
 		enemy->_touchingTile = false;
@@ -163,10 +162,9 @@ void awake_big(Entity *enemy)
 
 	if (!enemy->_touchingTile)
 	{
-		enemy->velocity.y = 2;
+		enemy->velocity.y = 1;
 		enemy->velocity.x = 0;
 	}
-
 	else
 	{
 		enemy->_touchingTile = false;
@@ -227,11 +225,11 @@ void awake_tall(Entity *enemy)
 		enemy->velocity.y = 1;
 		enemy->velocity.x = 0;
 	}
-
 	else
 	{
 		enemy->_touchingTile = false;
 	}
+
 }
 
 Entity *spawn_enemy_ranged(Vector2D position)
@@ -308,11 +306,11 @@ void awake_regular(Entity *enemy)
 		enemy->velocity.y = 1;
 		enemy->velocity.x = 0;
 	}
-
 	else
 	{
 		enemy->_touchingTile = false;
 	}
+
 }
 
 void enemy_phyiscs(Entity *enemy)

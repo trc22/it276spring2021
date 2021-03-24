@@ -40,6 +40,7 @@ Entity *player_spawn(Vector2D position)
 	inventory_insert(get_item_by_id(2));
 	inventory_insert(get_item_by_id(9));
 	inventory_insert(get_item_by_id(5));
+	inventory_insert(get_item_by_id(7));
 	current_item = cycle_items();
 
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
@@ -221,19 +222,21 @@ void player_collide(Entity *self, Entity *other)
 			player->velocity.x += (player->velocity.x * -1);
 	}
 
-	if (other->type == 11)
-	{
-		inventory_insert(get_item_by_id(other->itemID));
-		entity_free(other);
-		return;
-	}
-
 	if (keys[SDL_SCANCODE_E])
 	{
 		if (other->type == 21 || other->type == 22 ) //if button or door
 		{
 			other->_usable = true;
 			other->collide(other, self);
+		}
+
+		if (other->type == 11)
+		{
+			inventory_insert(get_item_by_id(other->itemID));
+			if (!check_inventory(other->itemID))
+				return;
+
+			entity_free(other);
 		}
 	}
 
