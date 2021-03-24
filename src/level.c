@@ -7,8 +7,12 @@
 #include "level.h"
 
 #include "player.h"
+#include "enemy.h"
+#include "pickup.h"
+#include "interactables.h"
 
 void level_spawns(int levelID);
+void level_starting_items(int levelID);
 
 Level *currentLevel;
 
@@ -137,6 +141,7 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 	currentLevel = level;
 	level_spawns(levelID); //spawn all non-player entities
 	player_spawn(playerSpawn); //spawn player
+	level_starting_items(levelID); //setup player inventory
     return level;
 }
 
@@ -309,11 +314,15 @@ void level_spawns(int levelID)
 	switch (levelID)
 	{
 	case 0: //Demo level
+		
+		//Enemies
 		spawn_enemy_regular(vector2d(2274, 1720));
 		spawn_enemy_small(vector2d(2350, 1720));
 		spawn_enemy_big(vector2d(2400, 1650));
 		spawn_enemy_tall(vector2d(2450, 1700));
 		spawn_enemy_ranged(vector2d(2500, 1730));
+
+		//Pickups
 		spawn_pickup(vector2d(2200, 1720), 7);
 		spawn_pickup(vector2d(300, 1720), 3);
 		spawn_button(vector2d(600, 1700), "level_00_door");
@@ -324,6 +333,21 @@ void level_spawns(int levelID)
 		break;
 	}
 
+}
+
+void level_starting_items(int levelID)
+{
+	//Setup player inventory
+	if (levelID == 0)
+	{
+		inventory_insert(get_item_by_id(2));
+		inventory_insert(get_item_by_id(4));
+		inventory_insert(get_item_by_id(5));
+		inventory_insert(get_item_by_id(8));
+		inventory_insert(get_item_by_id(9));
+		inventory_insert(get_item_by_id(13));
+	}
+	return;
 }
 
 Level *get_current_level()
