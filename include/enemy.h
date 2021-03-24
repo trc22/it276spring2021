@@ -15,7 +15,7 @@ Entity *spawn_enemy_ranged(Vector2D position);
 
 void asleep(Entity *enemy);
 
-void awake(Entity *enemy);
+void awake_regular(Entity *enemy);
 
 void die(Entity *enemy);
 

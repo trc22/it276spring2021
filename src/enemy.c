@@ -9,6 +9,12 @@ void enemy_think_big(Entity *self);
 void enemy_think_tall(Entity *self);
 void enemy_think_ranged(Entity *self);
 
+void awake_small(Entity *enemy);
+void awake_big(Entity *enemy);
+void awake_tall(Entity *enemy);
+void awake_ranged(Entity *enemy);
+
+
 void enemy_collide(Entity *self, Entity *other);
 
 
@@ -38,7 +44,7 @@ void enemy_think_regular(Entity *self)
 {
 	if (self->position.x - get_player()->position.x < 500)
 	{
-		awake(self);
+		awake_regular(self);
 	}
 	else
 		asleep(self);
@@ -77,10 +83,35 @@ void enemy_think_small(Entity *self)
 {
 	if (self->position.x - get_player()->position.x < 300)
 	{
-		awake(self);
+		awake_small(self);
 	}
 	else
 		asleep(self);
+}
+
+void awake_small(Entity *enemy)
+{
+	if (get_player()->position.x > enemy->position.x)
+	{
+		enemy->velocity.x = 2;
+		enemy->rotation.y = 0;
+	}
+	else
+	{
+		enemy->velocity.x = -2;
+		enemy->rotation.y = 180;
+	}
+
+	if (!enemy->_touchingTile)
+	{
+		enemy->velocity.y = 1;
+		enemy->velocity.x = 0;
+	}
+
+	else
+	{
+		enemy->_touchingTile = false;
+	}
 }
 
 
@@ -110,10 +141,35 @@ void enemy_think_big(Entity *self)
 {
 	if (self->position.x - get_player()->position.x < 500)
 	{
-		awake(self);
+		awake_big(self);
 	}
 	else
 		asleep(self);
+}
+
+void awake_big(Entity *enemy)
+{
+	if (get_player()->position.x > enemy->position.x)
+	{
+		enemy->velocity.x = .5;
+		enemy->rotation.y = 0;
+	}
+	else
+	{
+		enemy->velocity.x = -.5;
+		enemy->rotation.y = 180;
+	}
+
+	if (!enemy->_touchingTile)
+	{
+		enemy->velocity.y = 2;
+		enemy->velocity.x = 0;
+	}
+
+	else
+	{
+		enemy->_touchingTile = false;
+	}
 }
 
 Entity *spawn_enemy_tall(Vector2D position)
@@ -142,10 +198,35 @@ void enemy_think_tall(Entity *self)
 {
 	if (self->position.x - get_player()->position.x < 500)
 	{
-		awake(self);
+		awake_tall(self);
 	}
 	else
 		asleep(self);
+}
+
+void awake_tall(Entity *enemy)
+{
+	if (get_player()->position.x > enemy->position.x)
+	{
+		enemy->velocity.x = .75;
+		enemy->rotation.y = 0;
+	}
+	else
+	{
+		enemy->velocity.x = -.75;
+		enemy->rotation.y = 180;
+	}
+
+	if (!enemy->_touchingTile)
+	{
+		enemy->velocity.y = 1;
+		enemy->velocity.x = 0;
+	}
+
+	else
+	{
+		enemy->_touchingTile = false;
+	}
 }
 
 Entity *spawn_enemy_ranged(Vector2D position)
@@ -166,6 +247,7 @@ Entity *spawn_enemy_ranged(Vector2D position)
 	ent->collide = enemy_collide;
 	ent->_canCollide = false;
 	ent->_touchingTile = false;
+	ent->duration = 200; //Time inbetween ranged attacks
 	return ent;
 }
 
@@ -173,18 +255,36 @@ void enemy_think_ranged(Entity *self)
 {
 	if (self->position.x - get_player()->position.x < 500)
 	{
-		awake(self);
+		awake_ranged(self);
 	}
 	else
 		asleep(self);
 }
+
+void awake_ranged(Entity *enemy)
+{
+	if (enemy->duration == 200)
+	{
+		if (get_player()->position.x > enemy->position.x)
+		{
+			fire_projectile_enemy(enemy->position, vector2d(1, 0));
+		}
+		else
+		{
+			fire_projectile_enemy(enemy->position, vector2d(-1, 0));
+		}
+		enemy->duration = 0;
+	}
+	else(enemy->duration++);
+}
+
 
 void asleep(Entity *enemy)
 {
 	enemy->velocity = vector2d(0, 0);
 }
 
-void awake(Entity *enemy)
+void awake_regular(Entity *enemy)
 {
 	if (get_player()->position.x > enemy->position.x)
 	{

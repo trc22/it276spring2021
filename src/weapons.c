@@ -2,6 +2,7 @@
 #include "weapons.h"
 
 void projectile_think(Entity *self);
+void projectile_think_enemy(Entity *self);
 void hitbox_think (Entity *self);
 void throw_think(Entity *self);
 
@@ -27,6 +28,31 @@ void projectile_think(Entity *self)
 {
 	if (!self)return;
 	self->velocity.x += (self->velocity.x * .25);
+	if (!camera_rect_on_screen(gfc_sdl_rect(self->position.x, self->position.y, self->sprite->frame_w, self->sprite->frame_h)))
+		entity_free(self);
+}
+
+Entity *fire_projectile_enemy(Vector2D origin, Vector2D velocity)
+{
+	Entity *ent;
+	ent = entity_new();
+	ent->sprite = gf2d_sprite_load_all("images/bullet.png", 8, 4, 1);
+	vector2d_copy(ent->position, origin);
+	ent->frameRate = 0.1;
+	ent->frameCount = 1;
+	ent->think = projectile_think_enemy;
+	ent->rotation.x = 64;
+	ent->rotation.y = 64;
+	ent->type = 2; //Bullet
+	ent->velocity = velocity;
+	ent->_touchingWall = false;
+	ent->_canCollide = true;
+	return ent;
+}
+
+void projectile_think_enemy(Entity *self)
+{
+	if (!self)return;
 	if (!camera_rect_on_screen(gfc_sdl_rect(self->position.x, self->position.y, self->sprite->frame_w, self->sprite->frame_h)))
 		entity_free(self);
 }

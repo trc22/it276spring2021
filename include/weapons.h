@@ -7,6 +7,8 @@
 
 Entity *fire_projectile(Vector2D origin, Vector2D velocity);
 
+Entity *fire_projectile_enemy(Vector2D origin, Vector2D velocity);
+
 Entity *create_hitbox(Vector2D origin, Vector2D size, int duration);
 
 Entity *create_explosion(Vector2D origin, Vector2D size, int duration);
