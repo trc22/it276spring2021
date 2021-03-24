@@ -29,7 +29,7 @@ Entity *spawn_door(Vector2D position, const char *destination)
 	ent->collisionTimer = 50; //using this for collisions
 	
 	ent->destination = destination;
-
+	ent->duration = 1; //target level id
 	ent->_usable = false;
 
 	return ent;

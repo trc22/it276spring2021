@@ -44,7 +44,7 @@ Level *level_new();
  * @param filename the file to load
  * @return NULL on error (See the logs) a loaded level otherwise
  */
-Level *level_load(const char *filename, Vector2D playerSpawn);
+Level *level_load(const char *filename, Vector2D playerSpawn, int levelID);
 
 /**
  * @brief free up a previously loaded level

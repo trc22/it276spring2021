@@ -8,6 +8,8 @@
 
 #include "player.h"
 
+void level_spawns(int levelID);
+
 Level *currentLevel;
 
 Level *level_new()
@@ -23,7 +25,7 @@ Level *level_new()
     return level;
 }
 
-Level *level_load(const char *filename, Vector2D playerSpawn)
+Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 {
     const char *string;
     Level *level;
@@ -133,7 +135,8 @@ Level *level_load(const char *filename, Vector2D playerSpawn)
     slog("map height: %f, with %i tiles high, each %i pixels tall", level->levelSize.y, level->levelHeight, level->tileHeight);
     sj_free(json);
 	currentLevel = level;
-	player_spawn(playerSpawn);
+	level_spawns(levelID); //spawn all non-player entities
+	player_spawn(playerSpawn); //spawn player
     return level;
 }
 
@@ -297,8 +300,30 @@ void level_transition(Level *level, Entity *door)
 	slog("freed all ents");
 	free(level);
 	slog("freed level");
-	level_load(door->destination, vector2d(600, 600));
+	level_load(door->destination, vector2d(600, 600), door->duration);
 //	slog("loaded new level");
+}
+
+void level_spawns(int levelID)
+{
+	switch (levelID)
+	{
+	case 0: //Demo level
+		spawn_enemy_regular(vector2d(2274, 1720));
+		spawn_enemy_small(vector2d(2350, 1720));
+		spawn_enemy_big(vector2d(2400, 1650));
+		spawn_enemy_tall(vector2d(2450, 1700));
+		spawn_enemy_ranged(vector2d(2500, 1730));
+		spawn_pickup(vector2d(2200, 1720), 7);
+		spawn_pickup(vector2d(300, 1720), 3);
+		spawn_button(vector2d(600, 1700), "level_00_door");
+		break;
+	case 1:
+		break;
+	default:
+		break;
+	}
+
 }
 
 Level *get_current_level()
