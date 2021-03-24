@@ -4,6 +4,11 @@
 #include "player.h"
 
 void enemy_think_regular(Entity *self);
+void enemy_think_small(Entity *self);
+void enemy_think_big(Entity *self);
+void enemy_think_tall(Entity *self);
+void enemy_think_ranged(Entity *self);
+
 void enemy_collide(Entity *self, Entity *other);
 
 
@@ -44,6 +49,134 @@ void enemy_think_regular(Entity *self)
 		self->_canCollide = false;
 		self->collisionTimer++;
 	}
+}
+
+Entity *spawn_enemy_small(Vector2D position)
+{
+	Entity *ent;
+	ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for enemy");
+		return NULL;
+	}
+	ent->sprite = ent->sprite = gf2d_sprite_load_all("images/enemy_small.png", 32, 46, 1);
+	vector2d_copy(ent->position, position);
+	ent->type = 2; //enemy
+	ent->health = 10;
+	ent->position = position;
+	ent->think = enemy_think_small;
+	ent->collide = enemy_collide;
+	ent->collisionTimer = 15;
+	ent->_canCollide = true;
+	ent->_touchingTile = false;
+	return ent;
+}
+
+void enemy_think_small(Entity *self)
+{
+	if (self->position.x - get_player()->position.x < 300)
+	{
+		awake(self);
+	}
+	else
+		asleep(self);
+}
+
+
+Entity *spawn_enemy_big(Vector2D position)
+{
+	Entity *ent;
+	ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for enemy");
+		return NULL;
+	}
+	ent->sprite = ent->sprite = gf2d_sprite_load_all("images/enemy_big.png", 128, 128, 1);
+	vector2d_copy(ent->position, position);
+	ent->type = 2; //enemy
+	ent->health = 40;
+	ent->position = position;
+	ent->think = enemy_think_big;
+	ent->collide = enemy_collide;
+	ent->collisionTimer = 15;
+	ent->_canCollide = true;
+	ent->_touchingTile = false;
+	return ent;
+}
+
+void enemy_think_big(Entity *self)
+{
+	if (self->position.x - get_player()->position.x < 500)
+	{
+		awake(self);
+	}
+	else
+		asleep(self);
+}
+
+Entity *spawn_enemy_tall(Vector2D position)
+{
+	Entity *ent;
+	ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for enemy");
+		return NULL;
+	}
+	ent->sprite = ent->sprite = gf2d_sprite_load_all("images/enemy_tall.png", 70, 96, 1);
+	vector2d_copy(ent->position, position);
+	ent->type = 2; //enemy
+	ent->health = 10;
+	ent->position = position;
+	ent->think = enemy_think_tall;
+	ent->collide = enemy_collide;
+	ent->collisionTimer = 15;
+	ent->_canCollide = true;
+	ent->_touchingTile = false;
+	return ent;
+}
+
+void enemy_think_tall(Entity *self)
+{
+	if (self->position.x - get_player()->position.x < 500)
+	{
+		awake(self);
+	}
+	else
+		asleep(self);
+}
+
+Entity *spawn_enemy_ranged(Vector2D position)
+{
+	Entity *ent;
+	ent = entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for enemy");
+		return NULL;
+	}
+	ent->sprite = ent->sprite = gf2d_sprite_load_all("images/enemy_ranged.png", 44, 62, 1);
+	vector2d_copy(ent->position, position);
+	ent->type = 2; //enemy
+	ent->health = 10;
+	ent->position = position;
+	ent->think = enemy_think_ranged;
+	ent->collide = enemy_collide;
+	ent->_canCollide = false;
+	ent->_touchingTile = false;
+	return ent;
+}
+
+void enemy_think_ranged(Entity *self)
+{
+	if (self->position.x - get_player()->position.x < 500)
+	{
+		awake(self);
+	}
+	else
+		asleep(self);
 }
 
 void asleep(Entity *enemy)
