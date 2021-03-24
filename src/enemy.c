@@ -351,4 +351,16 @@ void enemy_collide(Entity *self, Entity *other)
 		return;
 	}
 
+	if (other->type == 15) //If hit by rifle bullet
+	{
+		if (other->duration > 0)
+		{
+			other->duration--;
+			entity_damage(self, 30);
+			self->collisionTimer = 0;
+			return;
+		}
+		entity_free(other);
+	}
+
 }

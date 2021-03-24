@@ -39,8 +39,8 @@ Entity *player_spawn(Vector2D position)
 	inventory_insert(get_item_by_id(14));
 	inventory_insert(get_item_by_id(2));
 	inventory_insert(get_item_by_id(9));
-	inventory_insert(get_item_by_id(5));
-	inventory_insert(get_item_by_id(7));
+	inventory_insert(get_item_by_id(6));
+	inventory_insert(get_item_by_id(10));
 	current_item = cycle_items();
 
 	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png",128,128,16);
@@ -290,8 +290,10 @@ void use_item(Item *item)
 			break;
 		case 6: //rifle
 			fire_rifle(item, player->position, player->rotation.z);
+			break;
 		case 7: //dynamite
 			fire_dynamite(item, player->position, player->rotation.z);
+			break;
 		case 12: //lighter
 			break;
 		case 13: //knife

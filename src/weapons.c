@@ -6,6 +6,8 @@ void projectile_think_enemy(Entity *self);
 void hitbox_think (Entity *self);
 void throw_think(Entity *self);
 
+Entity *fire_projectile_rifle(Vector2D origin, Vector2D velocity);
+
 Entity *fire_projectile(Vector2D origin, Vector2D velocity)
 {
 	Entity *ent;
@@ -44,6 +46,23 @@ Entity *fire_projectile_enemy(Vector2D origin, Vector2D velocity)
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
 	ent->type = 2; //Bullet
+	ent->velocity = velocity;
+	ent->_touchingWall = false;
+	ent->_canCollide = true;
+	return ent;
+}
+
+Entity *fire_projectile_rifle(Vector2D origin, Vector2D velocity)
+{
+	Entity *ent;
+	ent = entity_new();
+	ent->sprite = gf2d_sprite_load_all("images/bullet.png", 8, 4, 1);
+	vector2d_copy(ent->position, origin);
+	ent->frameRate = 0.1;
+	ent->frameCount = 1;
+	ent->think = projectile_think;
+	ent->type = 15; //Rifle bullet
+	ent->duration = 3; //number of enemies bullet can pass through
 	ent->velocity = velocity;
 	ent->_touchingWall = false;
 	ent->_canCollide = true;
@@ -207,12 +226,12 @@ void fire_rifle(Item *rifle, Vector2D player_position, float player_rotation)
 		if (player_rotation == 90)
 		{
 			position.x = player_position.x;
-			fire_projectile(position, vector2d(1, 0));
+			fire_projectile_rifle(position, vector2d(1, 0));
 		}
 		else
 		{
 			position.x = player_position.x;
-			fire_projectile(position, vector2d(-1, 0));
+			fire_projectile_rifle(position, vector2d(-1, 0));
 		}
 	}
 	return;
