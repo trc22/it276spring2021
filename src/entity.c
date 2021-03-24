@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "level.h"
+#include "overlay.h"
 
 typedef struct
 {
@@ -178,6 +179,7 @@ void entity_draw(Entity *ent)
         if (!camera_rect_on_screen(gfc_sdl_rect(ent->position.x,ent->position.y,ent->sprite->frame_w,ent->sprite->frame_h)))
         {
             //entity is off camera, skip
+			ent->_touchingTile = true;
             return;
         }
 		
@@ -202,7 +204,7 @@ void entity_draw(Entity *ent)
 		ent->collisionBox = gfc_sdl_rect(ent->position.x + 50, ent->position.y, ent->sprite->frame_w - 100, ent->sprite->frame_h  - 5);
 	}
 	else if (ent->type == 2)
-		ent->collisionBox = gfc_sdl_rect(ent->position.x - 10, ent->position.y, ent->sprite->frame_w + 10, ent->sprite->frame_h);
+		ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
 	else
 		ent->collisionBox = gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h);
 	
@@ -271,6 +273,9 @@ void entity_damage(Entity *target, int damage)
 	target->health -= damage;
 	if (target->health <= 0)
 	{
+		if (target->type == 0 && get_light_on) //turn off light if player dies
+			toggle_light();
+
 		entity_free(target);
 	}
 }

@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
 	init_overlay();
 	spawn_enemy_regular(vector2d(2274, 1720));
 	spawn_enemy_small(vector2d(2350, 1720));
-	spawn_enemy_big(vector2d(2400, 1680));
+	spawn_enemy_big(vector2d(2400, 1650));
 	spawn_enemy_tall(vector2d(2450, 1700));
 	spawn_enemy_ranged(vector2d(2500, 1730));
 	spawn_pickup(vector2d(2200, 1720), 7);

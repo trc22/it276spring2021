@@ -37,7 +37,7 @@ void init_overlay()
 	
 	currentSlot = 0;
 
-	_isOn = true;
+	_isOn = false;
 	_showInventory = false;
 	return;
 }
@@ -45,7 +45,7 @@ void init_overlay()
 void draw_light(Vector4D alpha)
 {
 
-	if (_isOn && get_player()->_inuse && get_player() != NULL)
+	if (_isOn)
 	{
 		light_pos = vector2d((player_get_position().x - light_offset.x) - camera_get_position().x, (player_get_position().y - light_offset.y) - camera_get_position().y);
 
