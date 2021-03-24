@@ -1,3 +1,31 @@
+# Tim's readme (IT 276)
+
+Controls:
+-WASD: movement
+-SPACE: jump
+-E(hold): interact
+-F: use item
+-X: drop item
+-I show inventory
+-TAB: cycle inventory
+-L: load save
+
+Current features
+-Hacky lighting
+-Puzzle elements (door/key and lever)
+-Five weapons (pistol, shotgun, knife, dynamite, rifle)
+-Unique items (flashlight, pizza, key, ammo, tape-recorder)
+-Spooky enemies (normal, small, big, tall, ranged)
+-Fully interactable environment (very janky physics)
+-Simple UI (shows inventory, tanks framerate)
+-Full read/write (can save inventory to a json file and load it)
+-Level transitions (doors can take you to different levels)
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------
 # gameframework2d (GF2D)
 a collection of utlitity functions designed to facilitate creating 2D games with SDL2
 This project is specifically intended to function as an educational tool for my students taking 2D Game Programming.
