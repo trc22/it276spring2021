@@ -52,7 +52,11 @@ void entity_update(Entity *self)
     if (!self)return;
     // DO ANY GENERIC UPDATE CODE
 	if (self->position.y > get_current_level()->levelSize.y) //if entity is out of bounds
+	{
+		if (self->type == 0 && get_light_on) //turn off light if player is freed
+			toggle_light();
 		entity_free(self);
+	}
     vector2d_add(self->position,self->position,self->velocity);
     self->frame += self->frameRate;
     if (self->frame >= self->frameCount)self->frame = 0;
@@ -293,7 +297,7 @@ void enemy_physics(SDL_Rect tile)
 			entity_manager.entity_list[i].velocity.y = 0;
 			entity_manager.entity_list[i].last_collision.x = tile.x;
 			entity_manager.entity_list[i].last_collision.y = tile.y;
-		}
+		}	
 	}
 }
 

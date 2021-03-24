@@ -210,7 +210,7 @@ void player_think(Entity *self)
 void player_collide(Entity *self, Entity *other)
 {
 	const Uint8 *keys;
-	if (!self)return;
+	if (!self || !other)return;
 	keys = SDL_GetKeyboardState(NULL);
 
 	if (other->type == 2)
@@ -222,6 +222,15 @@ void player_collide(Entity *self, Entity *other)
 			player->velocity.x += (player->velocity.x * -1);
 	}
 
+	if (other->type == 11)
+	{
+		inventory_insert(get_item_by_id(other->itemID));
+		if (!check_inventory(other->itemID))
+			return;
+
+		entity_free(other);
+	}
+
 	if (keys[SDL_SCANCODE_E])
 	{
 		if (other->type == 21 || other->type == 22 ) //if button or door
@@ -230,14 +239,6 @@ void player_collide(Entity *self, Entity *other)
 			other->collide(other, self);
 		}
 
-		if (other->type == 11)
-		{
-			inventory_insert(get_item_by_id(other->itemID));
-			if (!check_inventory(other->itemID))
-				return;
-
-			entity_free(other);
-		}
 	}
 
 	self->collisionTimer = 0;
