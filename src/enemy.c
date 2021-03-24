@@ -88,6 +88,14 @@ void enemy_think_small(Entity *self)
 	}
 	else
 		asleep(self);
+
+	if (self->collisionTimer == 15)
+		self->_canCollide = true;
+	else
+	{
+		self->_canCollide = false;
+		self->collisionTimer++;
+	}
 }
 
 void awake_small(Entity *enemy)
@@ -112,6 +120,7 @@ void awake_small(Entity *enemy)
 	{
 		enemy->_touchingTile = false;
 	}
+
 }
 
 
@@ -145,6 +154,14 @@ void enemy_think_big(Entity *self)
 	}
 	else
 		asleep(self);
+
+	if (self->collisionTimer == 15)
+		self->_canCollide = true;
+	else
+	{
+		self->_canCollide = false;
+		self->collisionTimer++;
+	}
 }
 
 void awake_big(Entity *enemy)
@@ -205,6 +222,14 @@ void enemy_think_tall(Entity *self)
 		self->_canCollide = false;
 		asleep(self);
 	}
+
+	if (self->collisionTimer == 15)
+		self->_canCollide = true;
+	else
+	{
+		self->_canCollide = false;
+		self->collisionTimer++;
+	}
 }
 
 void awake_tall(Entity *enemy)
@@ -262,6 +287,7 @@ void enemy_think_ranged(Entity *self)
 	}
 	else
 		asleep(self);
+
 }
 
 void awake_ranged(Entity *enemy)
