@@ -37,7 +37,7 @@ Entity *player_spawn(Vector2D position)
 	check_empty(get_current_item(0));
 	inventory_insert(get_item_by_id(1));
 	inventory_insert(get_item_by_id(14));
-	inventory_insert(get_item_by_id(12));
+	inventory_insert(get_item_by_id(2));
 	inventory_insert(get_item_by_id(7));
 	inventory_insert(get_item_by_id(13));
 	current_item = cycle_items();

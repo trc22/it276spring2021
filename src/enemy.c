@@ -196,12 +196,16 @@ Entity *spawn_enemy_tall(Vector2D position)
 
 void enemy_think_tall(Entity *self)
 {
-	if (self->position.x - get_player()->position.x < 500)
+	if (self->position.x - get_player()->position.x < 500 && get_light_on())
 	{
+		self->_canCollide = true;
 		awake_tall(self);
 	}
 	else
+	{
+		self->_canCollide = false;
 		asleep(self);
+	}
 }
 
 void awake_tall(Entity *enemy)

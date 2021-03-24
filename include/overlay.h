@@ -24,4 +24,6 @@ void inventory_text();
 
 void toggle_inventory();
 
+Bool get_light_on();
+
 #endif

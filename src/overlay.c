@@ -115,3 +115,8 @@ void toggle_inventory()
 	}
 	_showInventory = true;
 }
+
+Bool get_light_on()
+{
+	return _isOn;
+}
