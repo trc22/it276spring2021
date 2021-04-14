@@ -6,6 +6,8 @@
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
+#include "gf2d_windows.h"
+#include "windows_common.h"
 
 #include "font.h"
 #include "camera.h"
