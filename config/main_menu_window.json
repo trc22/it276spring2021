@@ -1,7 +1,7 @@
 {
 "window":{
-    "color" : [255,255,255, 255],
-    "dimensions" : [0,0,600,162],
+    "color" : [100, 100, 100, 255],
+    "dimensions" : [0,0,360,260],
     "justify" : "center",
     "align" : "middle",
     "elements":
@@ -9,11 +9,11 @@
       {
         "type": "list",
         "name": "list",
-        "id" : 111,
-        "bounds": [0.01,0.01,0.99,0.99],
+        "id" : 0,
+        "bounds": [10,10,1,1],
         "color" : [255,255,255,255],
         "style": "vertical",
-        "item_size" : [0.5,42],
+        "item_size" : [100,36],
         "elements":
         [
             {
@@ -25,54 +25,35 @@
             "text":"?",
             "justify" : "center",
             "align" : "middle",
-            "style":"H1"
-            },
-            {
-            "type": "entry",
-            "name": "entry",
-            "id" : 2,
-            "bounds": [0,0,0.99,40],
-            "color" : [255,255,255,255],
-            "label" :
-                {
-                "type": "label",
-                "name": "entry_l",
-                "id" : 21,
-                "bounds": [0.01,0,0.98,1],
-                "color" : [255,255,255,255],
-                "text":"?",
-                "justify" : "left",
-                "align" : "middle",
-                "style":"H5"
-                }
+            "style":"H2"
             },
             {
             "type": "list",
-            "name": "yesno",
+            "name": "menu",
             "id" : 50,
-            "bounds": [260,0,0.5,64],
+            "bounds": [0,0,200,1],
             "color" : [255,255,255,255],
-            "style": "horizontal",
+            "style": "vertical",
             "item_size" : [168,64],
             "elements":
             [
                 {
                 "type": "button",
-                "name": "OK",
+                "name": "start",
                 "id" : 51,
-                "bounds": [0,0,168,64],
-                "hotkey":"ok",
+                "bounds": [100,0,168,64],
+                "hotkey":"start",
                 "color" : [255,255,255,255],
                 "highColor" : [255,255,255,255],
                 "pressColor" : [255,255,255,255],
                 "label" :
                     {
                     "type": "label",
-                    "name": "yes_l",
+                    "name": "start_1",
                     "id" : 511,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
-                    "text":"OK",
+                    "text":"Start",
                     "justify" : "center",
                     "align" : "middle",
                     "style":"H5"
@@ -89,21 +70,52 @@
                 },
                 {
                 "type": "button",
-                "name": "cancel",
+                "name": "load",
                 "id" : 52,
-                "bounds": [0,0,164,68],
+                "bounds": [100,0,164,68],
                 "color" : [255,255,255,255],
-                "hotkey":"cancel",
+                "hotkey":"load",
                 "highColor" : [255,255,255,255],
                 "pressColor" : [255,255,255,255],
                 "label" :
                     {
                     "type": "label",
-                    "name": "No_l",
+                    "name": "load_1",
                     "id" : 521,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
-                    "text":"Cancel",
+                    "text":"Load",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 522,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+                {
+                "type": "button",
+                "name": "quit",
+                "id" : 52,
+                "bounds": [100,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"quit",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "quit_1",
+                    "id" : 521,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"Quit",
                     "align" : "middle",
                     "justify" : "center",
                     "style":"H5"

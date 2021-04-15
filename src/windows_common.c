@@ -113,4 +113,24 @@ Window *window_text_entry(char *question, char *defaultText, size_t length, void
     return win;
 }
 
+Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void *), void(*onQuit)(void *), void *startData, void *loadData, void *QuitData)
+{
+	Window *win;
+	List *callbacks;
+	win = gf2d_window_load("config/main_menu_window.json");
+	if (!win)
+	{
+		slog("failed to load main menu");
+		return NULL;
+	}
+	gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), text);
+	win->update = yes_no_update;
+	win->free_data = yes_no_free;
+	callbacks = gfc_list_new();
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onStart, startData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onLoad, loadData));
+	win->data = callbacks;
+	return win;
+}
+
 /*eol@eof*/

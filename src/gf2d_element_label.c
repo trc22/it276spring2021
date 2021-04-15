@@ -126,20 +126,20 @@ void gf2d_element_make_label(Element *e,LabelElement *label)
 
 const char *gf2d_element_label_get_text(Element *e)
 {
+	LabelElement *label;
     if (!e)return NULL;
     if (e->type != ET_Label)return NULL;
-    LabelElement *label;
-    label = (LabelElement *)e->data;
+	label = (LabelElement *)e->data;
     if (!label)return NULL;
     return label->text;
 }
 
 void gf2d_element_label_set_text(Element *e,char *text)
 {
+	LabelElement *label;
     if (!e)return;
     if (e->type != ET_Label)return;
-    LabelElement *label;
-    label = (LabelElement *)e->data;
+	label = (LabelElement *)e->data;
     if (!label)return;
     gfc_block_cpy(label->text,text);
 }
