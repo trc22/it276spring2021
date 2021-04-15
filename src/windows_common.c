@@ -113,7 +113,7 @@ Window *window_text_entry(char *question, char *defaultText, size_t length, void
     return win;
 }
 
-Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void *), void(*onQuit)(void *), void *startData, void *loadData, void *QuitData)
+Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void *), void(*onQuit)(void *), void *startData, void *loadData, void *quitData)
 {
 	Window *win;
 	List *callbacks;
@@ -129,6 +129,7 @@ Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void 
 	callbacks = gfc_list_new();
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onStart, startData));
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onLoad, loadData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onQuit, quitData));
 	win->data = callbacks;
 	return win;
 }

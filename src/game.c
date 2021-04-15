@@ -159,7 +159,7 @@ int main(int argc, char * argv[])
         }
 
 		if (selection == 0 && _mainMenu == NULL)
-			_mainMenu = window_main_menu("Main Menu", onStart, onQuit, onLoad, NULL, NULL, NULL);
+			_mainMenu = window_main_menu("Main Menu", onStart, onLoad, onQuit, NULL, NULL, NULL);
 
    //     slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
