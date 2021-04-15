@@ -102,7 +102,7 @@
                 {
                 "type": "button",
                 "name": "quit",
-                "id" : 52,
+                "id" : 53,
                 "bounds": [100,0,164,68],
                 "color" : [255,255,255,255],
                 "hotkey":"quit",
@@ -112,7 +112,7 @@
                     {
                     "type": "label",
                     "name": "quit_1",
-                    "id" : 521,
+                    "id" : 523,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
                     "text":"Quit",
@@ -124,7 +124,7 @@
                     {
                     "type": "actor",
                     "name": "image",
-                    "id" : 522,
+                    "id" : 524,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
                     "actor" : "actors/button.actor"

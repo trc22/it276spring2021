@@ -67,6 +67,14 @@ int yes_no_update(Window *win,List *updateList)
                 }
                 gf2d_window_free(win);
                 return 1;
+			case 53:
+				callback = (Callback*)gfc_list_get_nth(callbacks, 2);
+				if (callback)
+				{
+					gfc_callback_call(callback);
+				}
+				gf2d_window_free(win);
+				return 1;
         }
     }
     return 0;
