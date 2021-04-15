@@ -1,6 +1,6 @@
 {
 "window":{
-    "color" : [255,255,255, 255],
+    "color" : [100,100,100, 255],
     "dimensions" : [0,0,350,120],
     "justify" : "center",
     "align" : "middle",
