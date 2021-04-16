@@ -16,6 +16,8 @@
 #include "gf2d_collision.h"
 #include "windows_common.h"
 
+#include "level.h"
+
 static int _done = 0;
 static Window *_quit = NULL;
 static Window *_mainMenu = NULL;
@@ -37,18 +39,17 @@ void onExit(void *data)
 void onStart(void *data)
 {
 	gf2d_window_free(_mainMenu);
+	selection = 1;
 }
 
 void onLoad(void *data)
 {
-	selection = 1;
-	slog("Selection %i", selection);
+	selection = 2;
 }
 
 void onQuit(void *data)
 {
 	selection = -1;
-	slog("Selection %i", selection);
 	_quit = NULL;
 
 }
@@ -65,6 +66,7 @@ int main(int argc, char * argv[])
     CollisionFilter filter= {0};
     int mx,my;
     float mf;
+	Level *level;
   //  static Body body[10000];// not a pointer!
    // Shape shape[4];// not a pointer!    /*parse args*/
     for (i = 1; i < argc; i++)
@@ -100,8 +102,7 @@ int main(int argc, char * argv[])
     gf2d_windows_init(128);
     gf2d_entity_system_init(1024);
     
-    camera_set_dimensions(0,0,1200,700);
-    background = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
+    camera_set_dimensions(vector2d(1200,700));
     
     SDL_ShowCursor(SDL_DISABLE);
     // game specific setup
@@ -115,6 +116,8 @@ int main(int argc, char * argv[])
         1,
         1);
     mf = 0;
+
+	level = level_load("levels/menu.json", vector2d(600, 600), 0); //main menu level
 
     /*main game loop*/
     filter.worldclip = 1;
@@ -134,13 +137,14 @@ int main(int argc, char * argv[])
         gf2d_entity_think_all();
         gf2d_mouse_update();
         gf2d_space_update(space);    
+		level_update(level);
         
         collision = gf2d_collision_trace_space(space, vector2d(mx,my), vector2d(600,360) ,filter);
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-                gf2d_sprite_draw_image(background,vector2d(0,0));
+				level_draw(level);
                 // DRAW WORLD
                 gf2d_entity_update_all();
                 // Draw entities
@@ -157,9 +161,16 @@ int main(int argc, char * argv[])
         {
             _quit = window_yes_no("Exit?",onExit,onCancel,NULL,NULL);
         }
-
+		
 		if (selection == 0 && _mainMenu == NULL)
 			_mainMenu = window_main_menu("Main Menu", onStart, onLoad, onQuit, NULL, NULL, NULL);
+
+		if (selection == 1)
+		{
+			free(level);
+			level = level_load("levels/exampleLevel.json", vector2d(600, 600), 0); //demo level
+			selection = -2;
+		}
 
    //     slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }

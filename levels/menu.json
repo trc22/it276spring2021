@@ -1,0 +1,12 @@
+{
+    "level":
+    {
+        "bgImage" : ["images/backgrounds/layers0.png","images/backgrounds/layers1.png"],
+        "tileSet" : "images/groundTile.png",
+        "tileWidth":64,
+        "tileHeight":64,
+        "tileFPL":1,
+        "tileMap":[
+        ]
+    }
+}
