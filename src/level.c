@@ -140,7 +140,8 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
     sj_free(json);
 	currentLevel = level;
 //	level_spawns(levelID); //spawn all non-player entities
-//	player_spawn(playerSpawn); //spawn player
+	if(levelID != -1)
+		player_spawn(playerSpawn); //spawn player
 //	level_starting_items(levelID); //setup player inventory
     return level;
 }

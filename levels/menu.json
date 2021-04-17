@@ -6,7 +6,7 @@
         "tileWidth":64,
         "tileHeight":64,
         "tileFPL":1,
-        "tileMap":[
+        "tileMap":[[1]
         ]
     }
 }

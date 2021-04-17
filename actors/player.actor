@@ -1,0 +1,13 @@
+sprite: images/0.png
+frameWidth: 36
+frameHeight: 54
+framesPerLine: 1
+scale: 1,1
+color: 255,255,255,255
+colorSpecial: 255,255,255,255
+
+action: idle
+startFrame: 0
+endFrame: 0
+frameRate: 0.1
+type: loop

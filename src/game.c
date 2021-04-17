@@ -17,6 +17,7 @@
 #include "windows_common.h"
 
 #include "level.h"
+#include "player.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -117,7 +118,7 @@ int main(int argc, char * argv[])
         1);
     mf = 0;
 
-	level = level_load("levels/menu.json", vector2d(600, 600), 0); //main menu level
+	level = level_load("levels/menu.json", vector2d(600, 600), -1); //main menu level
 
     /*main game loop*/
     filter.worldclip = 1;
@@ -135,19 +136,20 @@ int main(int argc, char * argv[])
         gf2d_windows_update_all();
                 
         gf2d_entity_think_all();
+		gf2d_entity_update_all();
         gf2d_mouse_update();
         gf2d_space_update(space);    
 		level_update(level);
         
-        collision = gf2d_collision_trace_space(space, vector2d(mx,my), vector2d(600,360) ,filter);
+       // collision = gf2d_collision_trace_space(space, vector2d(mx,my), vector2d(600,360) ,filter);
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
+				// DRAW WORLD
 				level_draw(level);
-                // DRAW WORLD
-                gf2d_entity_update_all();
                 // Draw entities
+				gf2d_entity_draw_all();
             //UI elements last
 
             gf2d_font_draw_line_tag("Press F4 to quit!",FT_H1,gfc_color(255,255,255,255), vector2d(0,0));
@@ -168,7 +170,7 @@ int main(int argc, char * argv[])
 		if (selection == 1)
 		{
 			free(level);
-			level = level_load("levels/exampleLevel.json", vector2d(600, 600), 0); //demo level
+			level = level_load("levels/exampleLevel.json", vector2d(0, 0), 0); //demo level
 			selection = -2;
 		}
 
