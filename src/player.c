@@ -27,32 +27,38 @@ int inventoryPos;
 Entity *player_spawn(Vector2D position)
 {
     Entity *ent;
-	ActionList *actions;
 	ent = gf2d_entity_new();
-	ent->id = 0;
-	ent->dead = 0;
-	ent->inuse = 1;
     if (!ent)
     {
         slog("failed to create entity for the player");
         return NULL;
     }
 	slog("player spawned");
+	ent->id = 0;
+	ent->dead = 0;
+	ent->inuse = 1;
 	/*inventoryPos = 5;
 	inventory_init(6);
 	inventory_insert(get_item_by_id(0));
 	check_empty(get_current_item(0));
 	current_item = cycle_items();*/
+
 	gf2d_actor_free(&ent->actor);
 	gf2d_actor_load(&ent->actor, "actors/player.actor");
 	gf2d_actor_set_action(&ent->actor, "idle");
+	
+	ent->shape = (gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y));
+	gf2d_body_clear(&ent->body);
+	gf2d_body_set(&ent->body, "player_body", 0, 0, 0, 0, ent->position, vector2d(0, 0), 10, 1, 1, &ent->shape, NULL, NULL);
 	vector2d_copy(ent->position, position);
+	ent->acceleration = vector2d(0, 0);
     ent->update = player_update;
 	ent->think = player_think;
 	ent->draw = player_draw;
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->flip = vector2d(0, 0);
+	ent->velocity = vector2d(0, 0);
 	//ent->last_collision.x = 0;
 	//ent->last_collision.y = 0;
 	ent->health = 100;
@@ -78,12 +84,7 @@ void player_update(Entity *self)
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
 	camera_set_position(camera);
-	// apply dampening on velocity
-	vector2d_scale(self->velocity, self->velocity, 0.75);
-	if (vector2d_magnitude_squared(self->velocity) < 2)
-	{
-		vector2d_clear(self->velocity);
-	}
+
 	player_position = self->position;
 }
 
@@ -101,20 +102,47 @@ void player_think(Entity *self)
 
 
 	if (gfc_input_command_pressed("walkleft"))
-		gf2d_actor_set_action(&self->actor, "run");
-	if (gfc_input_command_down("walkleft")) // move left
 	{
-		self->position.x -= 2;
+		gf2d_actor_set_action(&self->actor, "run");
+	}
+	if (gfc_input_command_held ("walkleft")) // move left
+	{
+		//self->velocity.x = -2;
+		self->acceleration.x = -0.05;
 		self->flip = vector2d(-1, 0);
 	}
 
-	if (gfc_input_command_pressed("walkright")) 
-		gf2d_actor_set_action(&self->actor, "run");
-	if (gfc_input_command_down("walkright")) // move right
+	if (gfc_input_command_pressed("walkright"))
 	{
-		self->flip = vector2d(0, 0);
-		self->position.x += 2;
+		gf2d_actor_set_action(&self->actor, "run");
 	}
+	if (gfc_input_command_held("walkright")) // move right
+	{
+		//self->velocity.x = 2;
+		self->acceleration.x = 0.05;
+		self->flip = vector2d(0, 0);
+	}
+
+	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
+	{
+		if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft"))
+		{
+			self->velocity.x = 0;
+			self->acceleration.x = 0;
+			gf2d_actor_set_action(&self->actor, "idle");
+		}
+	}
+	if (self->velocity.x > 2)
+		self->velocity.x = 2;
+
+	/*if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft") && self->acceleration.x != 0)
+	{
+		if (self->acceleration.x > 0)
+			self->acceleration.x -= 0.001;
+		if (self->acceleration.x < 0)
+			self->acceleration.x += 0.001;
+		slog("accel: %f", self->acceleration.x);
+	}*/
 
 
 
@@ -169,6 +197,7 @@ void player_think(Entity *self)
 
 void player_draw(Entity *self)
 {
+	gf2d_body_draw(&self->body, self->position);
 }
 /*void player_collide(Entity *self, Entity *other)
 {

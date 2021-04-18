@@ -145,6 +145,8 @@ void gf2d_entity_update(Entity *self)
     }
     /*collision handles position and velocity*/
     vector2d_add(self->velocity,self->velocity,self->acceleration);
+	vector2d_add(self->position, self->position, self->velocity); //Remove when collision is added
+
 
     gf2d_particle_emitter_update(self->pe);
 
