@@ -1,4 +1,5 @@
 #include "simple_logger.h"
+#include "gfc_input.h"
 
 #include "player.h"
 #include "camera.h"
@@ -44,6 +45,7 @@ Entity *player_spawn(Vector2D position)
 	current_item = cycle_items();*/
 	gf2d_actor_free(&ent->actor);
 	gf2d_actor_load(&ent->actor, "actors/player.actor");
+	gf2d_actor_set_action(&ent->actor, "idle");
 	vector2d_copy(ent->position, position);
     ent->update = player_update;
 	ent->think = player_think;
@@ -89,7 +91,7 @@ void player_think(Entity *self)
 {
 	const Uint8 *keys;
 	Vector2D aimdir, camera;
-	int mx, my;
+	int mx, my;	
 	if (!self)return;
 	keys = SDL_GetKeyboardState(NULL);
 	SDL_GetMouseState(&mx, &my);
@@ -98,20 +100,23 @@ void player_think(Entity *self)
 	my += camera.y;
 
 
-	// turn aimdir into a unit vector
-	vector2d_normalize(&aimdir);
-
-	if (keys[SDL_SCANCODE_A]) // move left
+	if (gfc_input_command_pressed("walkleft"))
+		gf2d_actor_set_action(&self->actor, "run");
+	if (gfc_input_command_down("walkleft")) // move left
 	{
 		self->position.x -= 2;
 		self->flip = vector2d(-1, 0);
 	}
 
-	if (keys[SDL_SCANCODE_D]) // move right
+	if (gfc_input_command_pressed("walkright")) 
+		gf2d_actor_set_action(&self->actor, "run");
+	if (gfc_input_command_down("walkright")) // move right
 	{
-		self->position.x += 2;
 		self->flip = vector2d(0, 0);
+		self->position.x += 2;
 	}
+
+
 
 	if (keys[SDL_SCANCODE_SPACE]) //jump
 	{
