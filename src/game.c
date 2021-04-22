@@ -15,6 +15,7 @@
 #include "gf2d_space.h"
 #include "gf2d_collision.h"
 #include "windows_common.h"
+#include "gf2d_dynamic_body.h"
 
 #include "level.h"
 #include "player.h"
@@ -62,14 +63,14 @@ int main(int argc, char * argv[])
     int fullscreen = 0;
     int debug = 0;
     Sprite *background = NULL;
+	
     Space *space = NULL;
     Collision collision;
     CollisionFilter filter= {0};
+	Entity *ent;
     int mx,my;
     float mf;
 	Level *level;
-  //  static Body body[10000];// not a pointer!
-   // Shape shape[4];// not a pointer!    /*parse args*/
     for (i = 1; i < argc; i++)
     {
         if (strcmp(argv[i],"--fullscreen") == 0)
@@ -109,19 +110,19 @@ int main(int argc, char * argv[])
     // game specific setup
         // init mouse, editor window
     gf2d_mouse_load("actors/mouse.actor");
-        space = gf2d_space_new_full(
+   /*     space = gf2d_space_new_full(
         3,
         gf2d_rect(0,0,1200,700),
         0.1,
         vector2d(0,0.1),
         1,
         1);
-    mf = 0;
+    mf = 0;*/
 
 	level = level_load("levels/menu.json", vector2d(600, 600), -1); //main menu level
 
     /*main game loop*/
-    filter.worldclip = 1;
+  //  filter.worldclip = 1;
     /*main game loop*/
     while(!_done)
     {
@@ -138,11 +139,16 @@ int main(int argc, char * argv[])
         gf2d_entity_think_all();
 		gf2d_entity_update_all();
         gf2d_mouse_update();
-        gf2d_space_update(space);    
+       // gf2d_space_update(space);    
 		level_update(level);
+		if (get_player() != NULL)
+		{
+			//if (gf2d_body_body_collide(&get_player()->body, &ent->body))
+				//slog("collision");	
+		}
         
-       // collision = gf2d_collision_trace_space(space, vector2d(mx,my), vector2d(600,360) ,filter);
-        
+       collision = gf2d_collision_trace_space(space, vector2d(mx,my), vector2d(0, 0) ,filter);
+
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
@@ -170,8 +176,32 @@ int main(int argc, char * argv[])
 		if (selection == 1)
 		{
 			free(level);
-			level = level_load("levels/exampleLevel.json", vector2d(0, 0), 0); //demo level
+			level = level_load("levels/exampleLevel.json", vector2d(600, 600), 0); //demo level
 			selection = -2;
+
+		/*	ent = gf2d_entity_new();
+			ent->position = vector2d(100, 0);
+			gf2d_actor_free(&ent->actor);
+			gf2d_actor_load(&ent->actor, "actors/player.actor");
+			gf2d_actor_set_action(&ent->actor, "idle");
+
+			ent->shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
+			gf2d_body_clear(&ent->body);
+			gf2d_body_set(
+				&ent->body,
+				"player",
+				1,
+				WORLD_LAYER,
+				0,
+				0,
+				ent->position,
+				vector2d(0, 0),
+				10,
+				1,
+				1,
+				&ent->shape,
+				ent,
+				NULL);*/
 		}
 
    //     slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());

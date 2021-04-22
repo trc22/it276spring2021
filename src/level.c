@@ -2,11 +2,13 @@
 
 #include "simple_json.h"
 #include "simple_logger.h"
+#include "gf2d_collision.h"
+#include "gf2d_space.h"
 
 #include "camera.h"
 #include "level.h"
 
-//#include "player.h"
+#include "player.h"
 //#include "enemy.h"
 //#include "pickup.h"
 //#include "interactables.h"
@@ -14,7 +16,12 @@
 //void level_spawns(int levelID);
 //void level_starting_items(int levelID);
 
+void level_add_shapes(Level *level);
+
 Level *currentLevel;
+Collision collision;
+CollisionFilter filter = { 1 };
+
 
 Level *level_new()
 {
@@ -38,8 +45,10 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
     int count,tileindex;
     int i,j;
     int tempInt;
+	
+	Space *space = NULL;
 
-    if (!filename)
+	if (!filename)
     {
         slog("filename is NULL, cannot load the level");
         return NULL;
@@ -139,10 +148,17 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
     slog("map height: %f, with %i tiles high, each %i pixels tall", level->levelSize.y, level->levelHeight, level->tileHeight);
     sj_free(json);
 	currentLevel = level;
+
 //	level_spawns(levelID); //spawn all non-player entities
-	if(levelID != -1)
+	if (levelID != -1)
+	{
 		player_spawn(playerSpawn); //spawn player
+	}
 //	level_starting_items(levelID); //setup player inventory
+	level_make_space();
+	level_add_shapes(level);
+	filter.worldclip = 1;
+
     return level;
 }
 
@@ -164,6 +180,11 @@ void level_update(Level *level)
     if (camera.x < 0)camera.x = 0;
     if (camera.y < 0)camera.y = 0;
     camera_set_position(vector2d(camera.x,camera.y));
+
+	gf2d_entity_pre_sync_all();
+	gf2d_space_update(currentLevel->space);
+	gf2d_entity_post_sync_all();
+
 }
 
 void level_free(Level *level)
@@ -244,8 +265,16 @@ void level_draw(Level *level)
             level->tileMap[i] - 1);
 		drawPosition.x -= offset.x;
 		drawPosition.y -= offset.y;
+		if (get_player() != NULL)
+		{
+			collision = gf2d_collision_trace_space(level->space, get_player()->position, vector2d(get_player()->position.x, get_player()->position.y + 54), filter);
+			if (collision.collided)
+				get_player()->grounded = 1;
+			else
+				get_player()->grounded = 0;
+		}
 		/*collisionBox = gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h);
-
+		
 		if (tile_collisions(get_player()->collisionBox, collisionBox))
 		{
 			get_player()->_touchingTile = true;
@@ -262,6 +291,30 @@ void level_draw(Level *level)
 
 	}
 }
+
+void level_make_space()
+{
+	currentLevel->space = gf2d_space_new_full(3,
+		gf2d_rect(0, 0, currentLevel->levelWidth, currentLevel->levelHeight),
+		0.1, vector2d(0,0),
+		1,
+		0.001);
+}
+
+void level_add_shapes(Level *level)
+{
+	int i;
+	Vector2D position;
+
+	for (i = 0; i < level->tileCount; i++)
+	{
+		if (level->tileMap[i] == 0)continue;
+		position.x = ((i % level->levelWidth)*level->tileSet->frame_w);
+		position.y = ((i / level->levelWidth)*level->tileSet->frame_h);
+		gf2d_space_add_static_shape(currentLevel->space, (gf2d_shape_rect(position.x, position.y, level->tileWidth, level->tileHeight)));
+	}
+}
+
 /*
 Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox)
 {

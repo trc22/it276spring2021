@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "level.h"
 #include "gf2d_actor.h"
+#include "gf2d_dynamic_body.h"
 
 #include "item.h"
 //#include "overlay.h"
@@ -14,6 +15,7 @@
 void player_update(Entity *self);
 void player_think(Entity *self);
 void player_draw(Entity *self);
+int player_touch(Entity *self, Entity *other);
 void player_load_save(const char *filename);
 
 
@@ -27,6 +29,7 @@ int inventoryPos;
 Entity *player_spawn(Vector2D position)
 {
     Entity *ent;
+	Shape shape;
 	ent = gf2d_entity_new();
     if (!ent)
     {
@@ -37,6 +40,7 @@ Entity *player_spawn(Vector2D position)
 	ent->id = 0;
 	ent->dead = 0;
 	ent->inuse = 1;
+	ent->grounded = 0;
 	/*inventoryPos = 5;
 	inventory_init(6);
 	inventory_insert(get_item_by_id(0));
@@ -47,14 +51,33 @@ Entity *player_spawn(Vector2D position)
 	gf2d_actor_load(&ent->actor, "actors/player.actor");
 	gf2d_actor_set_action(&ent->actor, "idle");
 	
-	ent->shape = (gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y));
+	shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
+	ent->shape = shape;
 	gf2d_body_clear(&ent->body);
-	gf2d_body_set(&ent->body, "player_body", 0, 0, 0, 0, ent->position, vector2d(0, 0), 10, 1, 1, &ent->shape, NULL, NULL);
+	gf2d_body_set(
+		&ent->body, 
+		"player", 
+		0, 
+		WORLD_LAYER, 
+		0, 
+		0, 
+		ent->position, 
+		vector2d(0, 0), 
+		10, 
+		1, 
+		1, 
+		&ent->shape, 
+		ent, 
+		NULL);
+
 	vector2d_copy(ent->position, position);
 	ent->acceleration = vector2d(0, 0);
+
     ent->update = player_update;
 	ent->think = player_think;
 	ent->draw = player_draw;
+	ent->touch = player_touch;
+	
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->flip = vector2d(0, 0);
@@ -86,6 +109,7 @@ void player_update(Entity *self)
 	camera_set_position(camera);
 
 	player_position = self->position;
+	player_position = self->body.position;
 }
 
 void player_think(Entity *self)
@@ -100,6 +124,14 @@ void player_think(Entity *self)
 	mx += camera.x;
 	my += camera.y;
 
+	if (self->grounded == 0)
+	{
+		self->velocity.y = 1;
+	}
+	else
+	{
+		self->velocity.y = 0;
+	}
 
 	if (gfc_input_command_pressed("walkleft"))
 	{
@@ -132,8 +164,10 @@ void player_think(Entity *self)
 			gf2d_actor_set_action(&self->actor, "idle");
 		}
 	}
-	if (self->velocity.x > 2)
-		self->velocity.x = 2;
+	if (self->velocity.x > 3)
+		self->velocity.x = 3;
+	if (self->velocity.x < -3)
+		self->velocity.x = -3;
 
 	/*if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft") && self->acceleration.x != 0)
 	{
@@ -143,7 +177,6 @@ void player_think(Entity *self)
 			self->acceleration.x += 0.001;
 		slog("accel: %f", self->acceleration.x);
 	}*/
-
 
 
 	if (keys[SDL_SCANCODE_SPACE]) //jump
@@ -194,10 +227,17 @@ void player_think(Entity *self)
 		loadTimer++;*/
 }
 
+int player_touch(Entity *self, Entity *other)
+{
+	slog("Touching entity");
+	return 1;
+}
+
 
 void player_draw(Entity *self)
 {
-	gf2d_body_draw(&self->body, self->position);
+	gf2d_body_draw(&self->body,self->body.position);
+	//gf2d_body_draw(db->body, vector2d(self->position.x - camera_get_position().x, self->position.y));
 }
 /*void player_collide(Entity *self, Entity *other)
 {

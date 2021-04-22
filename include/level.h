@@ -7,6 +7,8 @@
 #include "gfc_text.h"
 
 #include "gf2d_sprite.h"
+#include "gf2d_space.h"
+
 //#include "entity.h"
 
 typedef enum
@@ -18,6 +20,7 @@ typedef enum
 
 typedef struct
 {
+	Space		*space;		 /**<the physics space for the level*/
     Sprite     **bgImage;    /**<the background image for the level*/
     int         bgImageCount;/**<how many we have*/
     Vector2D    levelSize;   /**<how large, in pixels, the level is*/
@@ -64,6 +67,8 @@ void level_update(Level *level);
  * @param level the level the draw
  */
 void level_draw(Level *level);
+
+void level_make_space();
 
 Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox);
 
