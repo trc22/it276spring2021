@@ -67,7 +67,8 @@ typedef struct Entity_S
     int   count;                            /**<useful for counting things like ammo count or health ammount*/
     float jumpcool;
     int   jumpcount;                        /**<used for multijump*/
-    int   grounded;             
+    int   grounded;
+	int	  canmove;							/**<used for blocking entity movement*/
     void *data;                             /**<any other game specific data can be referenced here*/
 }Entity;
 

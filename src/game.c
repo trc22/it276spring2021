@@ -141,14 +141,7 @@ int main(int argc, char * argv[])
         gf2d_mouse_update();
        // gf2d_space_update(space);    
 		level_update(level);
-		if (get_player() != NULL)
-		{
-			//if (gf2d_body_body_collide(&get_player()->body, &ent->body))
-				//slog("collision");	
-		}
         
-       collision = gf2d_collision_trace_space(space, vector2d(mx,my), vector2d(0, 0) ,filter);
-
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
@@ -176,7 +169,7 @@ int main(int argc, char * argv[])
 		if (selection == 1)
 		{
 			free(level);
-			level = level_load("levels/exampleLevel.json", vector2d(600, 600), 0); //demo level
+			level = level_load("levels/exampleLevel.json", vector2d(200, 800), 0); //demo level
 			selection = -2;
 
 		/*	ent = gf2d_entity_new();
@@ -204,7 +197,7 @@ int main(int argc, char * argv[])
 				NULL);*/
 		}
 
-   //     slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+  //    slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     
     slog("---==== END ====---");

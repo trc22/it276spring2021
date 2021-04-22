@@ -17,6 +17,7 @@
 //void level_starting_items(int levelID);
 
 void level_add_shapes(Level *level);
+void level_phyiscs(Level *level);
 
 Level *currentLevel;
 Collision collision;
@@ -185,6 +186,8 @@ void level_update(Level *level)
 	gf2d_space_update(currentLevel->space);
 	gf2d_entity_post_sync_all();
 
+	level_phyiscs(level);
+
 }
 
 void level_free(Level *level)
@@ -265,30 +268,6 @@ void level_draw(Level *level)
             level->tileMap[i] - 1);
 		drawPosition.x -= offset.x;
 		drawPosition.y -= offset.y;
-		if (get_player() != NULL)
-		{
-			collision = gf2d_collision_trace_space(level->space, get_player()->position, vector2d(get_player()->position.x, get_player()->position.y + 54), filter);
-			if (collision.collided)
-				get_player()->grounded = 1;
-			else
-				get_player()->grounded = 0;
-		}
-		/*collisionBox = gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileSet->frame_w, level->tileSet->frame_h);
-		
-		if (tile_collisions(get_player()->collisionBox, collisionBox))
-		{
-			get_player()->_touchingTile = true;
-		}
-
-		if (tile_collisions(get_player()->collisionBoxBody, collisionBox))
-		{
-			get_player()->_touchingWall = true;
-			get_player()->last_collision.x = collisionBox.x;
-			get_player()->last_collision.y = collisionBox.y;
-		}
-
-		enemy_physics(collisionBox);*/
-
 	}
 }
 
@@ -314,6 +293,34 @@ void level_add_shapes(Level *level)
 		gf2d_space_add_static_shape(currentLevel->space, (gf2d_shape_rect(position.x, position.y, level->tileWidth, level->tileHeight)));
 	}
 }
+
+void level_phyiscs(Level *level)
+{
+	Entity *player = get_player();
+	if (player == NULL)
+		return;
+	
+	collision = gf2d_collision_trace_space(level->space, player->position, vector2d(player->position.x, player->position.y + 54), filter);
+	if (collision.collided)
+	{
+		player->grounded = 1;
+	}
+	else
+	{
+		player->grounded = 0;
+	}
+	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x - 6, player->position.y), vector2d(player->position.x + 32, player->position.y), filter);
+	if (collision.collided)
+	{
+		if (collision.pointOfContact.x < player->position.x)
+			player->canmove = 1;
+		if (collision.pointOfContact.x > player->position.x)
+			player->canmove = -1;
+	}
+	else
+		player->canmove = 0;
+}
+
 
 /*
 Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox)

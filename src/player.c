@@ -41,6 +41,7 @@ Entity *player_spawn(Vector2D position)
 	ent->dead = 0;
 	ent->inuse = 1;
 	ent->grounded = 0;
+	ent->canmove = 0;
 	/*inventoryPos = 5;
 	inventory_init(6);
 	inventory_insert(get_item_by_id(0));
@@ -51,7 +52,7 @@ Entity *player_spawn(Vector2D position)
 	gf2d_actor_load(&ent->actor, "actors/player.actor");
 	gf2d_actor_set_action(&ent->actor, "idle");
 	
-	shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
+	shape = gf2d_shape_rect(ent->position.x + 10, ent->position.y, ent->actor.size.x - 16, ent->actor.size.y);
 	ent->shape = shape;
 	gf2d_body_clear(&ent->body);
 	gf2d_body_set(
@@ -126,10 +127,11 @@ void player_think(Entity *self)
 
 	if (self->grounded == 0)
 	{
-		self->velocity.y = 1;
+		self->acceleration.y = 0.05;
 	}
 	else
 	{
+		self->acceleration.y = 0;
 		self->velocity.y = 0;
 	}
 
@@ -137,22 +139,34 @@ void player_think(Entity *self)
 	{
 		gf2d_actor_set_action(&self->actor, "run");
 	}
-	if (gfc_input_command_held ("walkleft")) // move left
+	if (gfc_input_command_held("walkleft") && self->canmove != 1)  // move left
 	{
-		//self->velocity.x = -2;
+
 		self->acceleration.x = -0.05;
 		self->flip = vector2d(-1, 0);
+	}
+
+	if (self->velocity.x < 0 && self->canmove == 1)
+	{
+		self->velocity.x = 0;
+		self->acceleration.x = 0;
 	}
 
 	if (gfc_input_command_pressed("walkright"))
 	{
 		gf2d_actor_set_action(&self->actor, "run");
 	}
-	if (gfc_input_command_held("walkright")) // move right
+	if (gfc_input_command_held("walkright") && self->canmove != -1) // move right
 	{
 		//self->velocity.x = 2;
 		self->acceleration.x = 0.05;
 		self->flip = vector2d(0, 0);
+	}
+
+	if (self->velocity.x > 0 && self->canmove == -1)
+	{
+		self->velocity.x = 0;
+		self->acceleration.x = 0;
 	}
 
 	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
@@ -236,7 +250,7 @@ int player_touch(Entity *self, Entity *other)
 
 void player_draw(Entity *self)
 {
-	gf2d_body_draw(&self->body,self->body.position);
+	//gf2d_body_draw(&self->body, vector2d(self->position.x - camera_get_position().x, self->position.y - camera_get_position().y));
 	//gf2d_body_draw(db->body, vector2d(self->position.x - camera_get_position().x, self->position.y));
 }
 /*void player_collide(Entity *self, Entity *other)
