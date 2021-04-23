@@ -18,7 +18,6 @@ void player_draw(Entity *self);
 int player_touch(Entity *self, Entity *other);
 void player_load_save(const char *filename);
 
-
 Vector2D player_position;
 Entity *player;
 Item *current_item;
@@ -52,7 +51,7 @@ Entity *player_spawn(Vector2D position)
 	gf2d_actor_load(&ent->actor, "actors/player.actor");
 	gf2d_actor_set_action(&ent->actor, "idle");
 	
-	shape = gf2d_shape_rect(ent->position.x + 10, ent->position.y, ent->actor.size.x - 16, ent->actor.size.y);
+	shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
 	ent->shape = shape;
 	gf2d_body_clear(&ent->body);
 	gf2d_body_set(
@@ -73,6 +72,7 @@ Entity *player_spawn(Vector2D position)
 
 	vector2d_copy(ent->position, position);
 	ent->acceleration = vector2d(0, 0);
+	ent->body.gravity = 0.5;
 
     ent->update = player_update;
 	ent->think = player_think;
@@ -125,7 +125,17 @@ void player_think(Entity *self)
 	mx += camera.x;
 	my += camera.y;
 
-	if (self->grounded == 0)
+	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
+	{
+		if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft"))
+		{
+			self->velocity.x = 0;
+			self->acceleration.x = 0;
+			gf2d_actor_set_action(&self->actor, "idle");
+		}
+	}
+
+	if (self->grounded == 0 && jumpTimer == 25)
 	{
 		self->acceleration.y = 0.05;
 	}
@@ -169,37 +179,25 @@ void player_think(Entity *self)
 		self->acceleration.x = 0;
 	}
 
-	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
-	{
-		if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft"))
-		{
-			self->velocity.x = 0;
-			self->acceleration.x = 0;
-			gf2d_actor_set_action(&self->actor, "idle");
-		}
-	}
+
 	if (self->velocity.x > 3)
 		self->velocity.x = 3;
 	if (self->velocity.x < -3)
 		self->velocity.x = -3;
 
-	/*if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft") && self->acceleration.x != 0)
+	if (keys[SDL_SCANCODE_SPACE] && self->grounded) //jump
 	{
-		if (self->acceleration.x > 0)
-			self->acceleration.x -= 0.001;
-		if (self->acceleration.x < 0)
-			self->acceleration.x += 0.001;
-		slog("accel: %f", self->acceleration.x);
-	}*/
-
-
-	if (keys[SDL_SCANCODE_SPACE]) //jump
+		jumpTimer = 0;
+	}
+	if (jumpTimer < 25)
 	{
+		jumpTimer++;
+		self->velocity.y -= 1;
 	}
 
 	if (keys[SDL_SCANCODE_TAB] && cycleTimer == 35)
 	{
-		current_item = cycle_items();
+		//current_item = cycle_items();
 		cycleTimer = 0;
 	}
 

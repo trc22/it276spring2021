@@ -300,8 +300,8 @@ void level_phyiscs(Level *level)
 	if (player == NULL)
 		return;
 	
-	collision = gf2d_collision_trace_space(level->space, player->position, vector2d(player->position.x, player->position.y + 54), filter);
-	if (collision.collided)
+	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x + 16, player->position.y), vector2d(player->position.x + 16, player->position.y + 54), filter);
+	if (collision.collided && collision.pointOfContact.y > player->position.y)
 	{
 		player->grounded = 1;
 	}
@@ -309,12 +309,12 @@ void level_phyiscs(Level *level)
 	{
 		player->grounded = 0;
 	}
-	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x - 6, player->position.y), vector2d(player->position.x + 32, player->position.y), filter);
+	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x - 6, player->position.y + 26), vector2d(player->position.x + 38, player->position.y + 26), filter);
 	if (collision.collided)
 	{
 		if (collision.pointOfContact.x < player->position.x)
 			player->canmove = 1;
-		if (collision.pointOfContact.x > player->position.x)
+		if (collision.pointOfContact.x > player->position.x + 16)
 			player->canmove = -1;
 	}
 	else

@@ -69,6 +69,7 @@ typedef struct Entity_S
     int   jumpcount;                        /**<used for multijump*/
     int   grounded;
 	int	  canmove;							/**<used for blocking entity movement*/
+	int	  jumping;
     void *data;                             /**<any other game specific data can be referenced here*/
 }Entity;
 
