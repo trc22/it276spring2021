@@ -171,30 +171,6 @@ int main(int argc, char * argv[])
 			free(level);
 			level = level_load("levels/exampleLevel.json", vector2d(200, 800), 0); //demo level
 			selection = -2;
-
-		/*	ent = gf2d_entity_new();
-			ent->position = vector2d(100, 0);
-			gf2d_actor_free(&ent->actor);
-			gf2d_actor_load(&ent->actor, "actors/player.actor");
-			gf2d_actor_set_action(&ent->actor, "idle");
-
-			ent->shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
-			gf2d_body_clear(&ent->body);
-			gf2d_body_set(
-				&ent->body,
-				"player",
-				1,
-				WORLD_LAYER,
-				0,
-				0,
-				ent->position,
-				vector2d(0, 0),
-				10,
-				1,
-				1,
-				&ent->shape,
-				ent,
-				NULL);*/
 		}
 
   //    slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());

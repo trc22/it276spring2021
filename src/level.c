@@ -23,6 +23,7 @@ Level *currentLevel;
 Collision collision;
 CollisionFilter filter = { 1 };
 
+Entity *ent;
 
 Level *level_new()
 {
@@ -154,11 +155,14 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 	if (levelID != -1)
 	{
 		player_spawn(playerSpawn); //spawn player
+		ent = entity_spawn("actors/player.actor", "ent", vector2d(100, 650));
+
 	}
 //	level_starting_items(levelID); //setup player inventory
 	level_make_space();
 	level_add_shapes(level);
 	filter.worldclip = 1;
+	filter.touchlayer = 1;
 
     return level;
 }
@@ -309,7 +313,7 @@ void level_phyiscs(Level *level)
 	{
 		player->grounded = 0;
 	}
-	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x - 6, player->position.y + 26), vector2d(player->position.x + 38, player->position.y + 26), filter);
+	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x - 2, player->position.y + 26), vector2d(player->position.x + 38, player->position.y + 26), filter);
 	if (collision.collided)
 	{
 		if (collision.pointOfContact.x < player->position.x)

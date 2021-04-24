@@ -59,7 +59,7 @@ Entity *player_spawn(Vector2D position)
 		"player", 
 		0, 
 		WORLD_LAYER, 
-		0, 
+		1, 
 		0, 
 		ent->position, 
 		vector2d(0, 0), 
@@ -70,6 +70,7 @@ Entity *player_spawn(Vector2D position)
 		ent, 
 		NULL);
 
+	ent->body.team = 0;
 	vector2d_copy(ent->position, position);
 	ent->acceleration = vector2d(0, 0);
 	ent->body.gravity = 0.5;
@@ -110,7 +111,6 @@ void player_update(Entity *self)
 	camera_set_position(camera);
 
 	player_position = self->position;
-	player_position = self->body.position;
 }
 
 void player_think(Entity *self)

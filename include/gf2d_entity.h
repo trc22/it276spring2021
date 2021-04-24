@@ -132,4 +132,15 @@ void gf2d_entity_post_sync_all();
  * @return true if damage was dealth, false otherwise
  */
 int gf2d_entity_deal_damage(Entity *target, Entity *inflictor, Entity *attacker,int damage,Vector2D kick);
+
+/**
+* @brief sets up and spawns an entity
+* @param actor the .actor file to load
+* @param name the entity name
+* @param position where the entity is spawned
+* @return the created entity, null otherwise
+*/
+Entity *entity_spawn(const char* actor, char* name,Vector2D position);
+
+void entity_collide_all(int i);
 #endif

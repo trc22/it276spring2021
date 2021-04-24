@@ -152,6 +152,7 @@ void gf2d_entity_update(Entity *self)
 
     gf2d_actor_next_frame(&self->actor);
 
+
     if (self->update != NULL)
     {
         self->update(self);
@@ -168,6 +169,8 @@ void gf2d_entity_think_all()
         {
             entity_manager.entityList[i].think(&entity_manager.entityList[i]);
         }
+		if (&entity_manager.entityList[i].body != NULL)
+			entity_collide_all(i);
     }
 }
 
@@ -199,6 +202,7 @@ void gf2d_entity_update_all()
         if (entity_manager.entityList[i].inuse == 0)continue;
         gf2d_entity_update(&entity_manager.entityList[i]);
     }
+
 }
 
 int gf2d_entity_deal_damage(Entity *target, Entity *inflictor, Entity *attacker,int damage,Vector2D kick)
@@ -214,6 +218,65 @@ int gf2d_entity_deal_damage(Entity *target, Entity *inflictor, Entity *attacker,
     vector2d_scale(k,kick,(float)inflicted/(float)damage);
     vector2d_add(target->velocity,k,target->velocity);
     return inflicted;
+}
+
+Entity *entity_spawn(const char* actor, char* name, Vector2D position)
+{
+	Entity *ent;
+	Shape shape;
+	ent = gf2d_entity_new();
+	if (!ent)
+	{
+		slog("failed to create entity for the player");
+		return NULL;
+	}
+	slog("player spawned");
+	ent->id = 1;
+	ent->dead = 0;
+	ent->inuse = 1;
+	ent->grounded = 0;
+	ent->canmove = 0;
+
+	gf2d_actor_free(&ent->actor);
+	gf2d_actor_load(&ent->actor, "actors/player.actor");
+	gf2d_actor_set_action(&ent->actor, "idle");
+
+	shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
+	ent->shape = shape;
+	gf2d_body_clear(&ent->body);
+	gf2d_body_set(
+		&ent->body,
+		"player",
+		0,
+		WORLD_LAYER,
+		1,
+		1,
+		ent->position,
+		vector2d(0, 0),
+		10,
+		1,
+		1,
+		&ent->shape,
+		ent,
+		NULL);
+	vector2d_copy(ent->position, position);
+	return ent;
+}
+
+void entity_collide_all(int i)
+{
+	int j;
+	for (j = 0; j < entity_manager.maxEntities; j++) //collision
+	{
+		if (entity_manager.entityList[j].inuse == 0 || &entity_manager.entityList[j].body == NULL)continue;
+		if (entity_manager.entityList[i].body.team == entity_manager.entityList[j].body.team)continue;
+		
+		if (gf2d_body_body_collide(&entity_manager.entityList[i].body, &entity_manager.entityList[j].body))
+		{
+			if (entity_manager.entityList[i].touch != NULL)
+				entity_manager.entityList[i].touch(&entity_manager.entityList[i], &entity_manager.entityList[j]);
+		}
+	}
 }
 
 /*eol@eof*/
