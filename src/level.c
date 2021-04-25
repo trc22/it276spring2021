@@ -9,7 +9,7 @@
 #include "level.h"
 
 #include "player.h"
-//#include "enemy.h"
+#include "enemy.h"
 //#include "pickup.h"
 //#include "interactables.h"
 
@@ -156,7 +156,7 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 	if (levelID != -1)
 	{
 		player_spawn(playerSpawn); //spawn player
-		ent_temp = entity_spawn("actors/player.actor", "ent", vector2d(100, 500));
+		spawn_enemy_regular(vector2d(40, 550));
 
 	}
 //	level_starting_items(levelID); //setup player inventory
@@ -313,6 +313,17 @@ void level_collisions(Level *level, Entity *ent)
 	{
 		ent->grounded = 0;
 	}
+	//collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x - 6, ent->position.y + ent->actor.sprite->frame_h), vector2d(ent->actor.sprite->frame_w + 6, ent->position.y + ent->actor.sprite->frame_h), filter);
+	collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x - 2, ent->position.y + ent->actor.sprite->frame_h / 2), vector2d(ent->position.x + 38, ent->position.y + ent->actor.sprite->frame_h / 2), filter);
+	if (collision.collided)
+	{
+		if (collision.pointOfContact.x < ent->position.x)
+			ent->canmove = 1;
+		if (collision.pointOfContact.x > ent->position.x + ent->actor.sprite->frame_w)
+			ent->canmove = -1;
+	}
+	else
+		ent->canmove = 0;
 }
 
 void level_player_collisions(Level *level, Entity *player)

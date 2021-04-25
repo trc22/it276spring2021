@@ -234,10 +234,10 @@ Entity *entity_spawn(const char* actor, char* name, Vector2D position)
 	ent = gf2d_entity_new();
 	if (!ent)
 	{
-		slog("failed to create entity for the player");
+		slog("failed to create entity");
 		return NULL;
 	}
-	slog("player spawned");
+	slog("entity spawned");
 	ent->id = 1;
 	ent->dead = 0;
 	ent->inuse = 1;
@@ -245,7 +245,7 @@ Entity *entity_spawn(const char* actor, char* name, Vector2D position)
 	ent->canmove = 0;
 
 	gf2d_actor_free(&ent->actor);
-	gf2d_actor_load(&ent->actor, "actors/player.actor");
+	gf2d_actor_load(&ent->actor, actor);
 	gf2d_actor_set_action(&ent->actor, "idle");
 
 	shape = gf2d_shape_rect(ent->position.x, ent->position.y, ent->actor.size.x, ent->actor.size.y);
@@ -291,7 +291,7 @@ void entity_collide_all(int i)
 
 void entity_physics(Entity *ent)
 {
-	if (ent->id == 0) return;
+	if (ent->id == 0) return; //Player has custom physics
 	if (ent->grounded == 0)
 	{
 		ent->acceleration.y = 0.05;
@@ -300,6 +300,18 @@ void entity_physics(Entity *ent)
 	{
 		ent->acceleration.y = 0;
 		ent->velocity.y = 0;
+	}
+
+	if (ent->velocity.x > 0 && ent->canmove == -1)
+	{
+		ent->velocity.x = 0;
+		ent->acceleration.x = 0;
+	}
+
+	if (ent->velocity.x < 0 && ent->canmove == 1)
+	{
+		ent->velocity.x = 0;
+		ent->acceleration.x = 0;
 	}
 }
 
