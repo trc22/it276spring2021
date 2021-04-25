@@ -17,13 +17,14 @@
 //void level_starting_items(int levelID);
 
 void level_add_shapes(Level *level);
-void level_phyiscs(Level *level);
+
+void level_player_collisions(Level *level, Entity *player);
 
 Level *currentLevel;
 Collision collision;
 CollisionFilter filter = { 1 };
 
-Entity *ent;
+Entity *ent_temp;
 
 Level *level_new()
 {
@@ -155,7 +156,7 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 	if (levelID != -1)
 	{
 		player_spawn(playerSpawn); //spawn player
-		ent = entity_spawn("actors/player.actor", "ent", vector2d(100, 650));
+		ent_temp = entity_spawn("actors/player.actor", "ent", vector2d(100, 500));
 
 	}
 //	level_starting_items(levelID); //setup player inventory
@@ -189,9 +190,6 @@ void level_update(Level *level)
 	gf2d_entity_pre_sync_all();
 	gf2d_space_update(currentLevel->space);
 	gf2d_entity_post_sync_all();
-
-	level_phyiscs(level);
-
 }
 
 void level_free(Level *level)
@@ -298,12 +296,28 @@ void level_add_shapes(Level *level)
 	}
 }
 
-void level_phyiscs(Level *level)
+void level_collisions(Level *level, Entity *ent)
 {
-	Entity *player = get_player();
-	if (player == NULL)
+	if (ent == NULL) return;
+	if (ent->id == 0)
+	{
+		level_player_collisions(level, ent);
 		return;
-	
+	}
+	collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x, ent->position.y), vector2d(ent->position.x, ent->position.y + 54), filter);
+	if (collision.collided && collision.pointOfContact.y > ent->position.y)
+	{
+		ent->grounded = 1;
+	}
+	else
+	{
+		ent->grounded = 0;
+	}
+}
+
+void level_player_collisions(Level *level, Entity *player)
+{
+
 	collision = gf2d_collision_trace_space(level->space, vector2d(player->position.x + 16, player->position.y), vector2d(player->position.x + 16, player->position.y + 54), filter);
 	if (collision.collided && collision.pointOfContact.y > player->position.y)
 	{
@@ -324,46 +338,7 @@ void level_phyiscs(Level *level)
 	else
 		player->canmove = 0;
 }
-
-
 /*
-Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox)
-{
-	int left_a, left_b;
-	int right_a, right_b;
-	int top_a, top_b;
-	int bot_a, bot_b;
-
-	left_a = player.x;
-	right_a = (player.x + player.w);
-	top_a = player.y;
-	bot_a = (player.y + player.h);
-
-	left_b = collisionBox.x;
-	right_b = (collisionBox.x + collisionBox.w);
-	top_b = collisionBox.y;
-	bot_b = (collisionBox.y + collisionBox.h);
-
-	if (bot_a <= top_b)
-	{
-		return false;
-	}
-	if (top_a >= bot_b)
-	{
-		return false;
-	}
-	if (right_a <= left_b)
-	{
-		return false;
-	}
-
-	if (left_a >= right_b)
-	{
-		return false;
-	}
-	return true;
-}
-
 void level_transition(Level *level, Entity *door)
 {
 	free_all_entities();

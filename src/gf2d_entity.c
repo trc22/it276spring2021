@@ -3,6 +3,7 @@
 #include "camera.h"
 
 #include "gf2d_entity.h"
+#include "level.h"
 
 
 typedef struct
@@ -13,6 +14,8 @@ typedef struct
 }EntityManager;
 
 static EntityManager entity_manager = {0};
+
+void entity_physics(Entity *ent);
 
 void gf2d_entity_system_close()
 {
@@ -146,7 +149,8 @@ void gf2d_entity_update(Entity *self)
     /*collision handles position and velocity*/
     vector2d_add(self->velocity,self->velocity,self->acceleration);
 	vector2d_add(self->position, self->position, self->velocity); //Remove when collision is added
-
+	
+	entity_physics(self);
 
     gf2d_particle_emitter_update(self->pe);
 
@@ -169,8 +173,11 @@ void gf2d_entity_think_all()
         {
             entity_manager.entityList[i].think(&entity_manager.entityList[i]);
         }
-		if (&entity_manager.entityList[i].body != NULL)
-			entity_collide_all(i);
+		if (&entity_manager.entityList[i].body != NULL) //Check for collisions
+		{
+			level_collisions(get_current_level(), &entity_manager.entityList[i]); //Dynamic bodies
+			entity_collide_all(i); //Static shapes
+		}
     }
 }
 
@@ -271,11 +278,28 @@ void entity_collide_all(int i)
 		if (entity_manager.entityList[j].inuse == 0 || &entity_manager.entityList[j].body == NULL)continue;
 		if (entity_manager.entityList[i].body.team == entity_manager.entityList[j].body.team)continue;
 		
+		//if (!vector2d_distance_between_less_than(entity_manager.entityList[i].body.position, entity_manager.entityList[j].body.position, 12))
+		//	continue;
+
 		if (gf2d_body_body_collide(&entity_manager.entityList[i].body, &entity_manager.entityList[j].body))
 		{
 			if (entity_manager.entityList[i].touch != NULL)
 				entity_manager.entityList[i].touch(&entity_manager.entityList[i], &entity_manager.entityList[j]);
 		}
+	}
+}
+
+void entity_physics(Entity *ent)
+{
+	if (ent->id == 0) return;
+	if (ent->grounded == 0)
+	{
+		ent->acceleration.y = 0.05;
+	}
+	else
+	{
+		ent->acceleration.y = 0;
+		ent->velocity.y = 0;
 	}
 }
 

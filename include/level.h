@@ -9,7 +9,7 @@
 #include "gf2d_sprite.h"
 #include "gf2d_space.h"
 
-//#include "entity.h"
+#include "gf2d_entity.h"
 
 typedef enum
 {
@@ -70,7 +70,7 @@ void level_draw(Level *level);
 
 void level_make_space();
 
-Bool tile_collisions(SDL_Rect player, SDL_Rect collisionBox);
+void level_collisions(Level *level, Entity *ent);
 
 //void level_transition(Level *level, Entity *door);
 
