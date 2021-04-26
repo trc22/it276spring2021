@@ -299,6 +299,7 @@ void level_add_shapes(Level *level)
 void level_collisions(Level *level, Entity *ent)
 {
 	if (ent == NULL) return;
+	if (ent->body.worldclip == 1) return;
 	if (ent->id == 0)
 	{
 		level_player_collisions(level, ent);

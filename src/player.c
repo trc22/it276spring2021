@@ -16,6 +16,8 @@ void player_update(Entity *self);
 void player_think(Entity *self);
 void player_draw(Entity *self);
 int player_touch(Entity *self, Entity *other);
+int player_damage(Entity *self, int amount, Entity *source);
+void player_die(Entity *self);
 void player_load_save(const char *filename);
 
 Vector2D player_position;
@@ -41,6 +43,7 @@ Entity *player_spawn(Vector2D position)
 	ent->inuse = 1;
 	ent->grounded = 0;
 	ent->canmove = 0;
+	ent->cooldown = 0; //Invincibility cooldown
 	/*inventoryPos = 5;
 	inventory_init(6);
 	inventory_insert(get_item_by_id(0));
@@ -79,6 +82,8 @@ Entity *player_spawn(Vector2D position)
 	ent->think = player_think;
 	ent->draw = player_draw;
 	ent->touch = player_touch;
+	ent->damage = player_damage;
+	ent->die = player_die;
 	
     ent->rotation.x = 64;
     ent->rotation.y = 64;
@@ -201,6 +206,17 @@ void player_think(Entity *self)
 		cycleTimer = 0;
 	}
 
+	if (self->cooldown < 50)
+	{
+		self->body.team = 1;
+		self->cooldown++;
+	}
+	else
+	{
+		self->body.team = 0;
+	}
+
+
 	//Use item
 	/*if (keys[SDL_SCANCODE_F])
 	{
@@ -241,9 +257,24 @@ void player_think(Entity *self)
 
 int player_touch(Entity *self, Entity *other)
 {
-	slog("Touching entity");
+//	slog("Touching entity");
 	return 1;
 }
+
+int player_damage(Entity *self, int amount, Entity *source)
+{
+	self->health -= amount;
+	vector2d_add(self->velocity, self->velocity, source->velocity);
+	self->cooldown = 0;
+	if (self->health <= 0)
+		self->die(self);
+}
+
+void player_die(Entity *self)
+{
+	gf2d_entity_free(self);
+}
+
 
 
 void player_draw(Entity *self)
