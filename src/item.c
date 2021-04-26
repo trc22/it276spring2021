@@ -7,10 +7,11 @@ typedef struct
 {
 	Item *item_list;
 	Uint32  max_items;
-}Inventory;
+}ItemManager;
 
-static Inventory item_manager = { 0 };
-static Inventory inventory = { 0 };
+
+static ItemManager item_manager = { 0 };
+static Uint32 tetris_inventory[6][8] = { 0 };
 
 void load_all_items(Uint32 max_items)
 {
@@ -33,7 +34,7 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
-	item_load(true, "", 0, 0, 0, 0, false, 0);
+/*	item_load(true, "", 0, 0, 0, 0, false, 0);
 	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
 	item_load(true, "key", 3, -1, -1, 25, false, 0);
 	
@@ -53,30 +54,7 @@ void load_all_items(Uint32 max_items)
 	item_load(true, "flashlight", 2, -1, -1, 25, false, 0);
 	item_load(true, "climbing gear", 11, -1, -1, 100, false, 0);
 	item_load(true, "lighter", 12, 6, 6, 25, false, 0);
-	item_load(true, "tape recorder", 14, 1, 4, 200, false, 0);
-
-}
-
-void inventory_init(Uint32 max_items)
-{
-	if (max_items == 0)
-	{
-		slog("cannot allocate 0 items!");
-		return;
-	}
-	if (inventory.item_list != NULL)
-	{
-		inventory_free();
-	}
-	inventory.item_list = (Item *)gfc_allocate_array(sizeof (Item), max_items);
-	if (inventory.item_list == NULL)
-	{
-		slog("failed to allocate item list!");
-		return;
-	}
-	inventory.max_items = max_items;
-	atexit(inventory_free);
-	slog("Inventory initialized");
+	item_load(true, "tape recorder", 14, 1, 4, 200, false, 0);*/
 
 }
 
@@ -90,184 +68,62 @@ void items_free()
 	slog("item list freed");
 }
 
+
+void init_inventory_tetris()
+{
+	int i, j;
+	slog("inventory:");
+	for (i = 0; i < 6; i++)
+	{
+		for (j = 0; j < 8; j++)
+		{
+			tetris_inventory[i][j] = 0;
+			printf("%i, ", tetris_inventory[i][j]);
+		}
+		printf("\n");
+	}
+	atexit(inventory_free);
+
+}
+
+void item_insert_tetris(Vector2D location)
+{
+	int x, y;
+	int i, j;
+	x = location.x;
+	y = location.y;
+
+	if (x > 6 || x < 0)
+	{
+		slog("tetris row bounds");
+		return;
+	}
+	if (y > 8 || y < 0)
+	{
+		slog("tetris slot out of bounds");
+		return;
+	}
+
+	if (tetris_inventory[x][y] != 0)
+	{
+		slog("slot is taken");
+		return;
+	}
+	tetris_inventory[x][y] = 1;
+
+	slog("Inserted new item");
+	for (i = 0; i < 6; i++)
+	{
+		for (j = 0; j < 8; j++)
+		{
+			printf("%i, ", tetris_inventory[i][j]);
+		}
+		printf("\n");
+	}
+
+}
+
 void inventory_free()
 {
-	if (inventory.item_list != NULL)
-	{
-		free(inventory.item_list);
-	}
-	memset(&inventory, 0, sizeof(inventory));
-	slog("inventory freed");
-}
-
-Item *item_load(Bool usable, char *name, int id, int amount, int max_amount, int useTimer, Bool ammo, int ammoID)
-{
-	Item *item;
-
-	if (item_manager.item_list[id]._inuse) return NULL;// someone else is using this one
-	memset(&item_manager.item_list[id], 0, sizeof(Item));
-	item_manager.item_list[id]._inuse = 1;
-	item = &item_manager.item_list[id];
-
-	item->_consumable = usable;
-	item->_hasAmmo = ammo;
-	item->ammoID = ammoID;
-	item->itemName = name;
-	item->itemID = id;
-	item->quantity = amount;
-	item->max_quantity = max_amount;
-	item->timer = useTimer;
-	item->timerMax = useTimer;
-
-	slog("loading %s, id: %i", item->itemName, item->itemID);
-	return item;
-}
-
-void inventory_insert(Item *item)
-{
-	int i;
-	if (inventory.max_items == NULL)
-	{
-		slog("inventory does not exist");
-		return;
-	}
-	if (item == NULL || item->itemName == NULL)
-	{
-		slog("item is not valid, cannot insert");
-		return;
-	}
-
-	for (i = 0; i < inventory.max_items; i++)
-	{
-		if (item != NULL && item->itemID == inventory.item_list[i].itemID)
-		{
-			inventory.item_list[i].quantity += item->quantity;
-			slog("%s already in inventory, updating quantity", item->itemName);
-			return;
-		}
-
-		if (inventory.item_list[i]._inuse)
-			continue;// someone else is using this one
-
-		inventory.item_list[i] = item_manager.item_list[item->itemID];
-		inventory.item_list[i]._inuse = 1;
-		slog("inserting %s into slot %i", inventory.item_list[i].itemName, i);
-		return;
-	}
-	slog("failed to insert: %s", item->itemName);
-	return;
-}
-
-void item_free(Item *item)
-{
-	if (!item)
-	{
-		slog("cannot free a NULL item");
-		return;
-	}
-	item->_inuse = 0;
-	item->itemID = NULL;
-	item->itemName = NULL;
-}
-
-Item *get_current_item(int i)
-{
-	return &inventory.item_list[i];
-}
-
-Item *get_item_by_id(int id)
-{
-	return &item_manager.item_list[id];
-}
-
-Item *search_inventory(int id)
-{
-	int i;
-	for (i = 0; i < inventory.max_items; i++)
-	{
-		if (inventory.item_list[i].itemID == id)
-			return &inventory.item_list[i];
-	}
-	return NULL;
-
-}
-
-Bool handle_ammo(Item *item)
-{
-	Item *ammo;
-	if (!item->_hasAmmo)
-	{
-		slog("This item does not use ammo!");
-		return false;
-	}
-	ammo = search_inventory(item->ammoID);
-	if (ammo == NULL || ammo->quantity == 0)
-	{
-		slog("No ammo!");
-		return false;
-	}
-	
-	ammo->quantity--;
-	check_empty(ammo);
-	return true;
-}
-
-
-void check_empty(Item *item)
-{
-	if (item->quantity == 0 || item == NULL)
-	{
-		slog("Ran out of: %s", item->itemName);
-		item_free(item); 
-	}
-}
-
-void update_timers()
-{
-	int i;
-	Item *item;
-	for (i = 0; i < inventory.max_items; i++)
-	{
-		item = &inventory.item_list[i];
-		if (!item->_inuse || item->itemID == NULL)
-			continue;
-		if (item->timer != item->timerMax)
-			item->timer++;
-	}
-}
-
-/*void drop_item(Item *item, Vector2D position)
-{
-	if (item->itemID == NULL || !item)
-	{
-		slog("No item to drop");
-		return;
-	}
-	if (item->itemID == 2 && get_light_on)
-		toggle_light;
-
-	spawn_pickup(position, item->itemID)->itemQuantity = item->quantity;
-	item_free(item);
-}*/
-
-void clear_inventory()
-{
-	int i;
-	for (i = 0; i < inventory.max_items; i++)
-	{
-		item_free(&inventory.item_list[i]);
-	}
-	return;
-}
-
-Bool check_inventory(int id)
-{
-	int i;
-	for (i = 0; i < inventory.max_items; i++)
-	{
-		if (inventory.item_list[i].itemID == id)
-			return true;
-	}
-	return false;
-
+//	free(tetris_inventory);
 }

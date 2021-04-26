@@ -85,6 +85,11 @@ Entity *player_spawn(Vector2D position)
 	ent->damage = player_damage;
 	ent->die = player_die;
 	
+	init_inventory_tetris();
+	item_insert_tetris(vector2d(2, 5));
+	item_insert_tetris(vector2d(2, 5));
+
+	
     ent->rotation.x = 64;
     ent->rotation.y = 64;
 	ent->flip = vector2d(0, 0);
@@ -385,24 +390,6 @@ void player_draw(Entity *self)
 	check_empty(item);
 }*/
 
-Item *cycle_items()
-{
-	if (inventoryPos < 5)
-		inventoryPos++;
-	else
-		inventoryPos = 0;
-
-	slog("slot %i selected", inventoryPos);
-
-	get_current_item(inventoryPos)->_equipped = true; //Equip current item
-	
-	if (inventoryPos < 0 ) 
-		get_current_item(5)->_equipped = false;
-	else
-		get_current_item(inventoryPos - 1)->_equipped = false; //Unequip last item
-	//update_hud_inventory(inventoryPos);
-	return get_current_item(inventoryPos);
-}
 
 Entity *get_player()
 {
