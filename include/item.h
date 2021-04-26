@@ -9,7 +9,7 @@
 typedef struct Item_s
 {
 	Bool		_inuse;
-	Bool		_consumable;
+	Bool		_usable;
 	Bool		_equipped;
 	Bool		_hasAmmo;
 	char		*itemName;
@@ -36,6 +36,10 @@ void load_all_items(Uint32 max_items);
 */
 void items_free();
 
+Item *item_load(int id, char *name, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown);
+
+Item *get_item_by_id(int id);
+
 /**
 * @brief allocates memory for the tetris style inventory
 */
@@ -45,7 +49,7 @@ void init_inventory_tetris();
 * @brief inserts item into tetris inventory
 * @param location where in the inventory the item is inserted
 */
-void item_insert_tetris(Vector2D location);
+void item_insert_tetris(Item *item, Vector2D location);
 
 /**
 * @brief frees the inventory

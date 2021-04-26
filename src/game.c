@@ -98,6 +98,7 @@ int main(int argc, char * argv[])
     gf2d_graphics_set_frame_delay(16);
     gfc_audio_init(256,16,4,1,1,1);
     gf2d_sprite_init(1024);
+	load_all_items(50);
     gf2d_action_list_init(128);
     gf2d_font_init("config/font.cfg");
     gfc_input_init("config/input.cfg");
