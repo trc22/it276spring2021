@@ -1,4 +1,7 @@
 #include "simple_logger.h"
+#include "gf2d_actor.h"
+#include "gf2d_font.h"
+
 #include "item.h"
 //#include "pickup.h"
 //#include "overlay.h"
@@ -11,7 +14,10 @@ typedef struct
 
 
 static ItemManager item_manager = { 0 };
+static ItemManager inventory = { 0 };
 static Uint32 tetris_inventory[6][8] = { 0 };
+
+Actor inventory_actor;
 
 void load_all_items(Uint32 max_items)
 {
@@ -96,6 +102,64 @@ Item *get_item_by_id(int id)
 	return &item_manager.item_list[id];
 }
 
+void inventory_init(Uint32 max_items)
+{
+	if (max_items == 0)
+	{
+		slog("cannot allocate 0 items!");
+		return;
+	}
+	if (inventory.item_list != NULL)
+	{
+		inventory_free();
+	}
+	inventory.item_list = (Item *)gfc_allocate_array(sizeof (Item), max_items);
+	if (inventory.item_list == NULL)
+	{
+		slog("failed to allocate item list!");
+		return;
+	}
+	inventory.max_items = max_items;
+	atexit(inventory_free);
+	slog("Inventory initialized");
+
+}
+
+void inventory_insert(Item *item)
+{
+	int i;
+	if (inventory.max_items == NULL)
+	{
+		slog("inventory does not exist");
+		return;
+	}
+	if (item == NULL || item->itemName == NULL)
+	{
+		slog("item is not valid, cannot insert");
+		return;
+	}
+
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		if (item != NULL && item->itemID == inventory.item_list[i].itemID)
+		{
+			inventory.item_list[i].quantity += item->quantity;
+			slog("%s already in inventory, updating quantity", item->itemName);
+			return;
+		}
+
+		if (inventory.item_list[i]._inuse)
+			continue;// someone else is using this one
+
+		inventory.item_list[i] = item_manager.item_list[item->itemID];
+		inventory.item_list[i]._inuse = 1;
+		slog("inserting %s into slot %i", inventory.item_list[i].itemName, i);
+		return;
+	}
+	slog("failed to insert: %s", item->itemName);
+	return;
+}
+
 void init_inventory_tetris()
 {
 	int i, j;
@@ -109,6 +173,11 @@ void init_inventory_tetris()
 		}
 		printf("\n");
 	}
+
+	gf2d_actor_free(&inventory_actor);
+	gf2d_actor_load(&inventory_actor, "actors/tetris_inventory.actor");
+	gf2d_actor_set_action(&inventory_actor, "idle");
+
 	atexit(inventory_free);
 
 }
@@ -183,3 +252,9 @@ void inventory_free()
 {
 //	free(tetris_inventory);
 }
+
+void draw_inventory()
+{
+	gf2d_sprite_draw_image(inventory_actor.sprite, vector2d(500, 100));
+}
+

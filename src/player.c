@@ -27,6 +27,8 @@ Item *current_item;
 int jumpTimer, cycleTimer, inventoryTimer, loadTimer;
 int inventoryPos;
 
+Bool i_open;
+
 Entity *player_spawn(Vector2D position)
 {
     Entity *ent;
@@ -85,9 +87,11 @@ Entity *player_spawn(Vector2D position)
 	ent->damage = player_damage;
 	ent->die = player_die;
 	
+	inventory_init(16);
 	init_inventory_tetris();
 	item_insert_tetris(get_item_by_id(1), vector2d(2, 5));
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1));
+	i_open = false;
 	//item_insert_tetris(vector2d(2, 5));
 
 	
@@ -120,6 +124,7 @@ void player_update(Entity *self)
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
 	camera_set_position(camera);
+
 
 	player_position = self->position;
 }
@@ -196,7 +201,7 @@ void player_think(Entity *self)
 	if (self->velocity.x < -3)
 		self->velocity.x = -3;
 
-	if (keys[SDL_SCANCODE_SPACE] && self->grounded) //jump
+	if (gfc_input_command_pressed("jump") && self->grounded) //jump
 	{
 		jumpTimer = 0;
 	}
@@ -204,6 +209,14 @@ void player_think(Entity *self)
 	{
 		jumpTimer++;
 		self->velocity.y -= 1;
+	}
+
+	if (gfc_input_command_pressed("inventory"))
+	{
+		if (!i_open)
+			i_open = true;
+		else
+			i_open = false;
 	}
 
 	if (keys[SDL_SCANCODE_TAB] && cycleTimer == 35)
@@ -287,6 +300,8 @@ void player_draw(Entity *self)
 {
 	//gf2d_body_draw(&self->body, vector2d(self->position.x - camera_get_position().x, self->position.y - camera_get_position().y));
 	//gf2d_body_draw(db->body, vector2d(self->position.x - camera_get_position().x, self->position.y));
+	if(i_open)
+		draw_inventory();
 }
 /*void player_collide(Entity *self, Entity *other)
 {

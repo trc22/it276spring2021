@@ -40,6 +40,10 @@ Item *item_load(int id, char *name, Bool usable, Bool hasAmmo, int ammoID, int m
 
 Item *get_item_by_id(int id);
 
+void inventory_init(Uint32 max_items);
+
+void inventory_insert(Item *item);
+
 /**
 * @brief allocates memory for the tetris style inventory
 */
@@ -55,5 +59,7 @@ void item_insert_tetris(Item *item, Vector2D location);
 * @brief frees the inventory
 */
 void inventory_free();
+
+void draw_inventory();
 
 #endif

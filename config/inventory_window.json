@@ -1,0 +1,139 @@
+{
+"window":{
+    "color" : [100, 100, 100, 255],
+    "dimensions" : [0,0,360,260],
+    "justify" : "center",
+    "align" : "middle",
+    "elements":
+    [
+      {
+        "type": "list",
+        "name": "list",
+        "id" : 0,
+        "bounds": [10,10,1,1],
+        "color" : [255,255,255,255],
+        "style": "vertical",
+        "item_size" : [100,36],
+        "elements":
+        [
+            {
+            "type": "label",
+            "name": "title",
+            "id" : 1,
+            "bounds": [0,0,1,40],
+            "color" : [255,255,255,255],
+            "text":"Inventory:",
+            "justify" : "center",
+            "align" : "middle",
+            "style":"H2"
+            },
+            {
+            "type": "list",
+            "name": "inventory",
+            "id" : 50,
+            "bounds": [0,0,200,1],
+            "color" : [255,255,255,255],
+            "style": "vertical",
+            "item_size" : [168,64],
+            "elements":
+            [
+                {
+                "type": "button",
+                "name": "start",
+                "id" : 51,
+                "bounds": [100,0,168,64],
+                "hotkey":"start",
+                "color" : [255,255,255,255],
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "start_1",
+                    "id" : 511,
+                    "bounds": [0,0,154,64],
+                    "color" : [255,255,255,255],
+                    "text":"Start",
+                    "justify" : "center",
+                    "align" : "middle",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 512,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+                {
+                "type": "button",
+                "name": "load",
+                "id" : 52,
+                "bounds": [100,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"load",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "load_1",
+                    "id" : 521,
+                    "bounds": [0,0,154,64],
+                    "color" : [255,255,255,255],
+                    "text":"Load",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 522,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+                {
+                "type": "button",
+                "name": "quit",
+                "id" : 53,
+                "bounds": [100,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"quit",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "quit_1",
+                    "id" : 523,
+                    "bounds": [0,0,154,64],
+                    "color" : [255,255,255,255],
+                    "text":"Quit",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 524,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                }
+            ]
+            }
+        ]
+      }
+    ]
+    }
+}
