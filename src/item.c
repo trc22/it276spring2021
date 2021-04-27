@@ -100,6 +100,19 @@ void items_free()
 	slog("item list freed");
 }
 
+void free_item(Item *item)
+{
+	if (!item)
+	{
+		slog("cannot free a NULL item");
+		return;
+	}
+	item->_inuse = 0;
+	item->itemID = NULL;
+	item->itemName = NULL;
+	item->sprite = NULL;
+}
+
 Item *get_item_by_id(int id)
 {
 	return &item_manager.item_list[id];
@@ -128,7 +141,7 @@ void inventory_init(Uint32 max_items)
 
 }
 
-void inventory_insert(Item *item)
+void inventory_insert_item(Item *item)
 {
 	int i;
 	if (inventory.max_items == NULL)
@@ -163,6 +176,20 @@ void inventory_insert(Item *item)
 	return;
 }
 
+void inventory_remove_item(Item *item)
+{
+	int i;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		if (inventory.item_list[i].itemID == item->itemID)
+		{
+			item_remove_tetris(item);
+			free_item(item);
+			return;
+		}
+	}
+}
+
 Item *get_item_by_pos(int pos)
 {
 	if (pos < 0 || pos > inventory.max_items)
@@ -170,7 +197,31 @@ Item *get_item_by_pos(int pos)
 		slog("Inventory pos is out of range");
 		return NULL;
 	}
-	return &inventory.item_list[pos];
+	if (inventory.item_list[pos]._inuse)
+		return &inventory.item_list[pos];
+	return NULL;
+}
+
+int get_item_inventory_pos(Item *item)
+{
+	int i;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		if (item == &inventory.item_list[i])
+			return i;
+	}
+	return -1;
+}
+
+Item *search_inventory(int id)
+{
+	int i;
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		if (inventory.item_list[i].itemID == id)
+			return &inventory.item_list[i];
+	}
+	return NULL;
 }
 
 void init_inventory_tetris()
@@ -246,12 +297,12 @@ void item_insert_tetris(Item *item, Vector2D location)
 	{
 		for (j = 0; j < item->itemSize.x; j++)
 		{
-			tetris_inventory[row - i][column - j] = 1; //Starting from the right, if x rows are taken;
+			tetris_inventory[row - i][column - j] = item->itemID; //Starting from the right, if x rows are taken;
 		}
 	}
 
 	item->pos = location;
-	inventory_insert(item);
+	inventory_insert_item(item);
 
 	slog("Inserted new item");
 	for (i = 0; i < 6; i++)
@@ -265,6 +316,33 @@ void item_insert_tetris(Item *item, Vector2D location)
 
 }
 
+void item_remove_tetris(Item *item)
+{
+	int i, j;
+
+	//slog("removing %s:", item->itemName);
+	for (i = 0; i < 6; i++)
+	{
+		for (j = 0; j < 8; j++)
+		{
+			if(tetris_inventory[i][j] == item->itemID);
+				tetris_inventory[i][j] = 0;
+		}
+	}
+	for (i = 0; i < 6; i++)
+	{
+		for (j = 0; j < 8; j++)
+		{
+			printf("%i, ", tetris_inventory[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+void item_move_tetris(Item *item, Vector2D location);
+
+void item_rotate_tetris(Item *item);
+
 void inventory_free()
 {
 //	free(tetris_inventory);
@@ -275,13 +353,15 @@ void draw_inventory()
 	int i;
 	Item *item;
 
-	gf2d_sprite_draw_image(inventory_actor.sprite, vector2d(425, 100));
+	gf2d_sprite_draw_image(inventory_actor.sprite, vector2d(425, 100)); //Draw grid
+
 	for (i = 0; i < inventory.max_items; i++)
 	{
 		item = get_item_by_pos(i);
-		if (!item->_inuse && item == NULL)
-			continue;
-		gf2d_sprite_draw_image(item->sprite, vector2d(item->pos.x + 425, item->pos.y + 100));
+
+		if (item == NULL) continue;
+		if (item->_inuse)
+			gf2d_sprite_draw_image(item->sprite, vector2d(item->pos.x + 425, item->pos.y + 100));
 	}
 }
 

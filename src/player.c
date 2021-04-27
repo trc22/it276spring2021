@@ -90,9 +90,9 @@ Entity *player_spawn(Vector2D position)
 	inventory_init(16);
 	init_inventory_tetris();
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1));
+	inventory_remove_item(search_inventory(4));
+	//inventory_remove_item(get_item_by_pos(0));
 	i_open = false;
-	//item_insert_tetris(vector2d(2, 5));
-
 	
     ent->rotation.x = 64;
     ent->rotation.y = 64;

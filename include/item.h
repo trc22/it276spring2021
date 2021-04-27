@@ -40,15 +40,25 @@ void load_all_items(Uint32 max_items);
 */
 void items_free();
 
+void free_item(Item *item);
+
 Item *item_load(int id, char *name, char *sprite, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown);
 
 Item *get_item_by_id(int id);
 
+
 void inventory_init(Uint32 max_items);
 
-void inventory_insert(Item *item);
+void inventory_insert_item(Item *item);
+
+void inventory_remove_item(Item *item);
 
 Item *get_item_by_pos(int pos);
+
+Item *search_inventory(int id);
+
+int get_item_inventory_pos(Item *item);
+
 
 /**
 * @brief allocates memory for the tetris style inventory
@@ -57,9 +67,30 @@ void init_inventory_tetris();
 
 /**
 * @brief inserts item into tetris inventory
+* @param item the item to insert
 * @param location where in the inventory the item is inserted
 */
 void item_insert_tetris(Item *item, Vector2D location);
+
+/**
+* @brief removes an item from tetris inventory
+* @param location where in the inventory the item is inserted
+*/
+void item_remove_tetris(Item *item);
+
+/**
+* @brief moves an item into a new slot
+* @param item the item to move
+* @param location where the item will be moved to
+*/
+void item_move_tetris(Item *item, Vector2D location);
+
+/**
+* @brief rotates an item 90 degrees
+* @param item the item to rotate
+*/
+void item_rotate_tetris(Item *item);
+
 
 /**
 * @brief frees the inventory
