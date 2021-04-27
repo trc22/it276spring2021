@@ -20,12 +20,17 @@ int player_damage(Entity *self, int amount, Entity *source);
 void player_die(Entity *self);
 void player_load_save(const char *filename);
 
+void handle_inventory();
+
 Vector2D player_position;
 Entity *player;
 Item *current_item;
 
 int jumpTimer, cycleTimer, inventoryTimer, loadTimer;
 int inventoryPos;
+
+Vector2D slot;
+
 
 Bool i_open;
 
@@ -90,9 +95,10 @@ Entity *player_spawn(Vector2D position)
 	inventory_init(16);
 	init_inventory_tetris();
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1));
-	inventory_remove_item(search_inventory(4));
-	//inventory_remove_item(get_item_by_pos(0));
+	//inventory_remove_item(search_inventory(4));
+
 	i_open = false;
+	slot = vector2d(0, 0);
 	
     ent->rotation.x = 64;
     ent->rotation.y = 64;
@@ -106,7 +112,7 @@ Entity *player_spawn(Vector2D position)
 	//init timers
 	jumpTimer = 25;
 	cycleTimer = 35;
-	inventoryTimer = 35;
+	inventoryTimer = 10;
 	loadTimer = 200;
 
     return ent;
@@ -234,6 +240,8 @@ void player_think(Entity *self)
 		self->body.team = 0;
 	}
 
+	handle_inventory();
+
 
 	//Use item
 	/*if (keys[SDL_SCANCODE_F])
@@ -299,8 +307,11 @@ void player_draw(Entity *self)
 {
 	//gf2d_body_draw(&self->body, vector2d(self->position.x - camera_get_position().x, self->position.y - camera_get_position().y));
 	//gf2d_body_draw(db->body, vector2d(self->position.x - camera_get_position().x, self->position.y));
-	if(i_open)
+	if (i_open)
+	{
 		draw_inventory();
+		draw_cursor_inventory(slot);
+	}
 }
 /*void player_collide(Entity *self, Entity *other)
 {
@@ -426,5 +437,46 @@ void player_load_save(const char *filename)
 	//load_save(filename);
 }
 
+void handle_inventory()
+{
+	const Uint8 *keys;
+	if (!i_open)
+		return;
+
+	keys = SDL_GetKeyboardState(NULL);
+
+	Item *item;
+
+	if (gfc_input_command_pressed("ok"))
+	{
+		item = item_find_tetris(slot);
+		slog("Selected %s", item->itemName);
+	}
+	
+	if (inventoryTimer == 10)
+	{
+		if (keys[SDL_SCANCODE_UP])
+			slot.x--;
+		if (keys[SDL_SCANCODE_DOWN])
+			slot.x++;
+		if (keys[SDL_SCANCODE_LEFT])
+			slot.y--;
+		if (keys[SDL_SCANCODE_RIGHT])
+			slot.y++;
+
+		if (slot.x > 5)
+			slot.x = 5;
+		if (slot.x < 0)
+			slot.x = 0;
+		if (slot.y > 7)
+			slot.y = 7;
+		if (slot.y < 0)
+			slot.y = 0;
+
+		inventoryTimer = 0;
+	}
+	else
+		inventoryTimer++;
+}
 
 /**/

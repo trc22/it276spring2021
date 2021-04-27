@@ -3,6 +3,7 @@
 #include "gf2d_font.h"
 
 #include "item.h"
+
 //#include "pickup.h"
 //#include "overlay.h"
 
@@ -18,6 +19,7 @@ static ItemManager inventory = { 0 };
 static Uint32 tetris_inventory[6][8] = { 0 };
 
 Actor inventory_actor;
+Sprite *cursor;
 
 void load_all_items(Uint32 max_items)
 {
@@ -242,6 +244,8 @@ void init_inventory_tetris()
 	gf2d_actor_load(&inventory_actor, "actors/tetris_inventory.actor");
 	gf2d_actor_set_action(&inventory_actor, "idle");
 
+	cursor = gf2d_sprite_load_image("images/inventory/cursor.png");
+
 	atexit(inventory_free);
 
 }
@@ -329,14 +333,15 @@ void item_remove_tetris(Item *item)
 				tetris_inventory[i][j] = 0;
 		}
 	}
-	for (i = 0; i < 6; i++)
-	{
-		for (j = 0; j < 8; j++)
-		{
-			printf("%i, ", tetris_inventory[i][j]);
-		}
-		printf("\n");
-	}
+}
+
+Item *item_find_tetris(Vector2D location)
+{
+	int row, column;
+	row = location.x;
+	column = location.y;
+	
+	return get_item_by_id(tetris_inventory[row][column]);
 }
 
 void item_move_tetris(Item *item, Vector2D location);
@@ -363,5 +368,15 @@ void draw_inventory()
 		if (item->_inuse)
 			gf2d_sprite_draw_image(item->sprite, vector2d(item->pos.x + 425, item->pos.y + 100));
 	}
+}
+
+void draw_cursor_inventory(Vector2D location)
+{
+	int x, y;
+	//Convert from inventory space to screen space
+	x = location.y; 
+	y = location.x;
+
+	gf2d_sprite_draw_image(cursor, vector2d((x *32) + 425, (y *32) + 100));
 }
 

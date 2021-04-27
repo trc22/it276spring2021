@@ -68,7 +68,7 @@ void init_inventory_tetris();
 /**
 * @brief inserts item into tetris inventory
 * @param item the item to insert
-* @param location where in the inventory the item is inserted
+* @param location where in the inventory the item is inserted (row, column)
 */
 void item_insert_tetris(Item *item, Vector2D location);
 
@@ -79,9 +79,16 @@ void item_insert_tetris(Item *item, Vector2D location);
 void item_remove_tetris(Item *item);
 
 /**
+* @brief checks what item is at a given location
+* @param location where in the inventory to check (row, column)
+*/
+Item *item_find_tetris(Vector2D location);
+
+
+/**
 * @brief moves an item into a new slot
 * @param item the item to move
-* @param location where the item will be moved to
+* @param location where the item will be moved to (row, column)
 */
 void item_move_tetris(Item *item, Vector2D location);
 
@@ -99,5 +106,7 @@ void inventory_free();
 
 
 void draw_inventory();
+
+void draw_cursor_inventory(Vector2D location);
 
 #endif
