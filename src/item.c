@@ -40,9 +40,9 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
-	item_load(0, "", true, false, NULL, 0, -1, vector2d(0, 0), 0);
-	item_load(1, "flashlight", true, false, NULL, 0, -1, vector2d(2, 1), 0);
-	item_load(4, "pistol", true, true, NULL, 0, -1, vector2d(2, 2), 0);
+	item_load(0, "", NULL, true, false, NULL, 0, -1, vector2d(0, 0), 0);
+//	item_load(1, "flashlight", true, false, NULL, 0, -1, vector2d(2, 1), 0);
+	item_load(4, "pistol", "images/inventory/pistol.png", true, true, NULL, 0, -1, vector2d(2, 2), 0);
 /*	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
 	item_load(true, "key", 3, -1, -1, 25, false, 0);
 	
@@ -65,7 +65,7 @@ void load_all_items(Uint32 max_items)
 	item_load(true, "tape recorder", 14, 1, 4, 200, false, 0);*/
 
 }
-Item *item_load(int id, char *name, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown)
+Item *item_load(int id, char *name, char *sprite, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown)
 {
 	Item *item;
 
@@ -74,9 +74,12 @@ Item *item_load(int id, char *name, Bool usable, Bool hasAmmo, int ammoID, int m
 	item_manager.item_list[id]._inuse = 1;
 
 	item = &item_manager.item_list[id];
-
 	item->itemID = id;
 	item->itemName = name;
+	if (sprite != NULL && sprite != "")
+		item->sprite = gf2d_sprite_load_image(sprite);
+	else
+		item->sprite = NULL;
 	item->_usable = usable;
 	item->_hasAmmo = hasAmmo;
 	item->ammoID = ammoID;
@@ -160,6 +163,16 @@ void inventory_insert(Item *item)
 	return;
 }
 
+Item *get_item_by_pos(int pos)
+{
+	if (pos < 0 || pos > inventory.max_items)
+	{
+		slog("Inventory pos is out of range");
+		return NULL;
+	}
+	return &inventory.item_list[pos];
+}
+
 void init_inventory_tetris()
 {
 	int i, j;
@@ -236,6 +249,10 @@ void item_insert_tetris(Item *item, Vector2D location)
 			tetris_inventory[row - i][column - j] = 1; //Starting from the right, if x rows are taken;
 		}
 	}
+
+	item->pos = location;
+	inventory_insert(item);
+
 	slog("Inserted new item");
 	for (i = 0; i < 6; i++)
 	{
@@ -255,6 +272,16 @@ void inventory_free()
 
 void draw_inventory()
 {
-	gf2d_sprite_draw_image(inventory_actor.sprite, vector2d(500, 100));
+	int i;
+	Item *item;
+
+	gf2d_sprite_draw_image(inventory_actor.sprite, vector2d(425, 100));
+	for (i = 0; i < inventory.max_items; i++)
+	{
+		item = get_item_by_pos(i);
+		if (!item->_inuse && item == NULL)
+			continue;
+		gf2d_sprite_draw_image(item->sprite, vector2d(item->pos.x + 425, item->pos.y + 100));
+	}
 }
 

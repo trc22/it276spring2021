@@ -4,10 +4,13 @@
 #include "gfc_types.h"
 #include "gfc_vector.h"
 #include "simple_json.h"
+#include "gf2d_sprite.h"
+
 
 
 typedef struct Item_s
 {
+	Sprite		*sprite;
 	Bool		_inuse;
 	Bool		_usable;
 	Bool		_equipped;
@@ -15,6 +18,7 @@ typedef struct Item_s
 	char		*itemName;
 	int			itemID;
 	Vector2D	itemSize;
+	Vector2D	pos;
 	int			rotate90;
 	int			quantity;
 	int			max_quantity;
@@ -36,13 +40,15 @@ void load_all_items(Uint32 max_items);
 */
 void items_free();
 
-Item *item_load(int id, char *name, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown);
+Item *item_load(int id, char *name, char *sprite, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown);
 
 Item *get_item_by_id(int id);
 
 void inventory_init(Uint32 max_items);
 
 void inventory_insert(Item *item);
+
+Item *get_item_by_pos(int pos);
 
 /**
 * @brief allocates memory for the tetris style inventory
@@ -59,6 +65,7 @@ void item_insert_tetris(Item *item, Vector2D location);
 * @brief frees the inventory
 */
 void inventory_free();
+
 
 void draw_inventory();
 
