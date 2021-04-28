@@ -29,7 +29,7 @@ int jumpTimer, cycleTimer, inventoryTimer, loadTimer;
 int inventoryPos;
 
 Vector2D slot, old_pos;
-int inventoryMode, movingItem;
+int inventoryMode, movingItem, old_z;
 Item *current_item;
 Item *equipped_item;
 
@@ -104,6 +104,8 @@ Entity *player_spawn(Vector2D position)
 	movingItem = 0;
 	slot = vector2d(0, 0);
 	old_pos = vector2d(0, 0);
+	old_z = 0;
+
 	current_item = get_item_by_id(0);
 	equipped_item = get_item_by_id(0);
 	
@@ -482,18 +484,25 @@ void handle_inventory()
 			{
 				slog("Moving %s", current_item->itemName);
 				vector2d_copy(old_pos, current_item->pos);
+				old_z = current_item->rotation->z;
 				movingItem = 1;
 				return;
 			}
 			if (movingItem && inventoryMode == 1)
 			{
-				item_move_tetris(current_item, current_item->pos, slot);
+				if (!item_move_tetris(current_item, current_item->pos, slot))
+					current_item->rotation->z = old_z;
 				movingItem = 0;
 				current_item = get_item_by_id(0);
 				return;
 			}
 
 		}
+	}
+
+	if (gfc_input_command_pressed("reload") && movingItem && current_item->itemID > 0)
+	{
+		item_rotate_tetris(current_item);
 	}
 	
 	if (inventoryTimer == 10)

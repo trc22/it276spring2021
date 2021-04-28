@@ -20,7 +20,7 @@ typedef struct Item_s
 	int			itemID;
 	Vector2D	itemSize;
 	Vector2D	pos;
-	int			rotate90;
+	Vector3D	*rotation;
 	int			quantity;
 	int			max_quantity;
 	int			timer;

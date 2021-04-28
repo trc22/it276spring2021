@@ -21,6 +21,8 @@ static Uint32 tetris_inventory[6][8] = { 0 };
 Actor inventory_actor;
 Sprite *cursor;
 
+Vector3D *rotation;
+
 void load_all_items(Uint32 max_items)
 {
 	if (max_items == 0)
@@ -82,6 +84,10 @@ Item *item_load(int id, char *name, char *sprite, Bool usable, Bool canEquip, Bo
 		item->sprite = gf2d_sprite_load_image(sprite);
 	else
 		item->sprite = NULL;
+	item->rotation = vector3d_new();
+	item->rotation->x = 0;
+	item->rotation->y = 0;
+	item->rotation->z = 0;
 	item->_usable = usable;
 	item->_equippable = canEquip;
 	item->_equipped = 0;
@@ -282,11 +288,7 @@ int item_insert_tetris(Item *item, Vector2D location)
 		slog("slot is taken");
 		return 0;
 	}
-	
-	if (item->rotate90)
-	{
-		vector2d_copy(item->itemSize, vector2d(item->itemSize.y, item->itemSize.x));
-	}
+
 	for (i = 0; i < item->itemSize.y; i++)
 	{
 
@@ -379,7 +381,15 @@ int item_move_tetris(Item *item, Vector2D src, Vector2D dst)
 	return 0;
 }
 
-void item_rotate_tetris(Item *item);
+void item_rotate_tetris(Item *item)
+{
+	item->rotation->z += 90;
+	if (item->rotation->z == 360)
+		item->rotation->z = 0;
+
+	vector2d_copy(item->itemSize, vector2d(item->itemSize.y, item->itemSize.x));
+
+}
 
 void inventory_free()
 {
@@ -397,14 +407,30 @@ void draw_inventory()
 	for (i = 0; i < inventory.max_items; i++)
 	{
 		item = get_item_by_pos(i);
+
+		if (item == NULL || !item->_inuse) continue;
+
 		//Convert from inventory space to screen space
 		x = item->pos.y - 1;
 		y = item->pos.x - 1;
+		if (item->rotation->z > 0)
+		{
+			if (item->rotation->z == 90)
+			{
+				x += 2;
+			}
+			else if (item->rotation->z == 180)
+			{
+				x += 2;
+				y += 2;
+			}
+			else if (item->rotation->z == 270)
+			{
+				y += 2;
+			}
 
-
-		if (item == NULL) continue;
-		if (item->_inuse)
-			gf2d_sprite_draw_image(item->sprite, vector2d((x * 32) + 425,( y * 32) + 100));
+		}
+		gf2d_sprite_draw(item->sprite, vector2d((x * 32) + 425, (y * 32) + 100), NULL, NULL, item->rotation, NULL, NULL, 0);
 	}
 }
 
