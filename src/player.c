@@ -470,15 +470,22 @@ void handle_inventory()
 		{
 			current_item = item_find_tetris(slot);
 			slog("selected %s", current_item->itemName);
-			return;
 		}
 
 		if (current_item != NULL && current_item->itemID > 0)
 		{
 			if (inventoryMode == 0)
 			{
-				slog("Equipping %s", current_item->itemName);
-				equipped_item = search_inventory(current_item->itemID);
+				if (current_item->_equippable)
+				{
+					slog("Equipping %s", current_item->itemName);
+					equipped_item = search_inventory(current_item->itemID);
+				}
+				else if (current_item->_usable)
+				{
+					slog("Using %s", current_item->itemName);
+					
+				}
 				current_item = get_item_by_id(0);
 				return;
 			}
