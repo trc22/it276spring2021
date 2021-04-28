@@ -45,14 +45,13 @@ void load_all_items(Uint32 max_items)
 	slog("Item list initialized");
 
 	item_load(0, "", NULL, true, false, false, NULL, 0, -1, vector2d(0, 0), 0);
-//	item_load(1, "flashlight", true, false, NULL, 0, -1, vector2d(2, 1), 0);
-	item_load(4, "pistol", "images/inventory/pistol.png", false, true, true, NULL, 0, -1, vector2d(2, 2), 0);
+	item_load(1, "flashlight", "images/inventory/flashlight.png", true, false, false, NULL, -1, -1, vector2d(1, 2), 0);
+	item_load(4, "pistol", "images/inventory/pistol.png", false, true, true, NULL, 12, -1, vector2d(2, 2), 0);
 /*	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
 	item_load(true, "key", 3, -1, -1, 25, false, 0);
 	
 	//Weapons
 	item_load(true, "knife", 13, -1, -1, 60, false, 0);
-	item_load(true, "pistol", 4, -1, -1, 40, true, 8);
 	item_load(true, "shotgun", 5, -1, -1, 90, true, 9);
 	item_load(true, "rifle", 6, -1, -1, 120, true, 10);
 	item_load(true, "dynamite", 7, 2, 4, 120, false, 0);
@@ -258,7 +257,7 @@ void init_inventory_tetris()
 
 }
 
-int item_insert_tetris(Item *item, Vector2D location)
+int item_insert_tetris(Item *item, Vector2D location, int _ismove)
 {
 	int i, j;
 	int row, column;
@@ -299,7 +298,7 @@ int item_insert_tetris(Item *item, Vector2D location)
 				slog("slot is taken");
 				return 0;
 			}
-			if (row - i < 0 || column - 1 < 0)
+			if (row - i < 0 || column - (item->itemSize.x - 1) < 0)
 			{
 				slog("can't put an item there");
 				return 0;
@@ -315,9 +314,10 @@ int item_insert_tetris(Item *item, Vector2D location)
 	}
 
 	item->pos = location;
-	inventory_insert_item(item);
+	if (!_ismove)
+		inventory_insert_item(item);
 
-	slog("Inserted new item");
+	slog("Updated inventory");
 	for (i = 0; i < 6; i++)
 	{
 		for (j = 0; j < 8; j++)
@@ -331,16 +331,16 @@ int item_insert_tetris(Item *item, Vector2D location)
 
 }
 
-void item_remove_tetris(Item *item)
+void item_remove_tetris(int id)
 {
 	int i, j;
-
+	
 	//slog("removing %s:", item->itemName);
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 5; i++)
 	{
-		for (j = 0; j < 8; j++)
+		for (j = 0; j < 7; j++)
 		{
-			if(tetris_inventory[i][j] == item->itemID);
+			if (tetris_inventory[i][j] == id)
 				tetris_inventory[i][j] = 0;
 		}
 	}
@@ -358,24 +358,14 @@ Item *item_find_tetris(Vector2D location)
 int item_move_tetris(Item *item, Vector2D src, Vector2D dst)
 {
 	int i, j;
-	item_remove_tetris(item);
-	if (item_insert_tetris(item, dst))
+	item_remove_tetris(item->itemID);
+	if (item_insert_tetris(item, dst, 1))
 	{
 		slog("moved item");
-
-		for (i = 0; i < 6; i++)
-		{
-			for (j = 0; j < 8; j++)
-			{
-				printf("%i, ", tetris_inventory[i][j]);
-			}
-			printf("\n");
-		}
-
 		vector2d_copy(search_inventory(item->itemID)->pos, dst);
 		return 1;
 	}
-	item_insert_tetris(item, src);
+	item_insert_tetris(item, src, 1);
 	vector2d_copy(search_inventory(item->itemID)->pos, src);
 	slog("failed to move");
 	return 0;
@@ -411,8 +401,10 @@ void draw_inventory()
 		if (item == NULL || !item->_inuse) continue;
 
 		//Convert from inventory space to screen space
+
 		x = item->pos.y - 1;
 		y = item->pos.x - 1;
+
 		if (item->rotation->z > 0)
 		{
 			if (item->rotation->z == 90)

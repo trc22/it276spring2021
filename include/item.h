@@ -70,15 +70,16 @@ void init_inventory_tetris();
 * @brief inserts item into tetris inventory
 * @param item the item to insert
 * @param location where in the inventory the item is inserted (row, column)
+* @param _ismove 1 if insertion is because of item movement
 * @return 0 if failed, 1 if successful
 */
-int item_insert_tetris(Item *item, Vector2D location);
+int item_insert_tetris(Item *item, Vector2D location, int _ismove);
 
 /**
 * @brief removes an item from tetris inventory
-* @param location where in the inventory the item is inserted
+* @param id where in the inventory the item is inserted
 */
-void item_remove_tetris(Item *item);
+void item_remove_tetris(int id);
 
 /**
 * @brief checks what item is at a given location
