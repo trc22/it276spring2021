@@ -42,9 +42,9 @@ void load_all_items(Uint32 max_items)
 	atexit(items_free);
 	slog("Item list initialized");
 
-	item_load(0, "", NULL, true, false, NULL, 0, -1, vector2d(0, 0), 0);
+	item_load(0, "", NULL, true, false, false, NULL, 0, -1, vector2d(0, 0), 0);
 //	item_load(1, "flashlight", true, false, NULL, 0, -1, vector2d(2, 1), 0);
-	item_load(4, "pistol", "images/inventory/pistol.png", true, true, NULL, 0, -1, vector2d(2, 2), 0);
+	item_load(4, "pistol", "images/inventory/pistol.png", false, true, true, NULL, 0, -1, vector2d(2, 2), 0);
 /*	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
 	item_load(true, "key", 3, -1, -1, 25, false, 0);
 	
@@ -67,7 +67,7 @@ void load_all_items(Uint32 max_items)
 	item_load(true, "tape recorder", 14, 1, 4, 200, false, 0);*/
 
 }
-Item *item_load(int id, char *name, char *sprite, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown)
+Item *item_load(int id, char *name, char *sprite, Bool usable, Bool canEquip, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown)
 {
 	Item *item;
 
@@ -83,6 +83,8 @@ Item *item_load(int id, char *name, char *sprite, Bool usable, Bool hasAmmo, int
 	else
 		item->sprite = NULL;
 	item->_usable = usable;
+	item->_equippable = canEquip;
+	item->_equipped = 0;
 	item->_hasAmmo = hasAmmo;
 	item->ammoID = ammoID;
 	item->max_quantity = max;
@@ -250,7 +252,7 @@ void init_inventory_tetris()
 
 }
 
-void item_insert_tetris(Item *item, Vector2D location)
+int item_insert_tetris(Item *item, Vector2D location)
 {
 	int i, j;
 	int row, column;
@@ -259,26 +261,26 @@ void item_insert_tetris(Item *item, Vector2D location)
 	column = location.y;
 
 	
-	if (row > 6 || row < 0)
+	if (row > 5 || row < 0)
 	{
 		slog("tetris row bounds");
-		return;
+		return 0;
 	}
-	if (column > 8 || column < 0)
+	if (column > 7 || column < 0)
 	{
 		slog("tetris column out of bounds");
-		return;
+		return 0;
 	}
 	if (&item->itemSize == NULL)
 	{
 		slog("item size is null");
-		return;
+		return 0;
 	}
 
 	if (tetris_inventory[row][column] != 0)
 	{
 		slog("slot is taken");
-		return;
+		return 0;
 	}
 	
 	if (item->rotate90)
@@ -290,10 +292,15 @@ void item_insert_tetris(Item *item, Vector2D location)
 
 		for (j = 0; j < item->itemSize.x; j++)
 		{
-			if (tetris_inventory[row - i][column - j] != 0 || column - j < 0) //Starting from the right, if x rows are taken;
+			if (tetris_inventory[row - i][column - j] != 0) //Starting from the right, if x rows are taken;
 			{
 				slog("slot is taken");
-				return;
+				return 0;
+			}
+			if (row - i < 0 || column - 1 < 0)
+			{
+				slog("can't put an item there");
+				return 0;
 			}
 		}
 	}
@@ -301,7 +308,7 @@ void item_insert_tetris(Item *item, Vector2D location)
 	{
 		for (j = 0; j < item->itemSize.x; j++)
 		{
-			tetris_inventory[row - i][column - j] = item->itemID; //Starting from the right, if x rows are taken;
+			tetris_inventory[row - i][column - j] = item->itemID; //Starting from the right;
 		}
 	}
 
@@ -317,6 +324,8 @@ void item_insert_tetris(Item *item, Vector2D location)
 		}
 		printf("\n");
 	}
+
+	return 1;
 
 }
 
@@ -344,7 +353,31 @@ Item *item_find_tetris(Vector2D location)
 	return get_item_by_id(tetris_inventory[row][column]);
 }
 
-void item_move_tetris(Item *item, Vector2D location);
+int item_move_tetris(Item *item, Vector2D src, Vector2D dst)
+{
+	int i, j;
+	item_remove_tetris(item);
+	if (item_insert_tetris(item, dst))
+	{
+		slog("moved item");
+
+		for (i = 0; i < 6; i++)
+		{
+			for (j = 0; j < 8; j++)
+			{
+				printf("%i, ", tetris_inventory[i][j]);
+			}
+			printf("\n");
+		}
+
+		vector2d_copy(search_inventory(item->itemID)->pos, dst);
+		return 1;
+	}
+	item_insert_tetris(item, src);
+	vector2d_copy(search_inventory(item->itemID)->pos, src);
+	slog("failed to move");
+	return 0;
+}
 
 void item_rotate_tetris(Item *item);
 
@@ -355,18 +388,23 @@ void inventory_free()
 
 void draw_inventory()
 {
-	int i;
+	int x,y,i;
 	Item *item;
+
 
 	gf2d_sprite_draw_image(inventory_actor.sprite, vector2d(425, 100)); //Draw grid
 
 	for (i = 0; i < inventory.max_items; i++)
 	{
 		item = get_item_by_pos(i);
+		//Convert from inventory space to screen space
+		x = item->pos.y - 1;
+		y = item->pos.x - 1;
+
 
 		if (item == NULL) continue;
 		if (item->_inuse)
-			gf2d_sprite_draw_image(item->sprite, vector2d(item->pos.x + 425, item->pos.y + 100));
+			gf2d_sprite_draw_image(item->sprite, vector2d((x * 32) + 425,( y * 32) + 100));
 	}
 }
 

@@ -24,12 +24,14 @@ void handle_inventory();
 
 Vector2D player_position;
 Entity *player;
-Item *current_item;
 
 int jumpTimer, cycleTimer, inventoryTimer, loadTimer;
 int inventoryPos;
 
-Vector2D slot;
+Vector2D slot, old_pos;
+int inventoryMode, movingItem;
+Item *current_item;
+Item *equipped_item;
 
 
 Bool i_open;
@@ -98,7 +100,12 @@ Entity *player_spawn(Vector2D position)
 	//inventory_remove_item(search_inventory(4));
 
 	i_open = false;
+	inventoryMode = 0;
+	movingItem = 0;
 	slot = vector2d(0, 0);
+	old_pos = vector2d(0, 0);
+	current_item = get_item_by_id(0);
+	equipped_item = get_item_by_id(0);
 	
     ent->rotation.x = 64;
     ent->rotation.y = 64;
@@ -445,12 +452,48 @@ void handle_inventory()
 
 	keys = SDL_GetKeyboardState(NULL);
 
-	Item *item;
+	if (gfc_input_command_pressed("inventory_mode"))
+	{
+		if (inventoryMode)
+			inventoryMode = 0;
+		else
+			inventoryMode = 1;
+	}
 
 	if (gfc_input_command_pressed("ok"))
 	{
-		item = item_find_tetris(slot);
-		slog("Selected %s", item->itemName);
+		if (current_item->itemID == 0)
+		{
+			current_item = item_find_tetris(slot);
+			slog("selected %s", current_item->itemName);
+			return;
+		}
+
+		if (current_item != NULL && current_item->itemID > 0)
+		{
+			if (inventoryMode == 0)
+			{
+				slog("Equipping %s", current_item->itemName);
+				equipped_item = search_inventory(current_item->itemID);
+				current_item = get_item_by_id(0);
+				return;
+			}
+			if (!movingItem && inventoryMode == 1)
+			{
+				slog("Moving %s", current_item->itemName);
+				vector2d_copy(old_pos, current_item->pos);
+				movingItem = 1;
+				return;
+			}
+			if (movingItem && inventoryMode == 1)
+			{
+				item_move_tetris(current_item, current_item->pos, slot);
+				movingItem = 0;
+				current_item = get_item_by_id(0);
+				return;
+			}
+
+		}
 	}
 	
 	if (inventoryTimer == 10)
@@ -458,7 +501,9 @@ void handle_inventory()
 		if (keys[SDL_SCANCODE_UP])
 			slot.x--;
 		if (keys[SDL_SCANCODE_DOWN])
+		{
 			slot.x++;
+		}
 		if (keys[SDL_SCANCODE_LEFT])
 			slot.y--;
 		if (keys[SDL_SCANCODE_RIGHT])
@@ -472,11 +517,17 @@ void handle_inventory()
 			slot.y = 7;
 		if (slot.y < 0)
 			slot.y = 0;
+		
+		if (movingItem)
+			search_inventory(current_item->itemID)->pos = slot;
 
 		inventoryTimer = 0;
 	}
 	else
 		inventoryTimer++;
+
+
+
 }
 
 /**/

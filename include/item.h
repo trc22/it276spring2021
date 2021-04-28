@@ -13,6 +13,7 @@ typedef struct Item_s
 	Sprite		*sprite;
 	Bool		_inuse;
 	Bool		_usable;
+	Bool		_equippable;
 	Bool		_equipped;
 	Bool		_hasAmmo;
 	char		*itemName;
@@ -42,7 +43,7 @@ void items_free();
 
 void free_item(Item *item);
 
-Item *item_load(int id, char *name, char *sprite, Bool usable, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown);
+Item *item_load(int id, char *name, char *sprite, Bool usable, Bool canEquip, Bool hasAmmo, int ammoID, int max, int quantity, Vector2D size, int cooldown);
 
 Item *get_item_by_id(int id);
 
@@ -69,8 +70,9 @@ void init_inventory_tetris();
 * @brief inserts item into tetris inventory
 * @param item the item to insert
 * @param location where in the inventory the item is inserted (row, column)
+* @return 0 if failed, 1 if successful
 */
-void item_insert_tetris(Item *item, Vector2D location);
+int item_insert_tetris(Item *item, Vector2D location);
 
 /**
 * @brief removes an item from tetris inventory
@@ -88,9 +90,11 @@ Item *item_find_tetris(Vector2D location);
 /**
 * @brief moves an item into a new slot
 * @param item the item to move
-* @param location where the item will be moved to (row, column)
+* @param src where the item used to be before moving it
+* @param dst where the item will be moved
+* @return 0 if failed, 1 if successful
 */
-void item_move_tetris(Item *item, Vector2D location);
+int item_move_tetris(Item *item, Vector2D src, Vector2D dst);
 
 /**
 * @brief rotates an item 90 degrees
