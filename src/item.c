@@ -46,14 +46,14 @@ void load_all_items(Uint32 max_items)
 
 	item_load(0, "", NULL, true, false, false, NULL, 0, -1, vector2d(0, 0), 0);
 	item_load(1, "flashlight", "images/inventory/flashlight.png", true, false, false, NULL, -1, -1, vector2d(1, 2), 0);
-	item_load(4, "pistol", "images/inventory/pistol.png", false, true, true, NULL, 12, -1, vector2d(2, 2), 0);
-/*	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
+	item_load(4, "pistol", "images/inventory/pistol.png", false, true, true, NULL, 12, 12, vector2d(2, 2), 0);
+	item_load(6, "rifle", "images/inventory/rifle.png", false, true, true, NULL, 4, 4, vector2d(1, 5), 0);
+	/*	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
 	item_load(true, "key", 3, -1, -1, 25, false, 0);
 	
 	//Weapons
 	item_load(true, "knife", 13, -1, -1, 60, false, 0);
 	item_load(true, "shotgun", 5, -1, -1, 90, true, 9);
-	item_load(true, "rifle", 6, -1, -1, 120, true, 10);
 	item_load(true, "dynamite", 7, 2, 4, 120, false, 0);
 
 	//Ammo
@@ -336,9 +336,9 @@ void item_remove_tetris(int id)
 	int i, j;
 	
 	//slog("removing %s:", item->itemName);
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < 6; i++)
 	{
-		for (j = 0; j < 7; j++)
+		for (j = 0; j < 8; j++)
 		{
 			if (tetris_inventory[i][j] == id)
 				tetris_inventory[i][j] = 0;
@@ -373,11 +373,19 @@ int item_move_tetris(Item *item, Vector2D src, Vector2D dst)
 
 void item_rotate_tetris(Item *item)
 {
+	int x, y;
+
 	item->rotation->z += 90;
 	if (item->rotation->z == 360)
 		item->rotation->z = 0;
 
-	vector2d_copy(item->itemSize, vector2d(item->itemSize.y, item->itemSize.x));
+	x = item->itemSize.y;
+	y = item->itemSize.x;
+	vector2d_copy(item->itemSize, vector2d(x,y));
+
+	x = item->pos.y;
+	y = item->pos.x;
+	vector2d_copy(item->pos, vector2d(x, y));
 
 }
 
@@ -402,25 +410,41 @@ void draw_inventory()
 
 		//Convert from inventory space to screen space
 
-		x = item->pos.y - 1;
+		x = item->pos.y - (item->itemSize.x - 1);
 		y = item->pos.x - 1;
+		if (item->itemSize.y > 2)
+			y = item->pos.x - (item->itemSize.y - 1);
+
 
 		if (item->rotation->z > 0)
 		{
 			if (item->rotation->z == 90)
 			{
-				x += 2;
+				x += item->itemSize.x;
+				if (item->itemSize.x == 1)
+					y += 1;
+				if (item->itemSize.y > 2)
+					y = item->pos.x;
 			}
 			else if (item->rotation->z == 180)
 			{
-				x += 2;
+				x += item->itemSize.x;
 				y += 2;
+				if (item->itemSize.y > 2)
+					y = item->pos.x + 1;
 			}
 			else if (item->rotation->z == 270)
 			{
 				y += 2;
+				if (item->itemSize.x == 1)
+					x = item->pos.y - (item->itemSize.y - 1);
+				if (item->itemSize.y > 2)
+				{
+					x = item->pos.y - (item->itemSize.y - 1);
+					y = item->pos.x + 1;
+				}
 			}
-
+			
 		}
 		gf2d_sprite_draw(item->sprite, vector2d((x * 32) + 425, (y * 32) + 100), NULL, NULL, item->rotation, NULL, NULL, 0);
 	}

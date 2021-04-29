@@ -98,6 +98,7 @@ Entity *player_spawn(Vector2D position)
 	init_inventory_tetris();
 	item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
+	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
 
 	//inventory_remove_item(search_inventory(4));
 
