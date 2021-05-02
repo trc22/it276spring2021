@@ -514,6 +514,16 @@ void handle_inventory()
 	{
 		item_rotate_tetris(current_item);
 	}
+
+	if (gfc_input_command_pressed("drop_item"))
+	{
+		current_item = item_find_tetris(slot);
+		if (current_item->itemID > 0)
+		{
+			slog("Removing %s", current_item->itemName);
+			inventory_remove_item(current_item);
+		}
+	}
 	
 	if (inventoryTimer == 10)
 	{

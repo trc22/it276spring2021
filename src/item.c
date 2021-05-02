@@ -117,9 +117,8 @@ void free_item(Item *item)
 		return;
 	}
 	item->_inuse = 0;
-	item->itemID = NULL;
-	item->itemName = NULL;
-	item->sprite = NULL;
+	item->itemID = 0;
+	item->itemName = "";
 }
 
 Item *get_item_by_id(int id)
@@ -192,8 +191,8 @@ void inventory_remove_item(Item *item)
 	{
 		if (inventory.item_list[i].itemID == item->itemID)
 		{
-			item_remove_tetris(item);
-			free_item(item);
+			item_remove_tetris(item->itemID);
+			free_item(&inventory.item_list[i]);
 			return;
 		}
 	}
@@ -406,7 +405,7 @@ void draw_inventory()
 	{
 		item = get_item_by_pos(i);
 
-		if (item == NULL || !item->_inuse) continue;
+		if (item == NULL || !item->_inuse || item->itemID == 0) continue;
 
 		//Convert from inventory space to screen space
 
