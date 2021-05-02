@@ -10,6 +10,7 @@
 
 #include "player.h"
 #include "enemy.h"
+#include "pickup.h"
 //#include "pickup.h"
 //#include "interactables.h"
 
@@ -156,6 +157,7 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 	if (levelID != -1)
 	{
 		player_spawn(playerSpawn); //spawn player
+		pickup_spawn(vector2d(200, 500), "pickup", 1, "pickup", 1);
 		spawn_enemy_regular(vector2d(40, 550));
 
 	}

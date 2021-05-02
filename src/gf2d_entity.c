@@ -253,7 +253,7 @@ Entity *entity_spawn(const char* actor, char* name, Vector2D position)
 	gf2d_body_clear(&ent->body);
 	gf2d_body_set(
 		&ent->body,
-		"player",
+		name,
 		0,
 		WORLD_LAYER,
 		1,

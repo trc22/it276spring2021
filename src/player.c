@@ -33,7 +33,6 @@ int inventoryMode, movingItem, old_z;
 Item *current_item;
 Item *equipped_item;
 
-
 Bool i_open;
 
 Entity *player_spawn(Vector2D position)
@@ -96,7 +95,7 @@ Entity *player_spawn(Vector2D position)
 	
 	inventory_init(16);
 	init_inventory_tetris();
-	item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
+	//item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
 	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
 
@@ -485,7 +484,7 @@ void handle_inventory()
 				else if (current_item->_usable)
 				{
 					slog("Using %s", current_item->itemName);
-					
+
 				}
 				current_item = get_item_by_id(0);
 				return;
@@ -501,7 +500,9 @@ void handle_inventory()
 			if (movingItem && inventoryMode == 1)
 			{
 				if (!item_move_tetris(current_item, current_item->pos, slot))
+				{
 					current_item->rotation->z = old_z;
+				}
 				movingItem = 0;
 				current_item = get_item_by_id(0);
 				return;
@@ -524,7 +525,7 @@ void handle_inventory()
 			inventory_remove_item(current_item);
 		}
 	}
-	
+
 	if (inventoryTimer == 10)
 	{
 		if (keys[SDL_SCANCODE_UP])
@@ -546,7 +547,7 @@ void handle_inventory()
 			slot.y = 7;
 		if (slot.y < 0)
 			slot.y = 0;
-		
+
 		if (movingItem)
 			search_inventory(current_item->itemID)->pos = slot;
 
@@ -554,9 +555,20 @@ void handle_inventory()
 	}
 	else
 		inventoryTimer++;
-
-
-
 }
+
+int player_inventory_insert(Item *item)
+{
+	if (!i_open)
+		i_open = 1;
+
+	item->pos = vector2d(0, 0);
+
+	inventoryMode = 1;
+	movingItem = 1;
+
+	current_item = item;
+}
+
 
 /**/

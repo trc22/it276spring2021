@@ -4,7 +4,10 @@
 #include <SDL_rect.h>
 
 #include "gf2d_entity.h"
+
 #include "item.h"
+#include "pickup.h"
+
 
 /**
  * @brief spawn a player entity
@@ -20,5 +23,7 @@ Item *cycle_items();
 Entity *get_player();
 
 Vector2D player_get_position();
+
+int player_inventory_insert(Item *item);
 
 #endif

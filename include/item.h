@@ -26,6 +26,7 @@ typedef struct Item_s
 	int			timer;
 	int			timerMax;
 	int			ammoID;
+	int			pickup;
 	void		(*free)(struct Item_s *self);
 	void         *data;
 }Item;

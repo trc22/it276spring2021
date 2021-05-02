@@ -3,6 +3,7 @@
 #include "gf2d_font.h"
 
 #include "item.h"
+#include "pickup.h"
 
 //#include "pickup.h"
 //#include "overlay.h"
@@ -92,6 +93,7 @@ Item *item_load(int id, char *name, char *sprite, Bool usable, Bool canEquip, Bo
 	item->_equipped = 0;
 	item->_hasAmmo = hasAmmo;
 	item->ammoID = ammoID;
+	item->pickup = 0;
 	item->max_quantity = max;
 	item->quantity = quantity;
 	item->itemSize = size;
@@ -363,6 +365,11 @@ int item_move_tetris(Item *item, Vector2D src, Vector2D dst)
 		slog("moved item");
 		vector2d_copy(search_inventory(item->itemID)->pos, dst);
 		return 1;
+	}
+	if (item->pickup > 0)
+	{
+		pickup_insert_fail(item);
+		return 0;
 	}
 	item_insert_tetris(item, src, 1);
 	vector2d_copy(search_inventory(item->itemID)->pos, src);
