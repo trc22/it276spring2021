@@ -1,9 +1,13 @@
+#include "simple_logger.h"
+
 #include "weapon.h"
 #include "player.h"
+#include "camera.h"
 
 int projectile_touch(Entity *self, Entity *other);
 void projectile_think(Entity *self);
 
+void weapon_particles(Vector2D position);
 
 Entity *weapon_fire_projectile(Vector2D position, Vector2D velocity, int damage)
 {
@@ -23,11 +27,23 @@ Entity *weapon_fire_projectile(Vector2D position, Vector2D velocity, int damage)
 void weapon_fire_pistol()
 {
 	Entity *player = get_player();
+	Vector2D position;
+	Vector2D velocity;
 
 	if (player->flip.x == 0)
-		weapon_fire_projectile(vector2d(player->position.x + 36, player->position.y + 20), vector2d(1, 0), 20);
-	else
-		weapon_fire_projectile(vector2d(player->position.x - 4, player->position.y + 20), vector2d(-1, 0), 20);
+	{
+		position = vector2d(player->position.x + 36, player->position.y + 20);
+		velocity = vector2d(1, 0);
+	}
+	else if (player->flip.x == -1)
+	{
+		position = vector2d(player->position.x - 4, player->position.y + 20);
+		velocity = vector2d(-1, 0);
+	}
+
+	weapon_fire_projectile(position, velocity, 20);
+
+	weapon_particles(position);
 }
 
 int projectile_touch(Entity *self, Entity *other)
@@ -41,4 +57,20 @@ void projectile_think(Entity *self)
 {
 	if (self->canmove != 0)
 		self->inuse = 0;
+}
+
+void weapon_init_particles(char *sprite)
+{
+}
+
+void weapon_particles(Vector2D position)
+{
+	Entity *player;
+	player = get_player();
+
+	vector2d_add(position, camera_get_offset(), position);
+	particle_new_position(player->pe, position);
+	gf2d_particle_new_default(player->pe, 100);
+	//slog("spawning particles");
+	
 }

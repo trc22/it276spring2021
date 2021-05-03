@@ -386,4 +386,8 @@ void gf2d_particle_update(Particle *p,Uint32 now)
     }
 }
 
+void particle_new_position(ParticleEmitter *pe, Vector2D(position))
+{
+	pe->position = position;
+}
 /*eol@eof*/

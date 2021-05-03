@@ -8,4 +8,6 @@ Entity *weapon_fire_projectile(Vector2D position, Vector2D velocity, int damage)
 
 void weapon_fire_pistol();
 
+void weapon_init_particles(char *sprite);
+
 #endif

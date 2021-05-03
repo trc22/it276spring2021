@@ -89,6 +89,58 @@ Entity *player_spawn(Vector2D position)
 	ent->acceleration = vector2d(0, 0);
 	ent->body.gravity = 0.5;
 
+	shape = gf2d_shape_rect(ent->position.x, ent->position.y, 16, 16);
+	/*ent->pe = gf2d_particle_emitter_new_full(
+		100,
+		1,
+		1,
+		PT_Sprite,
+		ent->position,
+		vector2d(2, 0),
+		vector2d(0, -3),
+		vector2d(2, 1),
+		vector2d(0, 0.05),
+		vector2d(0, 0.01),
+		gfc_color(1, 0, 0, 1),
+		gfc_color(1, 0, 0, 1),
+		gfc_color(1, 0, 0, 1),
+		&shape,
+		0,
+		0,
+		0,
+		"images/particle.png",
+		16,
+		16,
+		1,
+		0,
+		SDL_BLENDMODE_ADD);*/
+
+	ent->pe = gf2d_particle_emitter_new_full(
+		1000,
+		0.1,
+		0,
+		PT_Pixel,
+		//vector2d(575, 340),
+		vector2d(575, 340),
+		vector2d(2, 2),
+		vector2d(0, -3),
+		vector2d(2, 1),
+		vector2d(0, 0.05),
+		vector2d(0, 0.01),
+		gfc_color(1, 0, 0, 1),
+		gfc_color(0, 0, 0, 0),
+		gfc_color(1, 0, 0, 1),
+		&shape,
+		0,
+		0,
+		0,
+		"images/particle.png",
+		16,
+		16,
+		1,
+		0,
+		SDL_BLENDMODE_BLEND);
+
     ent->update = player_update;
 	ent->think = player_think;
 	ent->draw = player_draw;
@@ -144,7 +196,7 @@ void player_update(Entity *self)
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
 	camera_set_position(camera);
 
-
+	gf2d_particle_emitter_update(self->pe);
 	player_position = self->position;
 }
 
@@ -315,6 +367,10 @@ int player_damage(Entity *self, int amount, Entity *source)
 
 void player_die(Entity *self)
 {
+	Shape shape;
+	Sprite *sprite;
+	sprite = gf2d_sprite_load_image("images/particle.png");
+	shape = gf2d_shape_rect(self->position.x, self->position.y, 16, 16);
 	gf2d_entity_free(self);
 }
 
