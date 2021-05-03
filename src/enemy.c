@@ -7,6 +7,9 @@
 void enemy_think_regular(Entity *self);
 void enemy_touch_regular(Entity *self, Entity *other);
 
+int enemy_damage(Entity *self, int amount, Entity *source);
+void enemy_die(Entity *self);
+
 void enemy_seek(Entity *self, Entity *target);
 
 Entity *spawn_enemy_regular(Vector2D position)
@@ -14,8 +17,14 @@ Entity *spawn_enemy_regular(Vector2D position)
 	Entity *ent;
 	ent = entity_spawn("actors/enemy_regular.actor", "enemy_regular", position);
 	ent->body.team = 1;
+	ent->id = 1;
+
+	ent->health = 20;
+
 	ent->think = enemy_think_regular;
 	ent->touch = enemy_touch_regular;
+	ent->damage = enemy_damage;
+	ent->die = enemy_die;
 	return ent;
 }
 
@@ -54,4 +63,17 @@ void enemy_seek(Entity *self, Entity *target)
 		self->velocity.x = -.5;
 	if (target->position.x > self->position.x && self->canmove != -1)
 		self->velocity.x = .5;
+
 }
+
+int enemy_damage(Entity *self, int amount, Entity *source)
+{
+	self->health -= amount;
+	if (self->health <= 0)
+		self->die(self);
+}
+void enemy_die(Entity *self)
+{
+	gf2d_entity_free(self);
+}
+

@@ -8,6 +8,7 @@
 #include "gf2d_dynamic_body.h"
 
 #include "item.h"
+#include "weapon.h"
 //#include "overlay.h"
 //#include "weapons.h"
 //#include "save.h"
@@ -21,6 +22,8 @@ void player_die(Entity *self);
 void player_load_save(const char *filename);
 
 void handle_inventory();
+void handle_items(Item *item);
+void handle_weapons(Item *item);
 
 Vector2D player_position;
 Entity *player;
@@ -250,6 +253,9 @@ void player_think(Entity *self)
 	{
 		self->body.team = 0;
 	}
+
+	if (gfc_input_command_pressed("use_item"))
+		handle_weapons(equipped_item);
 
 	handle_inventory();
 
@@ -568,6 +574,49 @@ int player_inventory_insert(Item *item)
 	movingItem = 1;
 
 	current_item = item;
+}
+
+void handle_weapons(Item *item)
+{
+	if (item == NULL)
+	{
+		slog("Using null item");
+		return;
+	}
+	if (item->itemID == NULL)
+	{
+		slog("null item id");
+		return;
+	}
+	if (item->itemName == NULL)
+	{
+		slog("null item name");
+		return;
+	}
+	if (!item->_inuse)
+		return;
+
+	if (player->velocity.x == 0)
+	{
+		if (item->quantity > 0)
+			item->quantity--;
+		item->timer = 0;
+
+		switch (item->itemID)
+		{
+		case 2: //Use light
+			//toggle_light();
+			break;
+		case 4: //pistol
+			weapon_fire_pistol();
+			break;
+	/*	case 6: //rifle
+			fire_rifle(item, player->position, player->rotation.z);
+			break;*/
+		default:
+			break;
+		}
+	}
 }
 
 

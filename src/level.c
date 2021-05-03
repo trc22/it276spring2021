@@ -307,14 +307,17 @@ void level_collisions(Level *level, Entity *ent)
 		level_player_collisions(level, ent);
 		return;
 	}
-	collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x, ent->position.y), vector2d(ent->position.x, ent->position.y + 54), filter);
-	if (collision.collided && collision.pointOfContact.y > ent->position.y)
+	if (ent->id != 6)
 	{
-		ent->grounded = 1;
-	}
-	else
-	{
-		ent->grounded = 0;
+		collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x, ent->position.y), vector2d(ent->position.x, ent->position.y + 54), filter);
+		if (collision.collided && collision.pointOfContact.y > ent->position.y)
+		{
+			ent->grounded = 1;
+		}
+		else
+		{
+			ent->grounded = 0;
+		}
 	}
 	//collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x - 6, ent->position.y + ent->actor.sprite->frame_h), vector2d(ent->actor.sprite->frame_w + 6, ent->position.y + ent->actor.sprite->frame_h), filter);
 	collision = gf2d_collision_trace_space(level->space, vector2d(ent->position.x - 2, ent->position.y + ent->actor.sprite->frame_h / 2), vector2d(ent->position.x + 38, ent->position.y + ent->actor.sprite->frame_h / 2), filter);
