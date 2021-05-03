@@ -390,4 +390,10 @@ void particle_new_position(ParticleEmitter *pe, Vector2D(position))
 {
 	pe->position = position;
 }
+
+void particle_new_velocity(ParticleEmitter *pe, Vector2D velocity, Vector2D variance)
+{
+	pe->velocity = velocity;
+	pe->velocityVariance = variance;
+}
 /*eol@eof*/

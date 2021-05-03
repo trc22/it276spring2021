@@ -150,6 +150,9 @@ void gf2d_particle_new_default(
         ParticleEmitter *pe,
         Uint32   count);
 
-void particle_new_position(ParticleEmitter *pe, Vector2D(position));
+void particle_new_position(ParticleEmitter *pe, Vector2D position);
+
+void particle_new_velocity(ParticleEmitter *pe, Vector2D velocity, Vector2D variance);
+
 
 #endif

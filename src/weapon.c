@@ -7,7 +7,7 @@
 int projectile_touch(Entity *self, Entity *other);
 void projectile_think(Entity *self);
 
-void weapon_particles(Vector2D position);
+void weapon_particles(Vector2D position, Vector2D velocity, Vector2D variance);
 
 Entity *weapon_fire_projectile(Vector2D position, Vector2D velocity, int damage)
 {
@@ -29,21 +29,31 @@ void weapon_fire_pistol()
 	Entity *player = get_player();
 	Vector2D position;
 	Vector2D velocity;
+	Vector2D variance;
+
+	int offset;
 
 	if (player->flip.x == 0)
 	{
+		offset = 36;
 		position = vector2d(player->position.x + 36, player->position.y + 20);
-		velocity = vector2d(1, 0);
+		velocity = vector2d(3, 0);
+		variance = vector2d(1, 0);
 	}
+			
 	else if (player->flip.x == -1)
 	{
+		offset = -4;
 		position = vector2d(player->position.x - 4, player->position.y + 20);
-		velocity = vector2d(-1, 0);
+		velocity = vector2d(-3, 0);
+		variance = vector2d(-1, 0);
 	}
 
 	weapon_fire_projectile(position, velocity, 20);
+	
+	position.x -= (offset + 4);
 
-	weapon_particles(position);
+	weapon_particles(position, velocity, variance);
 }
 
 int projectile_touch(Entity *self, Entity *other)
@@ -63,13 +73,14 @@ void weapon_init_particles(char *sprite)
 {
 }
 
-void weapon_particles(Vector2D position)
+void weapon_particles(Vector2D position, Vector2D velocity, Vector2D variance)
 {
 	Entity *player;
 	player = get_player();
 
 	vector2d_add(position, camera_get_offset(), position);
 	particle_new_position(player->pe, position);
+	particle_new_velocity(player->pe, velocity, variance);
 	gf2d_particle_new_default(player->pe, 100);
 	//slog("spawning particles");
 	
