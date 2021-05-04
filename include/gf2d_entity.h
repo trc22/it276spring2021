@@ -144,4 +144,7 @@ int gf2d_entity_deal_damage(Entity *target, Entity *inflictor, Entity *attacker,
 Entity *entity_spawn(const char* actor, char* name,Vector2D position);
 
 void entity_collide_all(int i);
+
+void entity_free_all();
+
 #endif

@@ -355,17 +355,16 @@ void level_player_collisions(Level *level, Entity *player)
 	else
 		player->canmove = 0;
 }
-/*
-void level_transition(Level *level, Entity *door)
+void level_transition(char* level_name, Vector2D player_spawn, int level_id)
 {
-	free_all_entities();
+	entity_free_all();
 	slog("freed all ents");
-	free(level);
+	free(get_current_level());
 	slog("freed level");
-	level_load(door->destination, vector2d(600, 600), door->duration);
-//	slog("loaded new level");
+	level_load(level_name, player_spawn, level_id);
+	slog("loaded new level");
 }
-
+/*
 void level_spawns(int levelID)
 {
 	switch (levelID)

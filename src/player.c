@@ -212,6 +212,11 @@ void player_think(Entity *self)
 	mx += camera.x;
 	my += camera.y;
 
+	if (gfc_input_command_pressed("reload"))
+	{
+		level_transition("levels/exampleLevel.json", vector2d(300, 500), 0);
+	}
+
 	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
 	{
 		if (!gfc_input_command_held("walkright") && !gfc_input_command_held("walkleft"))

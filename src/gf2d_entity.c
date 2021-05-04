@@ -315,4 +315,13 @@ void entity_physics(Entity *ent)
 	}
 }
 
+void entity_free_all()
+{
+	int i;
+	for (i = 0; i < entity_manager.maxEntities; i++)
+	{
+		gf2d_entity_free(&entity_manager.entityList[i]);
+	}
+}
+
 /*eol@eof*/

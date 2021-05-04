@@ -72,7 +72,7 @@ void level_make_space();
 
 void level_collisions(Level *level, Entity *ent);
 
-//void level_transition(Level *level, Entity *door);
+void level_transition(char* level_name, Vector2D player_spawn, int level_id);
 
 Level *get_current_level();
 
