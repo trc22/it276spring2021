@@ -41,7 +41,7 @@
 		"enemies":[0, 0],
 		"enemySpawns":[[40, 550], [500, 500]]
 		"items": [1],
-		"itemSpawns":[[0,0]]
+		"itemSpawns":[[200,500]]
 		
     }
 }

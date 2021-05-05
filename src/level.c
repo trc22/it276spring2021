@@ -11,7 +11,6 @@
 #include "player.h"
 #include "enemy.h"
 #include "pickup.h"
-//#include "pickup.h"
 //#include "interactables.h"
 
 //void level_spawns(int levelID);
@@ -45,12 +44,16 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
     const char *string;
     Level *level;
     SJson *json,*levelJS,*levelMap,*row,*array;
-	SJson *player_start, *enemies, *enemy_spawns, *enemy;
+	SJson *player_start, *enemies, *enemy_spawns, *enemy, *items, *item_spawns, *item;
     int rows,columns;
     int count,tileindex;
     int i,j;
     int tempInt;
-	
+
+	int x, y;
+	int enemyCount, itemCount;
+	int enemy_type, item_id;
+
 	Space *space = NULL;
 
 	if (!filename)
@@ -154,43 +157,54 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
   
 	if (levelID != -1)
 	{
-		int x, y;
 		player_start = sj_object_get_value(levelJS, "playerSpawn");
 		sj_get_integer_value(sj_array_get_nth(player_start, 0), &x);
 		sj_get_integer_value(sj_array_get_nth(player_start, 1), &y);
+
 		slog("Player spawn: %i, %i", x, y);
 		player_spawn(vector2d(x, y));
+
 
 		enemies = sj_object_get_value(levelJS, "enemies");
 		enemy_spawns = sj_object_get_value(levelJS, "enemySpawns");
 
-		int enemyCount = sj_array_get_count(enemies);
-		int enemy_x, enemy_y;
-		int enemy_type;
+		enemyCount = sj_array_get_count(enemies);
 		slog("Enemies:");
 		for (i = 0; i < enemyCount; i++)
 		{
 			sj_get_integer_value(sj_array_get_nth(enemies, i), &enemy_type);
 			enemy = sj_array_get_nth(enemy_spawns, i);
-			sj_get_integer_value(sj_array_get_nth(enemy, 0), &enemy_x);
-			sj_get_integer_value(sj_array_get_nth(enemy, 1), &enemy_y);
+			sj_get_integer_value(sj_array_get_nth(enemy, 0), &x);
+			sj_get_integer_value(sj_array_get_nth(enemy, 1), &y);
 			if (enemy_type == 0)
 			{
-				spawn_enemy_regular(vector2d(enemy_x, enemy_y));
-				slog("Regular enemy spawned at: (%i, %i)", enemy_x, enemy_y);
+				spawn_enemy_regular(vector2d(x, y));
+				slog("Regular enemy spawned at: (%i, %i)", x, y);
 			}
 		}
+
+		items = sj_object_get_value(levelJS, "items");
+		item_spawns = sj_object_get_value(levelJS, "itemSpawns");
+
+		itemCount = sj_array_get_count(items);
+		slog("items:");
+		for (i = 0; i < itemCount; i++)
+		{
+			sj_get_integer_value(sj_array_get_nth(items, i), &item_id);
+			item = sj_array_get_nth(item_spawns, i);
+			sj_get_integer_value(sj_array_get_nth(item, 0), &x);
+			sj_get_integer_value(sj_array_get_nth(item, 1), &y);
+			if (item_id == 1)
+			{
+				pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
+			}
+		}
+
 	}
 	
 
 	sj_free(json);
 	currentLevel = level;
-
-
-	if (levelID != -1)
-	{
-		pickup_spawn(vector2d(200, 500), "pickup", 1, "pickup", 1);
-	}
 
 	level_make_space();
 	level_add_shapes(level);
