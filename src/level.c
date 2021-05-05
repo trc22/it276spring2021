@@ -45,6 +45,7 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
     const char *string;
     Level *level;
     SJson *json,*levelJS,*levelMap,*row,*array;
+	SJson *player_start, *enemies, *enemy_spawns, *enemy;
     int rows,columns;
     int count,tileindex;
     int i,j;
@@ -150,18 +151,47 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
     level->levelSize.y = level->levelHeight * level->tileHeight;
     slog("map width: %f, with %i tiles wide, each %i pixels wide", level->levelSize.x, level->levelWidth,level->tileWidth);
     slog("map height: %f, with %i tiles high, each %i pixels tall", level->levelSize.y, level->levelHeight, level->tileHeight);
-    sj_free(json);
-	currentLevel = level;
-
-//	level_spawns(levelID); //spawn all non-player entities
+  
 	if (levelID != -1)
 	{
-		player_spawn(playerSpawn); //spawn player
-		pickup_spawn(vector2d(200, 500), "pickup", 1, "pickup", 1);
-		spawn_enemy_regular(vector2d(40, 550));
+		int x, y;
+		player_start = sj_object_get_value(levelJS, "playerSpawn");
+		sj_get_integer_value(sj_array_get_nth(player_start, 0), &x);
+		sj_get_integer_value(sj_array_get_nth(player_start, 1), &y);
+		slog("Player spawn: %i, %i", x, y);
+		player_spawn(vector2d(x, y));
 
+		enemies = sj_object_get_value(levelJS, "enemies");
+		enemy_spawns = sj_object_get_value(levelJS, "enemySpawns");
+
+		int enemyCount = sj_array_get_count(enemies);
+		int enemy_x, enemy_y;
+		int enemy_type;
+		slog("Enemies:");
+		for (i = 0; i < enemyCount; i++)
+		{
+			sj_get_integer_value(sj_array_get_nth(enemies, i), &enemy_type);
+			enemy = sj_array_get_nth(enemy_spawns, i);
+			sj_get_integer_value(sj_array_get_nth(enemy, 0), &enemy_x);
+			sj_get_integer_value(sj_array_get_nth(enemy, 1), &enemy_y);
+			if (enemy_type == 0)
+			{
+				spawn_enemy_regular(vector2d(enemy_x, enemy_y));
+				slog("Regular enemy spawned at: (%i, %i)", enemy_x, enemy_y);
+			}
+		}
 	}
-//	level_starting_items(levelID); //setup player inventory
+	
+
+	sj_free(json);
+	currentLevel = level;
+
+
+	if (levelID != -1)
+	{
+		pickup_spawn(vector2d(200, 500), "pickup", 1, "pickup", 1);
+	}
+
 	level_make_space();
 	level_add_shapes(level);
 	filter.worldclip = 1;
@@ -364,47 +394,6 @@ void level_transition(char* level_name, Vector2D player_spawn, int level_id)
 	level_load(level_name, player_spawn, level_id);
 	slog("loaded new level");
 }
-/*
-void level_spawns(int levelID)
-{
-	switch (levelID)
-	{
-	case 0: //Demo level
-		
-		//Enemies
-		spawn_enemy_regular(vector2d(2274, 1720));
-		spawn_enemy_small(vector2d(2350, 1720));
-		spawn_enemy_big(vector2d(2400, 1650));
-		spawn_enemy_tall(vector2d(2450, 1700));
-		spawn_enemy_ranged(vector2d(2500, 1730));
-
-		//Pickups
-		spawn_pickup(vector2d(2200, 1720), 7);
-		spawn_pickup(vector2d(300, 1720), 3);
-		spawn_button(vector2d(600, 1700), "level_00_door");
-		break;
-	case 1:
-		break;
-	default:
-		break;
-	}
-
-}
-
-void level_starting_items(int levelID)
-{
-	//Setup player inventory
-	if (levelID == 0)
-	{
-		inventory_insert(get_item_by_id(2));
-		inventory_insert(get_item_by_id(4));
-		inventory_insert(get_item_by_id(5));
-		inventory_insert(get_item_by_id(8));
-		inventory_insert(get_item_by_id(9));
-		inventory_insert(get_item_by_id(13));
-	}
-	return;
-}*/
 
 Level *get_current_level()
 {
