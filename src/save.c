@@ -4,10 +4,12 @@
 #include "save.h"
 
 #include "item.h"
+#include "level.h"
 
-void save_new()
+void save_new(char *current_level, Vector2D position)
 {
 	SJson *json, *inventory,*inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantitiy, *quantities;
+	SJson *level, *level_name, *player_pos, *x, *y;
 	Item *item;
 	int i, j;
 
@@ -15,6 +17,7 @@ void save_new()
 
 	json = sj_object_new();
 	inventory = sj_object_new();
+	level = sj_object_new();
 
 	inventory_tetris = sj_array_new();
 	for (i = 0; i < 5; i++)
@@ -52,6 +55,17 @@ void save_new()
 	sj_object_insert(json, "masterInventory", inventory);
 
 	slog("inventory saved");
+
+	level_name = sj_new_str(current_level);
+	player_pos = sj_array_new();
+	x = sj_new_int(position.x);
+	y = sj_new_int(position.y);
+	sj_array_append(player_pos, x);
+	sj_array_append(player_pos, y);
+
+	sj_object_insert(level, "levelName", level_name);
+	sj_object_insert(level, "playerPos", player_pos);
+	sj_object_insert(json, "level", level);
 
 	sj_save(json, "saves/save.json");
 	

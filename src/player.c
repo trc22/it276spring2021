@@ -214,7 +214,7 @@ void player_think(Entity *self)
 
 	if (gfc_input_command_pressed("reload"))
 	{
-		save_new();
+		save_new("levels/exampleLevel.json", self->position);
 	}
 
 	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
