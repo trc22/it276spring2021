@@ -200,7 +200,7 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 			}
 		}
 
-		interactable_spawn(vector2d(200, 500), IT_DOOR, "levels/exampleLevel.json");
+		interactable_spawn(vector2d(200, 500), IT_SWITCH, "levels/exampleLevel.json", false, vector2d(200,500));
 	}
 	
 

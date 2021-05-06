@@ -13,6 +13,8 @@ typedef struct
 static InteractManager interact_manager = { 0 };
 
 void interact_door(Entity *self, Entity *other);
+void interact_switch(Entity *self, Entity *other);
+
 
 void interactable_system_init(Uint32 maxInteracts)
 {
@@ -58,7 +60,7 @@ Interactable *interactable_new()
 	return NULL;
 }
 
-Interactable *interactable_spawn(Vector2D location, int interact_type, char *destination)
+Interactable *interactable_spawn(Vector2D location, int interact_type, char *destination, Bool need_key, Vector2D switch_effect)
 {
 	Interactable *interactable;
 	interactable = interactable_new();
@@ -70,6 +72,15 @@ Interactable *interactable_spawn(Vector2D location, int interact_type, char *des
 		ent = entity_spawn("actors/player.actor", "door", location);
 		ent->touch = interact_door;
 		interactable->destination = destination;
+		interactable->require_key = need_key;
+	}
+	else if (interact_type == IT_SWITCH)
+	{
+		ent = entity_spawn("actors/player.actor", "switch", location);
+		ent->touch = interact_switch;
+		interactable->destination = destination;
+		interactable->require_key = need_key;
+		interactable->switch_effect = switch_effect;
 	}
 	
 	ent->id = 12;
@@ -81,14 +92,6 @@ Interactable *interactable_spawn(Vector2D location, int interact_type, char *des
 
 }
 
-void interact_door(Entity *self, Entity *other)
-{
-	if (other->id == 0 && gfc_input_command_pressed("interact"))
-	{
-		//slog("Destination: %s", interactable_get_by_id(self->interact_id)->destination);
-		level_transition(interactable_get_by_id(self->interact_id)->destination, vector2d(0, 0), 0);
-	}
-}
 
 Interactable *interactable_get_by_id(int id)
 {
@@ -107,4 +110,25 @@ Interactable *interactable_get_by_id(int id)
 	}
 	slog("could not find interactable");
 	return NULL;
+}
+
+void interact_door(Entity *self, Entity *other)
+{
+	if (other->id == 0 && gfc_input_command_pressed("interact"))
+	{
+		slog("Destination: %s", interactable_get_by_id(self->interact_id)->destination);
+		level_transition(interactable_get_by_id(self->interact_id)->destination, vector2d(0, 0), 0);
+	}
+}
+
+void interact_switch(Entity *self, Entity *other)
+{
+	if (other->id == 0 && gfc_input_command_pressed("interact"))
+	{
+		Interactable *interact; 
+		interact = interactable_get_by_id(self->interact_id);
+		interact->type = IT_DOOR;
+		self->touch = interact_door;
+		self->position = interact->switch_effect;
+	}
 }

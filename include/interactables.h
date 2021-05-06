@@ -18,6 +18,8 @@ typedef struct Interactable_s
 	int			id;
 	int			type;
 	char		*destination;
+	Bool		require_key;
+	Vector2D	switch_effect;
 	void		*data;
 }Interactable;
 
@@ -27,7 +29,7 @@ void interactable_system_close();
 
 Interactable *interactable_new();
 
-Interactable *interactable_spawn(Vector2D location, int interact_type, char *destination);
+Interactable *interactable_spawn(Vector2D location, int interact_type, char *destination, Bool need_key, Vector2D switch_effect);
 
 Interactable *interactable_get_by_id(int id);
 
