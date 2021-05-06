@@ -126,7 +126,7 @@ int main(int argc, char * argv[])
         1);
     mf = 0;*/
 
-	level = level_load("levels/menu.json", vector2d(600, 600), -1); //main menu level
+	level = level_load("levels/menu.json", -1); //main menu level
 
     /*main game loop*/
   //  filter.worldclip = 1;
@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
 		if (selection == 1)
 		{
 			free(level);
-			level = level_load("levels/exampleLevel.json", vector2d(300, 500), 0); //demo level
+			level = level_load("levels/exampleLevel.json", 0); //demo level
 			selection = -2;
 		}
 

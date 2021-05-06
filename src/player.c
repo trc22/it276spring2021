@@ -214,7 +214,7 @@ void player_think(Entity *self)
 
 	if (gfc_input_command_pressed("reload"))
 	{
-		level_transition("levels/exampleLevel.json", vector2d(300, 500), 0);
+		level_transition("levels/exampleLevel.json", 0);
 	}
 
 	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))

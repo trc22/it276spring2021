@@ -12,7 +12,7 @@ typedef struct
 
 static PickupManager pickupManager = { 0 };
 
-void pickup_touch(Entity *self, Entity* other);
+int pickup_touch(Entity *self, Entity* other);
 
 
 void init_pickup_system(Uint32 maxPickups)
@@ -117,7 +117,7 @@ void pickup_free(Pickup *pickup)
 	}
 }
 
-void pickup_touch(Entity *self, Entity* other)
+int pickup_touch(Entity *self, Entity* other)
 {
 	Pickup *pickup;
 

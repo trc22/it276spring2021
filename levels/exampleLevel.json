@@ -42,6 +42,8 @@
 		"enemySpawns":[[40, 550], [500, 500]]
 		"items": [1],
 		"itemSpawns":[[200,500]]
+		"interactables": [0],
+		"interactSpawns": [[200, 500]]
 		
     }
 }

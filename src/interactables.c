@@ -12,8 +12,8 @@ typedef struct
 
 static InteractManager interact_manager = { 0 };
 
-void interact_door(Entity *self, Entity *other);
-void interact_switch(Entity *self, Entity *other);
+int interact_door(Entity *self, Entity *other);
+int interact_switch(Entity *self, Entity *other);
 
 
 void interactable_system_init(Uint32 maxInteracts)
@@ -112,16 +112,17 @@ Interactable *interactable_get_by_id(int id)
 	return NULL;
 }
 
-void interact_door(Entity *self, Entity *other)
+int interact_door(Entity *self, Entity *other)
 {
 	if (other->id == 0 && gfc_input_command_pressed("interact"))
 	{
 		slog("Destination: %s", interactable_get_by_id(self->interact_id)->destination);
-		level_transition(interactable_get_by_id(self->interact_id)->destination, vector2d(0, 0), 0);
+		level_transition(interactable_get_by_id(self->interact_id)->destination, 0);
 	}
+	return 1;
 }
 
-void interact_switch(Entity *self, Entity *other)
+int interact_switch(Entity *self, Entity *other)
 {
 	if (other->id == 0 && gfc_input_command_pressed("interact"))
 	{
@@ -131,4 +132,5 @@ void interact_switch(Entity *self, Entity *other)
 		self->touch = interact_door;
 		self->position = interact->switch_effect;
 	}
+	return 1;
 }

@@ -47,7 +47,7 @@ Level *level_new();
  * @param filename the file to load
  * @return NULL on error (See the logs) a loaded level otherwise
  */
-Level *level_load(const char *filename, Vector2D playerSpawn, int levelID);
+Level *level_load(const char *filename, int levelID);
 
 /**
  * @brief free up a previously loaded level
@@ -72,7 +72,7 @@ void level_make_space();
 
 void level_collisions(Level *level, Entity *ent);
 
-void level_transition(char* level_name, Vector2D player_spawn, int level_id);
+void level_transition(char* level_name, int level_id);
 
 Level *get_current_level();
 
