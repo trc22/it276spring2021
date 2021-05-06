@@ -20,6 +20,7 @@
 #include "level.h"
 #include "player.h"
 #include "pickup.h"
+#include "interactables.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -106,6 +107,7 @@ int main(int argc, char * argv[])
     gf2d_entity_system_init(1024);
 
 	init_pickup_system(10);
+	interactable_system_init(10);
 	load_all_items(50);
 
     

@@ -11,7 +11,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "pickup.h"
-//#include "interactables.h"
+#include "interactables.h"
 
 //void level_spawns(int levelID);
 //void level_starting_items(int levelID);
@@ -196,10 +196,11 @@ Level *level_load(const char *filename, Vector2D playerSpawn, int levelID)
 			sj_get_integer_value(sj_array_get_nth(item, 1), &y);
 			if (item_id == 1)
 			{
-				pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
+			//	pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
 			}
 		}
 
+		interactable_spawn(vector2d(200, 500), IT_DOOR, "levels/exampleLevel.json");
 	}
 	
 

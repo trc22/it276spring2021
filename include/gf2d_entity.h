@@ -71,6 +71,7 @@ typedef struct Entity_S
 	int	  canmove;							/**<used for blocking entity movement*/
 	int	  jumping;
 	int	  pickup_id;
+	int   interact_id;
     void *data;                             /**<any other game specific data can be referenced here*/
 }Entity;
 

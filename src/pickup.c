@@ -19,7 +19,7 @@ void init_pickup_system(Uint32 maxPickups)
 {
 	if (maxPickups == 0)
 	{
-		slog("cannot allocate 0 entities!");
+		slog("cannot allocate 0 pickups!");
 		return;
 	}
 	if (pickupManager.pickupList != NULL)
