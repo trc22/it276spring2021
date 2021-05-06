@@ -466,3 +466,16 @@ void draw_cursor_inventory(Vector2D location)
 	gf2d_sprite_draw_image(cursor, vector2d((x *32) + 425, (y *32) + 100));
 }
 
+int item_get_id_tetris(Vector2D location)
+{
+	int x, y;
+	x = location.x;
+	y = location.y;
+
+	return tetris_inventory[x][y];
+}
+
+int item_get_max_items()
+{
+	return inventory.max_items;
+}

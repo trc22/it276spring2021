@@ -88,6 +88,7 @@ void item_remove_tetris(int id);
 */
 Item *item_find_tetris(Vector2D location);
 
+int item_get_id_tetris(Vector2D location);
 
 /**
 * @brief moves an item into a new slot
@@ -114,5 +115,7 @@ void inventory_free();
 void draw_inventory();
 
 void draw_cursor_inventory(Vector2D location);
+
+int item_get_max_items();
 
 #endif

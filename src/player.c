@@ -11,7 +11,7 @@
 #include "weapon.h"
 //#include "overlay.h"
 //#include "weapons.h"
-//#include "save.h"
+#include "save.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -214,7 +214,7 @@ void player_think(Entity *self)
 
 	if (gfc_input_command_pressed("reload"))
 	{
-		level_transition("levels/exampleLevel.json", 0);
+		save_new();
 	}
 
 	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
