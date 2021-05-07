@@ -93,12 +93,19 @@ void save_new(char *current_level, Vector2D position)
 
 int save_load()
 {
-	SJson *json, *inventory, *inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantitiy, *quantities;
+	SJson *json, *inventory, *inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantities;
+	SJson *item_positions, *item_pos, *rotations;
 	SJson *level, *level_name, *player_pos;
 
 	char *target_level;
 	int i, j, x, y;
-	int itemID;
+	int itemID, quantity, rotation;
+
+	x = 0;
+	y = 0;
+	itemID = 0;
+	quantity = 0;
+	rotation = 0;
 
 	slog("loading save");
 	json = sj_load("saves/save.json");
@@ -120,19 +127,36 @@ int save_load()
 	level_transition(target_level, 0);
 	vector2d_copy(get_player()->position, vector2d(x, y));
 
-	inventory = sj_object_get_value(json, "inventory");
+	inventory = sj_object_get_value(json, "masterInventory");
 	inventory_tetris = sj_object_get_value(inventory, "tetrisInventory");
 	
+	item_clear_all_tetris();
 	for (i = 0; i < 6; i++)
 	{
 		row = sj_array_get_nth(inventory_tetris, i);
 		for (j = 0; j < 8; j++)
 		{
-			sj_get_integer_value(sj_array_get_nth(row, j), itemID);
+			sj_get_integer_value(sj_array_get_nth(row, j), &itemID);
 			tetris_load(itemID, i, j);
 		}
 	}
 
+	items = sj_object_get_value(inventory, "items");
+	quantities = sj_object_get_value(inventory, "quantities");
+	item_positions = sj_object_get_value(inventory, "itemPositions");
+	rotations = sj_object_get_value(inventory, "zRotation");
+	for (i = 0; i < sj_array_get_count(items); i++)
+	{
+		sj_get_integer_value(sj_array_get_nth(items, i), &itemID);
+		sj_get_integer_value(sj_array_get_nth(quantities, i), &quantity);
+		sj_get_integer_value(sj_array_get_nth(rotations, i), &rotation);
+		slog("rotation: %i", rotation);
+		item_pos = sj_array_get_nth(item_positions, i);
+		sj_get_integer_value(sj_array_get_nth(item_pos, i), &x);
+		sj_get_integer_value(sj_array_get_nth(item_pos, i), &y);
+
+		inventory_load(itemID, quantity, vector2d(x, y), rotation);
+	}
 	
 	return 1;
 }

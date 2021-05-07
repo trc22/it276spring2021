@@ -105,6 +105,10 @@ int item_move_tetris(Item *item, Vector2D src, Vector2D dst);
 */
 void item_rotate_tetris(Item *item);
 
+/**
+* @brief sets every value in the tetris inventory to zero
+*/
+void item_clear_all_tetris();
 
 /**
 * @brief frees the inventory

@@ -394,6 +394,17 @@ void item_rotate_tetris(Item *item)
 	vector2d_copy(item->pos, vector2d(x, y));
 
 }
+void item_clear_all_tetris()
+{
+	int i, j;
+	for (i = 0; i < 6; i++)
+	{
+		for (j = 0; j < 8; j++)
+		{
+			tetris_inventory[i][j] = 0;
+		}
+	}
+}
 
 void inventory_free()
 {
