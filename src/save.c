@@ -5,6 +5,8 @@
 
 #include "item.h"
 #include "level.h"
+#include "player.h"
+
 
 void save_new(char *current_level, Vector2D position)
 {
@@ -71,4 +73,35 @@ void save_new(char *current_level, Vector2D position)
 	
 	slog("save written");
 
+}
+
+int save_load()
+{
+	SJson *json, *inventory, *inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantitiy, *quantities;
+	SJson *level, *level_name, *player_pos;
+
+	char *target_level;
+	int x, y;
+
+	slog("loading save");
+	json = sj_load("saves/save.json");
+
+	level = sj_object_get_value(json, "level");
+	level_name = sj_object_get_value(level, "levelName");
+	player_pos = sj_object_get_value(level, "playerPos");
+
+	sj_array_get_nth(player_pos, 1);
+	
+	sj_get_integer_value(sj_array_get_nth(player_pos, 0), &x);
+	sj_get_integer_value(sj_array_get_nth(player_pos, 1), &y);
+	
+	target_level = sj_get_string_value(level_name);
+
+	slog("%s", target_level);
+	slog("%i, %i", x, y);
+
+	level_transition(target_level, 0);
+	vector2d_copy(get_player()->position, vector2d(x, y));
+
+	return 1;
 }
