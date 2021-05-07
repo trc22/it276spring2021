@@ -10,7 +10,8 @@
 
 void save_new(char *current_level, Vector2D position)
 {
-	SJson *json, *inventory,*inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantitiy, *quantities;
+	SJson *json, *inventory, *inventory_tetris, *row, *item_id_tetris;
+	SJson *items, *item_id, *quantitiy, *quantities, *item_positions, *item_pos, *rotations, *rotation;
 	SJson *level, *level_name, *player_pos, *x, *y;
 	Item *item;
 	int i, j;
@@ -22,10 +23,10 @@ void save_new(char *current_level, Vector2D position)
 	level = sj_object_new();
 
 	inventory_tetris = sj_array_new();
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < 6; i++)
 	{
 		row = sj_array_new();
-		for (j = 0; j < 7; j++)
+		for (j = 0; j < 8; j++)
 		{
 			item_id_tetris = sj_new_int(item_get_id_tetris(vector2d(i, j)));
 			sj_array_append(row, item_id_tetris);
@@ -38,19 +39,34 @@ void save_new(char *current_level, Vector2D position)
 
 	items = sj_array_new();
 	quantities = sj_array_new();
+	item_positions = sj_array_new();
+	rotations = sj_array_new();
 	for (i = 0; i < item_get_max_items(); i++)
 	{
 		item = get_item_by_pos(i);
 		if (item == NULL || !item->_inuse || item->itemID < 1)
 			continue;
+
 		item_id = sj_new_int(item->itemID);
 		quantitiy = sj_new_int(item->quantity);
 		sj_array_append(items, item_id);
 		sj_array_append(quantities, quantitiy);
+
+		item_pos = sj_array_new();
+		x = sj_new_int(item->pos.x);
+		y = sj_new_int(item->pos.y);
+		sj_array_append(item_pos, x);
+		sj_array_append(item_pos, y);
+		sj_array_append(item_positions, item_pos);
+
+		rotation = sj_new_int((int)item->rotation->z);
+		sj_array_append(rotations, rotation);
 	}
 
 	sj_object_insert(inventory, "items", items);
 	sj_object_insert(inventory, "quantities", quantities);
+	sj_object_insert(inventory, "itemPositions", item_positions);
+	sj_object_insert(inventory, "zRotation", rotations);
 
 	slog("player items saved");
 
@@ -81,7 +97,8 @@ int save_load()
 	SJson *level, *level_name, *player_pos;
 
 	char *target_level;
-	int x, y;
+	int i, j, x, y;
+	int itemID;
 
 	slog("loading save");
 	json = sj_load("saves/save.json");
@@ -103,5 +120,19 @@ int save_load()
 	level_transition(target_level, 0);
 	vector2d_copy(get_player()->position, vector2d(x, y));
 
+	inventory = sj_object_get_value(json, "inventory");
+	inventory_tetris = sj_object_get_value(inventory, "tetrisInventory");
+	
+	for (i = 0; i < 6; i++)
+	{
+		row = sj_array_get_nth(inventory_tetris, i);
+		for (j = 0; j < 8; j++)
+		{
+			sj_get_integer_value(sj_array_get_nth(row, j), itemID);
+			tetris_load(itemID, i, j);
+		}
+	}
+
+	
 	return 1;
 }

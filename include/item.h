@@ -118,4 +118,9 @@ void draw_cursor_inventory(Vector2D location);
 
 int item_get_max_items();
 
+
+void inventory_load(int item_id, int quantity, Vector2D item_pos, int z_rotation);
+
+void tetris_load(int item_id, int row, int column);
+
 #endif

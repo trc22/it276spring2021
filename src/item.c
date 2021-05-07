@@ -479,3 +479,20 @@ int item_get_max_items()
 {
 	return inventory.max_items;
 }
+
+void inventory_load(int item_id, int quantity, Vector2D item_pos, int z_rotation)
+{
+	Item *item;
+
+	inventory_insert_item(get_item_by_id(item_id));
+	item = search_inventory(item_id);
+
+	item->quantity = quantity;
+	vector2d_copy(item->pos, item_pos);
+	item->rotation->z = z_rotation;
+}
+
+void tetris_load(int item_id, int row, int column)
+{
+	tetris_inventory[row][column] = item_id;
+}
