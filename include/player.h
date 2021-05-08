@@ -26,5 +26,8 @@ Vector2D player_get_position();
 
 int player_inventory_insert(Item *item);
 
+Item *get_current_item();
+
+int player_use_item(Item *item);
 
 #endif

@@ -19,7 +19,6 @@ void player_draw(Entity *self);
 int player_touch(Entity *self, Entity *other);
 int player_damage(Entity *self, int amount, Entity *source);
 void player_die(Entity *self);
-void player_load_save(const char *filename);
 
 void handle_inventory();
 void handle_items(Item *item);
@@ -153,6 +152,7 @@ Entity *player_spawn(Vector2D position)
 	//item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
 //	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
 //	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
+	item_insert_tetris(get_item_by_id(14), vector2d(4, 2), 0);
 
 	//inventory_remove_item(search_inventory(4));
 
@@ -211,12 +211,6 @@ void player_think(Entity *self)
 	camera = camera_get_position();
 	mx += camera.x;
 	my += camera.y;
-
-	if (gfc_input_command_pressed("reload"))
-	{
-		//save_new("levels/exampleLevel.json", self->position);
-		save_load();
-	}
 
 	if (gfc_input_command_released("walkright") || gfc_input_command_released("walkleft"))
 	{
@@ -316,44 +310,6 @@ void player_think(Entity *self)
 		handle_weapons(equipped_item);
 
 	handle_inventory();
-
-
-	//Use item
-	/*if (keys[SDL_SCANCODE_F])
-	{
-		use_item(current_item);
-	}
-
-	if (keys[SDL_SCANCODE_I] && inventoryTimer == 35)
-	{
-		toggle_inventory();
-		inventoryTimer = 0;
-	}
-
-	if (keys[SDL_SCANCODE_X])
-	{
-		drop_item(current_item, vector2d(player->position.x - 100, player->position.y + 50));
-	}
-
-	if (keys[SDL_SCANCODE_R])
-	{
-		slog("player pos: %f, %f", player_get_position().x, player_get_position().y);
-	}
-
-
-	if (keys[SDL_SCANCODE_L] && loadTimer == 200)
-	{
-		player_load_save("saves/save.json");
-		loadTimer = 0;
-	}
-
-	update_timers();
-	if (cycleTimer != 35)
-		cycleTimer++;
-	if (inventoryTimer != 35)
-		inventoryTimer++;
-	if (loadTimer != 200)
-		loadTimer++;*/
 }
 
 int player_touch(Entity *self, Entity *other)
@@ -511,10 +467,6 @@ int player_get_current_item()
 	return inventoryPos;
 }
 
-void player_load_save(const char *filename)
-{
-	//load_save(filename);
-}
 
 void handle_inventory()
 {
@@ -682,6 +634,51 @@ void handle_weapons(Item *item)
 }
 
 
+Item *get_current_item()
+{
+	return current_item;
+}
 
+int player_use_item(Item *item)
+{
+	if (movingItem || inventoryMode == 1)
+		return 0;
+
+	if (item == NULL)
+	{
+		slog("Using null item");
+		return 0;
+	}
+	if (item->itemID == NULL)
+	{
+		slog("null item id");
+		return 0;
+	}
+	if (item->itemName == NULL)
+	{
+		slog("null item name");
+		return 0;
+	}
+	if (!item->_inuse)
+		return 0;
+
+	switch (item->itemID)
+	{
+		case 14:
+			break;
+		default:
+			break;
+	}
+
+	if (item->_usable)
+	{
+		item->quantity--;
+		slog("%s: %i left", item->itemName, item->quantity);
+		if (item->quantity == 0)
+			inventory_remove_item(current_item);
+	}
+
+	return 1;
+}
 
 /**/

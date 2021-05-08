@@ -49,6 +49,7 @@ void load_all_items(Uint32 max_items)
 	item_load(1, "flashlight", "images/inventory/flashlight.png", true, false, false, NULL, -1, -1, vector2d(1, 2), 0);
 	item_load(4, "pistol", "images/inventory/pistol.png", false, true, true, NULL, 12, 12, vector2d(2, 2), 0);
 	item_load(6, "rifle", "images/inventory/rifle.png", false, true, true, NULL, 4, 4, vector2d(1, 5), 0);
+	item_load(14, "tape", "images/inventory/tape.png", false, false, true, NULL, 6, 2, vector2d(1, 2), 0);
 	/*	item_load(true, "pizza", 1, 4, 5, 50, false, 0);
 	item_load(true, "key", 3, -1, -1, 25, false, 0);
 	

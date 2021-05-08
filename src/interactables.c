@@ -3,6 +3,8 @@
 
 #include "interactables.h"
 #include "level.h"
+#include "player.h"
+#include "save.h"
 
 typedef struct
 {
@@ -14,6 +16,7 @@ static InteractManager interact_manager = { 0 };
 
 int interact_door(Entity *self, Entity *other);
 int interact_switch(Entity *self, Entity *other);
+int interact_save(Entity *self, Entity *other);
 
 
 void interactable_system_init(Uint32 maxInteracts)
@@ -82,6 +85,12 @@ Interactable *interactable_spawn(Vector2D location, int interact_type, char *des
 		interactable->require_key = need_key;
 		interactable->switch_effect = switch_effect;
 	}
+	else if (interact_type = IT_SAVE)
+	{
+		ent = entity_spawn("actors/player.actor", "switch", location);
+		ent->touch = interact_save;
+		interactable->destination = destination;
+	}
 	
 	ent->id = 12;
 	ent->interact_id = interactable->id;
@@ -131,6 +140,26 @@ int interact_switch(Entity *self, Entity *other)
 		interact->type = IT_DOOR;
 		self->touch = interact_door;
 		self->position = interact->switch_effect;
+	}
+	return 1;
+}
+
+int interact_save(Entity *self, Entity *other)
+{
+	if (other->id == 0 && gfc_input_command_pressed("ok"))
+	{
+		Interactable *interact;
+		Item *item;
+		interact = interactable_get_by_id(self->interact_id);
+		item = get_current_item();
+
+		if (item == NULL || item->itemID != 14)
+		{
+			item->_usable = true;
+			player_use_item(item);
+			item->_usable = false;
+			save_new(interact->destination, get_player()->position);
+		}
 	}
 	return 1;
 }

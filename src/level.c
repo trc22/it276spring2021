@@ -45,14 +45,15 @@ Level *level_load(const char *filename, int levelID)
     Level *level;
     SJson *json,*levelJS,*levelMap,*row,*array;
 	SJson *player_start, *enemies, *enemy_spawns, *enemy, *items, *item_spawns, *item;
-	SJson *interactables, *interact, *interact_spawns;
+	SJson *interactables, *interact, *interact_spawns, *has_key, *switch_effects, *effect;
     int rows,columns;
     int count,tileindex;
     int i,j;
     int tempInt;
 
 	int x, y;
-	int enemy_type, item_id, interact_type;
+	int interact_x, interact_y;
+	int enemy_type, item_id, interact_type, hasKey;
 
 	Space *space = NULL;
 
@@ -189,31 +190,56 @@ Level *level_load(const char *filename, int levelID)
 		slog("spawning pickups:");
 		for (i = 0; i < count; i++)
 		{
+			x = 0; y = 0;
 			sj_get_integer_value(sj_array_get_nth(items, i), &item_id);
 			item = sj_array_get_nth(item_spawns, i);
 			sj_get_integer_value(sj_array_get_nth(item, 0), &x);
 			sj_get_integer_value(sj_array_get_nth(item, 1), &y);
 			if (item_id == 1)
 			{
+				slog("Item pickup at: (%i, %i)", x, y);
 			//	pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
 			}
 		}
 
 		interactables = sj_object_get_value(levelJS, "interactables");
-		interact_spawns = sj_object_get_value(levelJS, "interact_spawns");
+		interact_spawns = sj_object_get_value(levelJS, "interactSpawns");
+		has_key = sj_object_get_value(levelJS, "hasKey");
+		switch_effects = sj_object_get_value(levelJS, "switchEffect");
 
 		count = sj_array_get_count(interactables);
 		slog("spawning interactables:");
 		for (i = 0; i < count; i++)
 		{
+
 			sj_get_integer_value(sj_array_get_nth(interactables, i), &interact_type);
+
 			interact = sj_array_get_nth(interact_spawns, i);
 			sj_get_integer_value(sj_array_get_nth(interact, 0), &x);
 			sj_get_integer_value(sj_array_get_nth(interact, 1), &y);
+
+			effect = sj_array_get_nth(switch_effects, i);
+			sj_get_integer_value(sj_array_get_nth(effect, 0), &interact_x);
+			sj_get_integer_value(sj_array_get_nth(effect, 1), &interact_y);
+
+			sj_get_integer_value(sj_array_get_nth(has_key, i), &hasKey);
+			
 			if (interact_type == 0)
 			{
-				interactable_spawn(vector2d(200, 500), IT_DOOR, "levels/exampleLevel.json", false, vector2d(200,500));
+				interactable_spawn(vector2d(x, y), IT_DOOR, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
+				slog("Door spawned at: (%i, %i)", x, y);
 			}
+			else if (interact_type == 1)
+			{
+				interactable_spawn(vector2d(x, y), IT_SWITCH, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
+				slog("Switch spawned at: (%i, %i)", x, y);
+			}
+			else if (interact_type == 2)
+			{
+				interactable_spawn(vector2d(x, y), IT_SAVE, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
+				slog("Save point spawned at: (%i, %i)", x, y);
+			}
+
 		}
 	
 
