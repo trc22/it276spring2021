@@ -21,6 +21,7 @@
 #include "player.h"
 #include "pickup.h"
 #include "interactables.h"
+#include "level_editor.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -48,7 +49,14 @@ void onStart(void *data)
 
 void onLoad(void *data)
 {
+	gf2d_window_free(_mainMenu);
 	selection = 2;
+}
+
+void onLevelEdit(void *data)
+{
+	gf2d_window_free(_mainMenu);
+	selection = 3;
 }
 
 void onQuit(void *data)
@@ -148,7 +156,10 @@ int main(int argc, char * argv[])
         gf2d_mouse_update();
        // gf2d_space_update(space);    
 		level_update(level);
-        
+
+		if (selection == -3)
+			level_editor_update();
+
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
@@ -169,15 +180,28 @@ int main(int argc, char * argv[])
         {
             _quit = window_yes_no("Exit?",onExit,onCancel,NULL,NULL);
         }
+
+		if (selection == -1)
+		{
+			_quit = window_yes_no("Exit?", onExit, onCancel, NULL, NULL);
+		}
+
 		
 		if (selection == 0 && _mainMenu == NULL)
-			_mainMenu = window_main_menu("Main Menu", onStart, onLoad, onQuit, NULL, NULL, NULL);
+			_mainMenu = window_main_menu("Main Menu", onStart, onLoad, onLevelEdit, NULL, NULL, NULL);
 
 		if (selection == 1)
 		{
 			free(level);
 			level = level_load("levels/exampleLevel.json", 0); //demo level
 			selection = -2;
+		}
+
+		if (selection == 3)
+		{
+			level_editor_init();
+
+			selection = -3;
 		}
 
   //    slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());

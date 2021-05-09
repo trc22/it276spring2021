@@ -75,6 +75,22 @@ int yes_no_update(Window *win,List *updateList)
 				}
 				gf2d_window_free(win);
 				return 1;
+			case 54:
+				callback = (Callback*)gfc_list_get_nth(callbacks, 3);
+				if (callback)
+				{
+					gfc_callback_call(callback);
+				}
+				gf2d_window_free(win);
+				return 1;
+			case 55:
+				callback = (Callback*)gfc_list_get_nth(callbacks, 4);
+				if (callback)
+				{
+					gfc_callback_call(callback);
+				}
+				gf2d_window_free(win);
+				return 1;
         }
     }
     return 0;
@@ -121,7 +137,7 @@ Window *window_text_entry(char *question, char *defaultText, size_t length, void
     return win;
 }
 
-Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void *), void(*onQuit)(void *), void *startData, void *loadData, void *quitData)
+Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void *), void(*onLevelEdit)(void *), void *startData, void *loadData, void *levelData)
 {
 	Window *win;
 	List *callbacks;
@@ -137,7 +153,30 @@ Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void 
 	callbacks = gfc_list_new();
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onStart, startData));
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onLoad, loadData));
-	callbacks = gfc_list_append(callbacks, gfc_callback_new(onQuit, quitData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onLevelEdit, levelData));
+	win->data = callbacks;
+	return win;
+}
+
+Window *window_level_editor(char *text, void(*onTile)(void *), void(*onPlayer)(void *), void(*onEnemy)(void *), void(*onPickup)(void *), void(*onInteract)(void *), void *tileData, void *playerData, void *enemyData, void *pickupData, void *interactData)
+{
+	Window *win;
+	List *callbacks;
+	win = gf2d_window_load("config/level_editor.json");
+	if (!win)
+	{
+		slog("failed to load level editor");
+		return NULL;
+	}
+	gf2d_element_label_set_text(gf2d_window_get_element_by_id(win, 1), text);
+	win->update = yes_no_update;
+	win->free_data = yes_no_free;
+	callbacks = gfc_list_new();
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onTile, tileData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onPlayer, playerData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onEnemy, enemyData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onPickup, pickupData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onInteract, interactData));
 	win->data = callbacks;
 	return win;
 }

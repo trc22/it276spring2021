@@ -1,8 +1,8 @@
 {
 "window":{
-    "color" : [100, 100, 100, 255],
-    "dimensions" : [0,0,360,250],
-    "justify" : "center",
+    "color" : [100,100,100, 255],
+    "dimensions" : [0,0,200,380],
+    "justify" : "left",
     "align" : "middle",
     "elements":
     [
@@ -18,20 +18,20 @@
         [
             {
             "type": "label",
-            "name": "question",
+            "name": "title",
             "id" : 1,
             "bounds": [0,0,1,40],
             "color" : [255,255,255,255],
-            "text":"?",
-            "justify" : "center",
+            "text":"Level Editor",
+            "justify" : "left",
             "align" : "middle",
             "style":"H2"
             },
             {
             "type": "list",
-            "name": "menu",
+            "name": "level_editor",
             "id" : 50,
-            "bounds": [0,0,200,1],
+            "bounds": [0,0,200,0],
             "color" : [255,255,255,255],
             "style": "vertical",
             "item_size" : [168,64],
@@ -39,21 +39,21 @@
             [
                 {
                 "type": "button",
-                "name": "start",
+                "name": "tiles",
                 "id" : 51,
-                "bounds": [100,0,168,64],
-                "hotkey":"start",
+                "bounds": [0,0,168,64],
+                "hotkey":"ok",
                 "color" : [255,255,255,255],
                 "highColor" : [255,255,255,255],
                 "pressColor" : [255,255,255,255],
                 "label" :
                     {
                     "type": "label",
-                    "name": "start_1",
+                    "name": "tiles_l",
                     "id" : 511,
-                    "bounds": [0,0,154,64],
+                    "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
-                    "text":"Start",
+                    "text":"Tiles",
                     "justify" : "center",
                     "align" : "middle",
                     "style":"H5"
@@ -70,21 +70,21 @@
                 },
                 {
                 "type": "button",
-                "name": "load",
+                "name": "player",
                 "id" : 52,
-                "bounds": [100,0,164,68],
+                "bounds": [0,0,164,68],
                 "color" : [255,255,255,255],
-                "hotkey":"load",
+                "hotkey":"player",
                 "highColor" : [255,255,255,255],
                 "pressColor" : [255,255,255,255],
                 "label" :
                     {
                     "type": "label",
-                    "name": "load_1",
+                    "name": "player_l",
                     "id" : 521,
-                    "bounds": [0,0,154,64],
+                    "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
-                    "text":"Load",
+                    "text":"Player",
                     "align" : "middle",
                     "justify" : "center",
                     "style":"H5"
@@ -101,21 +101,21 @@
                 },
 				{
                 "type": "button",
-                "name": "level",
+                "name": "enemy",
                 "id" : 53,
-                "bounds": [100,0,164,68],
+                "bounds": [0,0,164,68],
                 "color" : [255,255,255,255],
-                "hotkey":"level",
+                "hotkey":"enemy",
                 "highColor" : [255,255,255,255],
                 "pressColor" : [255,255,255,255],
                 "label" :
                     {
                     "type": "label",
-                    "name": "level_l",
-                    "id" : 523,
-                    "bounds": [0,0,154,64],
+                    "name": "enemy_l",
+                    "id" : 600,
+                    "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
-                    "text":"Level Edit",
+                    "text":"Enemies",
                     "align" : "middle",
                     "justify" : "center",
                     "style":"H5"
@@ -124,7 +124,69 @@
                     {
                     "type": "actor",
                     "name": "image",
-                    "id" : 524,
+                    "id" : 601,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+				{
+                "type": "button",
+                "name": "pickup",
+                "id" : 54,
+                "bounds": [0,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"pickup",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "pickup_l",
+                    "id" : 602,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"Pickups",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 603,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+				{
+                "type": "button",
+                "name": "interact",
+                "id" : 55,
+                "bounds": [0,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"interact",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "interact_l",
+                    "id" : 604,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"Interactables",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 605,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
                     "actor" : "actors/button.actor"

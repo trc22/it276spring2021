@@ -62,8 +62,8 @@ Level *level_load(const char *filename, int levelID)
         slog("filename is NULL, cannot load the level");
         return NULL;
     }
-	if (levelID == -1) return NULL;
-    json = sj_load(filename);
+
+	json = sj_load(filename);
     if (!json)return NULL;
 
     level = level_new();
