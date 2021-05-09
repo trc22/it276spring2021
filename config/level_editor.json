@@ -23,7 +23,7 @@
             "bounds": [0,0,1,40],
             "color" : [255,255,255,255],
             "text":"Level Editor",
-            "justify" : "left",
+            "justify" : "center",
             "align" : "middle",
             "style":"H2"
             },

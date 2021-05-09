@@ -157,9 +157,6 @@ int main(int argc, char * argv[])
        // gf2d_space_update(space);    
 		level_update(level);
 
-		if (selection == -3)
-			level_editor_update();
-
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
@@ -170,6 +167,10 @@ int main(int argc, char * argv[])
             //UI elements last
 
             gf2d_font_draw_line_tag("Press F4 to quit!",FT_H1,gfc_color(255,255,255,255), vector2d(0,0));
+
+
+			if (selection == -3)
+				level_editor_update();
 
             
             gf2d_windows_draw_all();
