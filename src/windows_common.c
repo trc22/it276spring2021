@@ -91,6 +91,22 @@ int yes_no_update(Window *win,List *updateList)
 				}
 				gf2d_window_free(win);
 				return 1;
+			case 56:
+				callback = (Callback*)gfc_list_get_nth(callbacks, 5);
+				if (callback)
+				{
+					gfc_callback_call(callback);
+				}
+				gf2d_window_free(win);
+				return 1;
+			case 57:
+				callback = (Callback*)gfc_list_get_nth(callbacks, 6);
+				if (callback)
+				{
+					gfc_callback_call(callback);
+				}
+				gf2d_window_free(win);
+				return 1;
         }
     }
     return 0;
@@ -158,7 +174,7 @@ Window *window_main_menu(char *text, void(*onStart)(void *), void(*onLoad)(void 
 	return win;
 }
 
-Window *window_level_editor(char *text, void(*onTile)(void *), void(*onPlayer)(void *), void(*onEnemy)(void *), void(*onPickup)(void *), void(*onInteract)(void *), void *tileData, void *playerData, void *enemyData, void *pickupData, void *interactData)
+Window *window_level_editor(char *text, void(*onTile)(void *), void(*onPlayer)(void *), void(*onEnemy)(void *), void(*onPickup)(void *), void(*onInteract)(void *), void(*onBackground)(void *), void(*onTest)(void *), void *tileData, void *playerData, void *enemyData, void *pickupData, void *interactData, void *backgroundData, void *testData)
 {
 	Window *win;
 	List *callbacks;
@@ -177,6 +193,8 @@ Window *window_level_editor(char *text, void(*onTile)(void *), void(*onPlayer)(v
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onEnemy, enemyData));
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onPickup, pickupData));
 	callbacks = gfc_list_append(callbacks, gfc_callback_new(onInteract, interactData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onBackground, backgroundData));
+	callbacks = gfc_list_append(callbacks, gfc_callback_new(onTest, testData));
 	win->data = callbacks;
 	return win;
 }

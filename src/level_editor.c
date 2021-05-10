@@ -103,11 +103,15 @@ void onYes(void *data)
 		else if (pos == 5)
 		{
 			tileDimensions = sj_new_int(count_real);
-			level_editor_make();
 			level_editor_reset();
 			return;
 		}
-
+	case LE_TEST:
+		if (pos == 0)
+		{
+			level_editor_make();
+			return;
+		}
 		default:
 			return;
 	}
@@ -126,6 +130,7 @@ void onTile(void *data)
 	status = LE_TILES;
 	pos = -1;
 	count = 1;
+	count_real = 1;
 	//_textEntry = window_text_entry("Level length:", "0", 5000, onYes, onNo);
 	_yesNo = window_yes_no("Level length", onYes, onNo, NULL, NULL);
 }
@@ -154,6 +159,24 @@ void onInteract(void *data)
 	_editor = NULL;
 }
 
+void onBackground(void *data)
+{
+	slog("background");
+	_editor = NULL;
+}
+
+void onTest(void *data)
+{
+	slog("testing");
+	_editor = NULL;
+	status = LE_TEST;
+	pos = -1;
+	count = 1;
+	count_real = 1;
+	new_yes_no_window("Are you sure?");
+
+}
+
 Level * level_editor_init()
 {
 	Level *level;
@@ -167,8 +190,8 @@ Level * level_editor_init()
 	count_real = 0;
 	sprintf(count_text, "%d", count);
 
-	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, NULL, NULL, NULL, NULL, NULL);
-	inputTimer = 25;
+	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, onBackground, onTest, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+	inputTimer = 15;
 	return level;
 }
 
@@ -190,17 +213,16 @@ Level * level_editor_make()
 
 void level_editor_update()
 {
-	//count_text = count;
 	gf2d_font_draw_line_tag(&count_text, FT_H1, gfc_color(0, 0, 0, 255), vector2d(600, 100));
 	
-	if (gfc_input_command_down("decrement") && inputTimer == 25)
+	if (gfc_input_command_down("decrement") && inputTimer == 15)
 	{
 		count--;
 		count_real--;
 		sprintf(&count_text, "%d", count);
 		inputTimer = 0;
 	}
-	if (gfc_input_command_down("increment") && inputTimer == 25)
+	if (gfc_input_command_down("increment") && inputTimer == 15)
 	{
 		count++;
 		count_real++;
@@ -208,7 +230,7 @@ void level_editor_update()
 		inputTimer = 0;
 	}
 
-	if (inputTimer < 25)
+	if (inputTimer < 15)
 		inputTimer++;
 }
 
@@ -224,7 +246,7 @@ void new_yes_no_window(char * text)
 
 void level_editor_reset()
 {
-	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, NULL, NULL, NULL, NULL, NULL);
+	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, onBackground, onTest, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 	status = 0;
 	pos = -1;
 }

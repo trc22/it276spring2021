@@ -9,7 +9,9 @@ typedef enum
 	LE_PLAYER,
 	LE_ENEMY,
 	LE_PICKUP,
-	LE_INTERACT
+	LE_INTERACT,
+	LE_BACKGROUND,
+	LE_TEST
 }LevelEditStatus;
 
 Level * level_editor_init();

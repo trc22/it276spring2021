@@ -1,7 +1,7 @@
 {
 "window":{
     "color" : [100,100,100, 255],
-    "dimensions" : [0,0,200,380],
+    "dimensions" : [0,0,200,500],
     "justify" : "left",
     "align" : "middle",
     "elements":
@@ -177,7 +177,7 @@
                     "id" : 604,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
-                    "text":"Interactables",
+                    "text":"Interacts",
                     "align" : "middle",
                     "justify" : "center",
                     "style":"H5"
@@ -187,6 +187,68 @@
                     "type": "actor",
                     "name": "image",
                     "id" : 605,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+				{
+                "type": "button",
+                "name": "background",
+                "id" : 56,
+                "bounds": [0,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"background",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "background_l",
+                    "id" : 606,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"Background",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 607,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "actor" : "actors/button.actor"
+                    }
+                },
+				{
+				"type": "button",
+                "name": "test",
+                "id" : 57,
+                "bounds": [0,0,164,68],
+                "color" : [255,255,255,255],
+                "hotkey":"test",
+                "highColor" : [255,255,255,255],
+                "pressColor" : [255,255,255,255],
+                "label" :
+                    {
+                    "type": "label",
+                    "name": "test_l",
+                    "id" : 608,
+                    "bounds": [0,0,168,64],
+                    "color" : [255,255,255,255],
+                    "text":"Save/test",
+                    "align" : "middle",
+                    "justify" : "center",
+                    "style":"H5"
+                    },
+                "actor" :
+                    {
+                    "type": "actor",
+                    "name": "image",
+                    "id" : 609,
                     "bounds": [0,0,168,64],
                     "color" : [255,255,255,255],
                     "actor" : "actors/button.actor"

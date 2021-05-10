@@ -1,1 +1,1 @@
-{"level":{"tileSet":"images/basetileset.png","tileWidth":"4","tileHeight":"4","tileFPL":"1","tileMap":[["1","0","0","1"],["1","0","0","1"],["1","0","0","1"],["1","1","1","1"]]}}
+{"level":{"tileSet":"images/basetileset.png","tileWidth":"32","tileHeight":"32","tileFPL":"1","tileMap":[["1","0","0","1"],["1","0","0","1"],["1","0","0","1"],["1","1","1","1"]]}}
