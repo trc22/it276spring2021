@@ -10,7 +10,7 @@
 
 Level *current_level;
 
-SJson *json, *levelJS, *levelMap, *row, *level_array, *tile;
+SJson *json, *levelJS, *levelMap, *row, *level_array, *tile, *tileSet, *tileDimensions, *tileFPL;
 SJson *player_start, *enemies, *enemy_spawns, *enemy, *items, *item_spawns, *item;
 SJson *interactables, *interact, *interact_spawns, *has_key, *switch_effects, *effect;
 
@@ -26,7 +26,10 @@ List textList;
 
 char count_text[100];
 
+int inputTimer;
+
 void new_yes_no_window(char * text);
+void level_editor_reset();
 
 void onYes(void *data)
 {
@@ -35,51 +38,76 @@ void onYes(void *data)
 	pos++;
 	switch (status)
 	{
-		case LE_TILES:
-			
-			if (pos == 0)
+	case LE_TILES:
+
+		if (pos == 0)
+		{
+			level_length = count_real;
+			slog("%i", level_length);
+			new_yes_no_window("Level width");
+			return;
+		}
+		else if (pos == 1)
+		{
+			level_width = count_real;
+			slog("%i", count);
+			new_yes_no_window("Confirm?");
+			return;
+		}
+		else if (pos == 2)
+		{
+			level_array = sj_array_new();
+			for (i = 0; i < level_length; i++)
 			{
-				level_length = count_real;
-				slog("%i", level_length);
-				new_yes_no_window("Level width");
-				return;
-			}
-			else if (pos == 1)
-			{
-				level_width = count_real;
-				slog("%i", count);
-				new_yes_no_window("Confirm?");
-				return;
-			}
-			else if (pos == 2)
-			{
-				level_array = sj_array_new();
-				for (i = 0; i < level_length; i++)
+				row = sj_array_new();
+				for (j = 0; j < level_width; j++)
 				{
-					row = sj_array_new();
-					for (j = 0; j < level_width; j++)
+					if (i == level_length - 1)
 					{
-						if (i == level_length - 1)
-						{
-							tile = sj_new_int(1);
-							sj_array_append(row, tile);
-							continue;
-						}
-						if (j == 0 || j == level_width - 1)
-						{
-							tile = sj_new_int(1);
-							sj_array_append(row, tile);
-							continue;
-						}
-						tile = sj_new_int(0);
+						tile = sj_new_int(1);
 						sj_array_append(row, tile);
+						continue;
 					}
-					sj_array_append(level_array, row);
+					if (j == 0 || j == level_width - 1)
+					{
+						tile = sj_new_int(1);
+						sj_array_append(row, tile);
+						continue;
+					}
+					tile = sj_new_int(0);
+					sj_array_append(row, tile);
 				}
-				sj_object_insert(levelJS, "tileMap", level_array);
-				level_editor_make();
+				sj_array_append(level_array, row);
+			}
+			onYes(NULL);
+		}
+		else if (pos == 3)
+		{
+			new_yes_no_window("Tile type (1-5)");
+		}
+		else if (pos == 4)
+		{
+			if (count_real < 1 || count_real > 5)
+			{
+				pos -= 2;
+				onYes(NULL);
+			}
+			else
+			{
+				tileSet = sj_new_str("images/basetileset.png");
+				tileFPL = sj_new_int(1);
+				new_yes_no_window("Tile width/length");
 			}
 			return;
+		}
+		else if (pos == 5)
+		{
+			tileDimensions = sj_new_int(count_real);
+			level_editor_make();
+			level_editor_reset();
+			return;
+		}
+
 		default:
 			return;
 	}
@@ -87,7 +115,8 @@ void onYes(void *data)
 
 void onNo(void *data)
 {
-
+	count -= 2;
+	onYes(NULL);
 }
 
 void onTile(void *data)
@@ -131,7 +160,6 @@ Level * level_editor_init()
 	level = level_new();
 
 	slog("creating new save");
-
 	json = sj_object_new();
 	levelJS = sj_object_new();
 	status = 0;
@@ -140,14 +168,21 @@ Level * level_editor_init()
 	sprintf(count_text, "%d", count);
 
 	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, NULL, NULL, NULL, NULL, NULL);
+	inputTimer = 25;
 	return level;
 }
 
 Level * level_editor_make()
 {
 	slog("making level");
+	//Tiles
+	sj_object_insert(levelJS, "tileSet", tileSet);
+	sj_object_insert(levelJS, "tileWidth", tileDimensions);
+	sj_object_insert(levelJS, "tileHeight", tileDimensions);
+	sj_object_insert(levelJS, "tileFPL", tileFPL);
+	sj_object_insert(levelJS, "tileMap", level_array);
 	sj_object_insert(json, "level", levelJS);
-	slog("inserted tile map");
+
 	sj_save(json, "levels/customLevel.json");
 	slog("level saved");
 	return level_new();
@@ -158,18 +193,23 @@ void level_editor_update()
 	//count_text = count;
 	gf2d_font_draw_line_tag(&count_text, FT_H1, gfc_color(0, 0, 0, 255), vector2d(600, 100));
 	
-	if (gfc_input_command_down("decrement"))
+	if (gfc_input_command_down("decrement") && inputTimer == 25)
 	{
 		count--;
 		count_real--;
 		sprintf(&count_text, "%d", count);
+		inputTimer = 0;
 	}
-	if (gfc_input_command_down("increment"))
+	if (gfc_input_command_down("increment") && inputTimer == 25)
 	{
 		count++;
 		count_real++;
 		sprintf(&count_text, "%d", count);
+		inputTimer = 0;
 	}
+
+	if (inputTimer < 25)
+		inputTimer++;
 }
 
 void level_editor_test(Level *level)
@@ -180,4 +220,11 @@ void level_editor_test(Level *level)
 void new_yes_no_window(char * text)
 {
 	_yesNo = window_yes_no(text, onYes, onNo, NULL, NULL);
+}
+
+void level_editor_reset()
+{
+	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, NULL, NULL, NULL, NULL, NULL);
+	status = 0;
+	pos = -1;
 }
