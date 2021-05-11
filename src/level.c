@@ -157,23 +157,25 @@ Level *level_load(const char *filename, int levelID)
     slog("map width: %f, with %i tiles wide, each %i pixels wide", level->levelSize.x, level->levelWidth,level->tileWidth);
     slog("map height: %f, with %i tiles high, each %i pixels tall", level->levelSize.y, level->levelHeight, level->tileHeight);
   
-	player_start = sj_object_get_value(levelJS, "playerSpawn");
-	sj_get_integer_value(sj_array_get_nth(player_start, 0), &x);
-	sj_get_integer_value(sj_array_get_nth(player_start, 1), &y);
-
-	slog("Player spawn: %i, %i", x, y);
-	player_spawn(vector2d(x, y));
-
-
-	enemies = sj_object_get_value(levelJS, "enemies");
-	enemy_spawns = sj_object_get_value(levelJS, "enemySpawns");
-
-	count = sj_array_get_count(enemies);
-	slog("Spawning enemies");
-	for (i = 0; i < count; i++)
+	if (levelID != -1)
 	{
-		sj_get_integer_value(sj_array_get_nth(enemies, i), &enemy_type);
-		enemy = sj_array_get_nth(enemy_spawns, i);
+		player_start = sj_object_get_value(levelJS, "playerSpawn");
+		sj_get_integer_value(sj_array_get_nth(player_start, 0), &x);
+		sj_get_integer_value(sj_array_get_nth(player_start, 1), &y);
+
+		slog("Player spawn: %i, %i", x, y);
+		player_spawn(vector2d(x, y));
+
+
+		enemies = sj_object_get_value(levelJS, "enemies");
+		enemy_spawns = sj_object_get_value(levelJS, "enemySpawns");
+
+		count = sj_array_get_count(enemies);
+		slog("Spawning enemies");
+		for (i = 0; i < count; i++)
+		{
+			sj_get_integer_value(sj_array_get_nth(enemies, i), &enemy_type);
+			enemy = sj_array_get_nth(enemy_spawns, i);
 			sj_get_integer_value(sj_array_get_nth(enemy, 0), &x);
 			sj_get_integer_value(sj_array_get_nth(enemy, 1), &y);
 			if (enemy_type == 0)
@@ -198,7 +200,7 @@ Level *level_load(const char *filename, int levelID)
 			if (item_id == 1)
 			{
 				slog("Item pickup at: (%i, %i)", x, y);
-			//	pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
+				//	pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
 			}
 		}
 
@@ -223,7 +225,7 @@ Level *level_load(const char *filename, int levelID)
 			sj_get_integer_value(sj_array_get_nth(effect, 1), &interact_y);
 
 			sj_get_integer_value(sj_array_get_nth(has_key, i), &hasKey);
-			
+
 			if (interact_type == 0)
 			{
 				interactable_spawn(vector2d(x, y), IT_DOOR, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
@@ -241,7 +243,7 @@ Level *level_load(const char *filename, int levelID)
 			}
 
 		}
-	
+	}
 
 	sj_free(json);
 	currentLevel = level;
@@ -285,7 +287,7 @@ void level_free(Level *level)
     
     if (level->tileMap != NULL)
     {
-        free(level->tileSet);
+        gf2d_sprite_free(level->tileSet);
         level->tileMap = NULL;
     }
     if (level->bgImageCount)
@@ -294,7 +296,7 @@ void level_free(Level *level)
         {
             gf2d_sprite_free(level->bgImage[i]);
         }
-        free(level->bgImage);
+		gf2d_sprite_free(level->bgImage);
     }
     gf2d_sprite_free(level->tileSet);
     
@@ -447,6 +449,7 @@ void level_transition(char* level_name, int level_id)
 	slog("freed level");
 	level_load(level_name, level_id);
 	slog("loaded new level");
+	return;
 }
 
 Level *get_current_level()

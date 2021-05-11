@@ -200,8 +200,9 @@ int main(int argc, char * argv[])
 
 		if (selection == 3)
 		{
+			free(level);
+			level = level_load("levels/customLevel.json", -1); //demo level
 			level_editor_init();
-
 			selection = -3;
 		}
 

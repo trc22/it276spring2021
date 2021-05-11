@@ -10,7 +10,7 @@
 
 Level *current_level;
 
-SJson *json, *levelJS, *levelMap, *row, *level_array, *tile, *tileSet, *tileDimensions, *tileFPL;
+SJson *json, *levelJS, *levelMap, *row, *level_array, *tile, *tileSet, *tileDimensions, *tileFPL, *background, *backgrounds;
 SJson *player_start, *player_x, *player_y, *enemies, *enemy_spawns, *enemy_spawn, *enemy, *enemy_x, *enemy_y;
 SJson *items, *item_spawn, *item_spawns, *item, *item_x, *item_y;
 SJson *interactables, *interact, *interact_spawns, *interact_spawn, *interact_x, *interact_y, *has_key, *key, *switch_effects, *effect;
@@ -319,6 +319,29 @@ void onYes(void *data)
 			onYes(NULL);
 		}
 		return;
+	case LE_BACKGROUND:
+		if (pos == 0)
+		{
+			switch (count_real)
+			{
+			case 1:
+				background = sj_new_str("images/backgrounds/bg_flat.png");
+				break;
+			default:
+				background = sj_new_str("images/backgrounds/bg_flat.png");
+				break;
+			}
+			new_yes_no_window("Confirm?");
+		}
+		else if (pos == 1)
+		{
+			backgrounds = sj_array_new();
+			sj_array_append(backgrounds, background);
+			sj_array_append(backgrounds, background);
+			level_editor_reset();
+		}
+		return;
+
 	case LE_TEST:
 		if (pos == 0)
 		{
@@ -332,7 +355,7 @@ void onYes(void *data)
 
 void onNo(void *data)
 {
-	count -= 2;
+	level_editor_reset();
 	onYes(NULL);
 }
 
@@ -396,6 +419,11 @@ void onBackground(void *data)
 {
 	slog("background");
 	_editor = NULL;
+	status = LE_BACKGROUND;
+	pos = -1;
+	count = 1;
+	count_real = 1;
+	new_yes_no_window("Background type: (1-5)?");
 }
 
 void onTest(void *data)
@@ -410,12 +438,9 @@ void onTest(void *data)
 
 }
 
-Level * level_editor_init()
+void level_editor_init()
 {
-	Level *level;
-	level = level_new();
-
-	slog("creating new save");
+	current_level = get_current_level();
 	json = sj_object_new();
 	levelJS = sj_object_new();
 	status = 0;
@@ -425,13 +450,14 @@ Level * level_editor_init()
 
 	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, onBackground, onTest, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 	inputTimer = 10;
-	return level;
 }
 
 Level * level_editor_make()
 {
+	gf2d_window_free(_editor);
 	slog("making level");
 	//Background
+	sj_object_insert(levelJS, "bgImage", backgrounds);
 	//Tiles
 	sj_object_insert(levelJS, "tileSet", tileSet);
 	sj_object_insert(levelJS, "tileWidth", tileDimensions);
@@ -455,9 +481,10 @@ Level * level_editor_make()
 
 	sj_object_insert(json, "level", levelJS);
 
-	sj_save(json, "levels/customLevel.json");
+	//sj_save(json, "levels/customLevel.json");
 	slog("level saved");
-	return level_new();
+	free(current_level);
+	level_load("levels/customLevel.json", 1);
 }
 
 void level_editor_update()

@@ -14,7 +14,7 @@ typedef enum
 	LE_TEST
 }LevelEditStatus;
 
-Level * level_editor_init();
+void level_editor_init();
 
 Level * level_editor_make();
 
