@@ -149,13 +149,12 @@ Entity *player_spawn(Vector2D position)
 	
 	inventory_init(16);
 	init_inventory_tetris();
-	//item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
+	item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
 	item_insert_tetris(get_item_by_id(8), vector2d(3, 1), 0);
 	item_insert_tetris(get_item_by_id(9), vector2d(1, 3), 0);
 	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
 	item_insert_tetris(get_item_by_id(14), vector2d(4, 2), 0);
-
 	//inventory_remove_item(search_inventory(4));
 
 	i_open = false;
@@ -182,6 +181,7 @@ Entity *player_spawn(Vector2D position)
 	cycleTimer = 35;
 	inventoryTimer = 10;
 	loadTimer = 200;
+
 
     return ent;
 }
@@ -327,6 +327,7 @@ int player_damage(Entity *self, int amount, Entity *source)
 	self->cooldown = 0;
 	if (self->health <= 0)
 		self->die(self);
+	return 1;
 }
 
 void player_die(Entity *self)
@@ -594,6 +595,7 @@ int player_inventory_insert(Item *item)
 	movingItem = 1;
 
 	current_item = item;
+	return 1;
 }
 
 void handle_weapons(Item *item)
@@ -684,7 +686,7 @@ int player_use_item(Item *item)
 			temp_item = search_inventory(4);
 			slog("reloading");
 			if (temp_item == NULL)
-				return;
+				return 1;
 			temp_item->quantity += item->quantity;
 			item->quantity -= item->quantity;
 			break;

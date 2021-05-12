@@ -102,6 +102,7 @@ Item *item_load(int id, char *name, char *sprite, Bool usable, Bool canEquip, Bo
 	item->itemSize = size;
 	item->timerMax = cooldown;
 
+	return item;
 }
 
 void items_free()

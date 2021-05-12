@@ -71,6 +71,7 @@ int enemy_damage(Entity *self, int amount, Entity *source)
 	self->health -= amount;
 	if (self->health <= 0)
 		self->die(self);
+	return 1;
 }
 void enemy_die(Entity *self)
 {

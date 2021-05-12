@@ -95,6 +95,7 @@ int projectile_touch(Entity *self, Entity *other)
 
 	gf2d_entity_deal_damage(other, get_player(), get_player, self->health, vector2d(0, 0));
 	self->inuse = 0;
+	return 1;
 }
 
 void projectile_think(Entity *self)

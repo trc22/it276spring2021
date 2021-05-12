@@ -121,7 +121,7 @@ int main(int argc, char * argv[])
 	init_pickup_system(10);
 	interactable_system_init(10);
 	load_all_items(50);
-
+	mf = 0;
     
     camera_set_dimensions(vector2d(1200,700));
     
@@ -222,7 +222,7 @@ int main(int argc, char * argv[])
 			selection = -3;
 		}
 
-  //    slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
+     slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
     
     slog("---==== END ====---");

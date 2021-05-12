@@ -40,7 +40,7 @@
 		"playerSpawn":[800, 550],
 		"enemies":[0, 0],
 		"enemySpawns":[[40, 550], [1400, 500]]
-		"items": [1],
+		"items": [8],
 		"itemSpawns":[[800,500]]
 		"interactables": [1, 2, 3, 4],
 		"interactSpawns": [[1000, 500], [1100, 500], [1200, 500], [1300, 500]],

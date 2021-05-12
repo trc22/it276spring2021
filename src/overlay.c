@@ -29,7 +29,7 @@ void init_overlay()
 	
 	currentSlot = 0;
 
-	_isOn = false;
+	_isOn = true;
 	return;
 }
 

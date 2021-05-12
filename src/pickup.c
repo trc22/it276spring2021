@@ -86,6 +86,7 @@ Pickup *pickup_spawn(Vector2D location, char *pickup_name, int pickup_id, char* 
 	pickup->_inuse;
 	pickup->id = pickup_id;
 	pickup->name = pickup_name;
+	return pickup;
 }
 
 Pickup *pickup_get_by_id(int pickup_id)
@@ -132,6 +133,7 @@ int pickup_touch(Entity *self, Entity* other)
 
 		self->inuse = 0;
 	}
+	return 1;
 }
 
 void pickup_respawn_ent(Pickup *pickup)

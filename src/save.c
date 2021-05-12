@@ -142,7 +142,7 @@ void save_load_player()
 	slog("loading save");
 	json = sj_load("saves/save.json");
 
-	player_pos = sj_object_get_value(level, "playerPos");
+/*	player_pos = sj_object_get_value(level, "playerPos");
 
 	sj_array_get_nth(player_pos, 1);
 
@@ -150,7 +150,7 @@ void save_load_player()
 	sj_get_integer_value(sj_array_get_nth(player_pos, 1), &y);
 
 	y -= 100;
-//	vector2d_copy(get_player()->position, vector2d(x, y));
+	vector2d_copy(get_player()->position, vector2d(x, y));*/
 
 	inventory = sj_object_get_value(json, "masterInventory");
 	inventory_tetris = sj_object_get_value(inventory, "tetrisInventory");
