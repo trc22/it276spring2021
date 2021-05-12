@@ -16,6 +16,7 @@
 #include "gf2d_collision.h"
 #include "windows_common.h"
 #include "gf2d_dynamic_body.h"
+#include "gfc_audio.h"
 
 #include "level.h"
 #include "player.h"
@@ -79,6 +80,7 @@ int main(int argc, char * argv[])
     Collision collision;
     CollisionFilter filter= {0};
 	Entity *ent;
+	Sound *sound;
     int mx,my;
     float mf;
 	Level *level;
@@ -114,7 +116,7 @@ int main(int argc, char * argv[])
     gfc_input_init("config/input.cfg");
     gf2d_windows_init(128);
     gf2d_entity_system_init(1024);
-
+	gfc_audio_init(10, 2, 2, 1, true, false);
 	init_pickup_system(10);
 	interactable_system_init(10);
 	load_all_items(50);
@@ -136,7 +138,7 @@ int main(int argc, char * argv[])
     mf = 0;*/
 
 	level = level_load("levels/menu.json", -1); //main menu level
-
+	sound = gfc_sound_load("sounds/short_jingle.mp3", 0.5, 1);
     /*main game loop*/
   //  filter.worldclip = 1;
     /*main game loop*/
@@ -190,7 +192,10 @@ int main(int argc, char * argv[])
 
 		
 		if (selection == 0 && _mainMenu == NULL)
+		{
+			gfc_sound_play(sound, 1, .5, -1, -1);
 			_mainMenu = window_main_menu("Main Menu", onStart, onLoad, onLevelEdit, NULL, NULL, NULL);
+		}
 
 		if (selection == 1)
 		{
