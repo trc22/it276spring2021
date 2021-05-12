@@ -1,7 +1,7 @@
 sprite: images/interacts.png
 frameWidth: 47
 frameHeight: 47
-framesPerLine: 4
+framesPerLine: 5
 scale: 1,1
 color: 255,255,255,255
 colorSpecial: 255,255,255,255
@@ -33,5 +33,11 @@ type: loop
 action: save
 startFrame: 3
 endFrame: 3
+frameRate: 0
+type: loop
+
+action: box
+startFrame: 4
+endFrame: 4
 frameRate: 0
 type: loop

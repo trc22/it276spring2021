@@ -30,6 +30,10 @@ Current features
  - Full read/write (can save inventory to a json file and load it)
 
 
+Sources:
+-All sprites/sfx/music are either locally sourced or from open game art
+-https://opengameart.org/content/various-inventory-24-pixel-icon-set
+-https://www.pinterest.com/pin/483503709968688595/
 
 
 

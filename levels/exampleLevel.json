@@ -39,12 +39,12 @@
 			],
 		"playerSpawn":[800, 550],
 		"enemies":[0, 0],
-		"enemySpawns":[[40, 550], [500, 500]]
+		"enemySpawns":[[40, 550], [1400, 500]]
 		"items": [1],
 		"itemSpawns":[[800,500]]
-		"interactables": [1, 2],
-		"interactSpawns": [[1000, 500], [1200, 500]],
-		"needKey": [0, 0],
-		"switchEffect": [[0,0], [0,0]]
+		"interactables": [1, 2, 3, 4],
+		"interactSpawns": [[1000, 500], [1100, 500], [1200, 500], [1300, 500]],
+		"needKey": [0, 0, 0, 0],
+		"switchEffect": [[0,0], [0,0], [0,0], [0,0]]
     }
 }

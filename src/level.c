@@ -236,6 +236,11 @@ Level *level_load(const char *filename, int levelID)
 				interactable_spawn(vector2d(x, y), IT_SAVE, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
 				slog("Save point spawned at: (%i, %i)", x, y);
 			}
+			else if (interact_type == 4)
+			{
+			//	interactable_spawn(vector2d(x, y), IT_BOX, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
+			//	slog("Box spawned at: (%i, %i)", x, y);
+			}
 
 		}
 

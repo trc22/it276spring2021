@@ -17,6 +17,7 @@ static InteractManager interact_manager = { 0 };
 int interact_door(Entity *self, Entity *other);
 int interact_switch(Entity *self, Entity *other);
 int interact_save(Entity *self, Entity *other);
+int interact_box(Entity *self, Entity *other);
 
 
 void interactable_system_init(Uint32 maxInteracts)
@@ -89,10 +90,16 @@ Interactable *interactable_spawn(Vector2D location, int interact_type, char *des
 	}
 	else if (interact_type = IT_SAVE)
 	{
-		ent = entity_spawn("actors/interacts.actor", "switch", location);
+		ent = entity_spawn("actors/interacts.actor", "save", location);
 		gf2d_actor_set_action(&ent->actor, "save");
 		ent->touch = interact_save;
 		interactable->destination = destination;
+	}
+	else if (interact_type = IT_BOX)
+	{
+		ent = entity_spawn("actors/interacts.actor", "box", location);
+		gf2d_actor_set_action(&ent->actor, "box");
+		ent->touch = interact_box;
 	}
 	
 	ent->id = 12;
@@ -165,5 +172,16 @@ int interact_save(Entity *self, Entity *other)
 			save_new(interact->destination, get_player()->position);
 		}
 	}
+	return 1;
+}
+
+int interact_box(Entity *self, Entity *other)
+{
+	if (other->id == 0 && other->velocity.x != 0)
+	{
+		self->velocity.x += other->velocity.x;
+	}
+	else
+		self->velocity.x = 0;
 	return 1;
 }
