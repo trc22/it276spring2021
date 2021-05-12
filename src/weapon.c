@@ -4,6 +4,7 @@
 #include "player.h"
 #include "camera.h"
 
+
 int projectile_touch(Entity *self, Entity *other);
 void projectile_think(Entity *self);
 
@@ -83,5 +84,6 @@ void weapon_particles(Vector2D position, Vector2D velocity, Vector2D variance)
 	particle_new_velocity(player->pe, velocity, variance);
 	gf2d_particle_new_default(player->pe, 100);
 	//slog("spawning particles");
+
 	
 }

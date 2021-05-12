@@ -116,7 +116,7 @@ int main(int argc, char * argv[])
     gfc_input_init("config/input.cfg");
     gf2d_windows_init(128);
     gf2d_entity_system_init(1024);
-	gfc_audio_init(10, 2, 2, 1, true, false);
+	//gfc_audio_init(10, 2, 2, 1, true, false);
 	init_pickup_system(10);
 	interactable_system_init(10);
 	load_all_items(50);

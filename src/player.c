@@ -34,7 +34,7 @@ Vector2D slot, old_pos;
 int inventoryMode, movingItem, old_z;
 Item *current_item;
 Item *equipped_item;
-
+Sound *pistol_sfx;
 Bool i_open;
 
 Entity *player_spawn(Vector2D position)
@@ -139,7 +139,7 @@ Entity *player_spawn(Vector2D position)
 		1,
 		0,
 		SDL_BLENDMODE_BLEND);
-
+	pistol_sfx = gfc_sound_load("sounds/silencer.wav", 0.5, 0);
     ent->update = player_update;
 	ent->think = player_think;
 	ent->draw = player_draw;
@@ -150,7 +150,7 @@ Entity *player_spawn(Vector2D position)
 	inventory_init(16);
 	init_inventory_tetris();
 	//item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
-//	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
+	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
 //	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
 	item_insert_tetris(get_item_by_id(14), vector2d(4, 2), 0);
 
@@ -623,6 +623,7 @@ void handle_weapons(Item *item)
 			break;
 		case 4: //pistol
 			weapon_fire_pistol();
+			gfc_sound_play(pistol_sfx, 0, 0.5, 2, 1);
 			break;
 	/*	case 6: //rifle
 			fire_rifle(item, player->position, player->rotation.z);
