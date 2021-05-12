@@ -1,3 +1,39 @@
+# Tim's readme (IT 276)
+
+Controls:
+ - WASD: movement
+ - SPACE: jump
+ - E: interact
+ - F: use item equipped item
+ - X: drop item
+ - I: show inventory
+ - Arrow keys: navigate inventory
+ - Enter: use/equip item
+ - R: rotate item in inventory
+ - TAB: cycle inventory modes (use/equip and move mode)
+ - +/-: Increment/decrment keys for level editor
+ - SHIFT: Modifier for level editor (allows you to inc/dec by 10 instead of 1)
+ - L: load save
+
+Current features
+ - Hacky lighting
+ - Puzzle elements (door/key and lever)
+ - Five weapons (pistol, shotgun, knife, dynamite, rifle)
+ - Sound effects
+ - Unique items (flashlight, pizza, key, ammo, tape-recorder)
+ - Spooky enemies (normal, small, big, tall, ranged)
+ - Fully interactable environment 
+ - Resident evil 4 style tetris inventory
+ - Neat particle effects
+ - Improved physics
+ - The worst level editor ever made
+ - Full read/write (can save inventory to a json file and load it)
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------
 # gameframework2d (GF2D)
 a collection of utlitity functions designed to facilitate creating 2D games with SDL2
 This project is specifically intended to function as an educational tool for my students taking 2D Game Programming.
