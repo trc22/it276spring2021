@@ -24,6 +24,7 @@
 #include "interactables.h"
 #include "level_editor.h"
 #include "save.h"
+#include "overlay.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -175,7 +176,7 @@ int main(int argc, char * argv[])
 			if (selection == -3)
 				level_editor_update();
 
-            
+			draw_overlay();
             gf2d_windows_draw_all();
             gf2d_mouse_draw();
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
@@ -201,6 +202,7 @@ int main(int argc, char * argv[])
 		{
 			level_free(level);
 			level = level_load("levels/exampleLevel.json", 0); //demo level
+			init_overlay();
 			selection = -2;
 		}
 
@@ -208,6 +210,7 @@ int main(int argc, char * argv[])
 		{
 			level = save_load_level(level);
 			save_load_player();
+			init_overlay();
 			selection = -2;
 		}
 

@@ -9,7 +9,7 @@
 
 #include "item.h"
 #include "weapon.h"
-//#include "overlay.h"
+#include "overlay.h"
 //#include "weapons.h"
 #include "save.h"
 
@@ -675,6 +675,7 @@ int player_use_item(Item *item)
 		{
 		case 1:
 			//Toggle light
+			toggle_light();
 			break;
 		case 8:
 			temp_item = search_inventory(4);
