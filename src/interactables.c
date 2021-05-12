@@ -140,6 +140,7 @@ int interact_switch(Entity *self, Entity *other)
 	{
 		Interactable *interact; 
 		interact = interactable_get_by_id(self->interact_id);
+		slog("A door has been revealed");
 		interact->type = IT_DOOR;
 		self->touch = interact_door;
 		self->position = interact->switch_effect;

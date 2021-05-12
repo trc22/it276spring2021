@@ -162,14 +162,6 @@ Level *level_load(const char *filename, int levelID)
   
 	if (levelID != -1)
 	{
-		player_start = sj_object_get_value(levelJS, "playerSpawn");
-		sj_get_integer_value(sj_array_get_nth(player_start, 0), &x);
-		sj_get_integer_value(sj_array_get_nth(player_start, 1), &y);
-
-		slog("Player spawn: %i, %i", x, y);
-		player_spawn(vector2d(x, y));
-
-
 		enemies = sj_object_get_value(levelJS, "enemies");
 		enemy_spawns = sj_object_get_value(levelJS, "enemySpawns");
 
@@ -246,6 +238,14 @@ Level *level_load(const char *filename, int levelID)
 			}
 
 		}
+
+		player_start = sj_object_get_value(levelJS, "playerSpawn");
+		sj_get_integer_value(sj_array_get_nth(player_start, 0), &x);
+		sj_get_integer_value(sj_array_get_nth(player_start, 1), &y);
+
+		slog("Player spawn: %i, %i", x, y);
+		player_spawn(vector2d(x, y));
+
 	}
 
 	sj_free(json);
@@ -253,19 +253,18 @@ Level *level_load(const char *filename, int levelID)
 	{
 		level->pe = gf2d_particle_emitter_new_full(
 			1000,
-			0,
-			0,
+			10,
+			1,
 			PT_Pixel,
-			//vector2d(575, 340),
-			vector2d(575, 340),
-			vector2d(3, 0),
+			vector2d(0, 340),
+			vector2d(10, 25),
 			vector2d(1, 0),
-			vector2d(0.1, 0),
+			vector2d(1, 0),
 			vector2d(0, 0),
-			vector2d(0, 0.01),
-			gfc_color(1, 0, 0, 1),
+			vector2d(0, 0),
+			gfc_color(1, 1, 1, .75),
 			gfc_color(0, 0, 0, 0),
-			gfc_color(1, 0, 0, 1),
+			gfc_color(0, 0, 0, 0.75),
 			&get_player()->shape,
 			0,
 			0,
