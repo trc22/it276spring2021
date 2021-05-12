@@ -22,6 +22,7 @@
 #include "pickup.h"
 #include "interactables.h"
 #include "level_editor.h"
+#include "save.h"
 
 static int _done = 0;
 static Window *_quit = NULL;
@@ -195,6 +196,13 @@ int main(int argc, char * argv[])
 		{
 			level_free(level);
 			level = level_load("levels/exampleLevel.json", 0); //demo level
+			selection = -2;
+		}
+
+		if (selection == 2)
+		{
+			level = save_load_level(level);
+			save_load_player();
 			selection = -2;
 		}
 

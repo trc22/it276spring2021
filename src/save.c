@@ -91,7 +91,7 @@ void save_new(char *current_level, Vector2D position)
 
 }
 
-int save_load()
+Level* save_load_level(Level *level_old)
 {
 	SJson *json, *inventory, *inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantities;
 	SJson *item_positions, *item_pos, *rotations;
@@ -112,20 +112,45 @@ int save_load()
 
 	level = sj_object_get_value(json, "level");
 	level_name = sj_object_get_value(level, "levelName");
+
+	target_level = sj_get_string_value(level_name);
+
+	sj_free(json);
+	slog("%s", target_level);
+	slog("%i, %i", x, y);
+	free(level_old);
+	return level_load(target_level, 0);
+
+}
+
+void save_load_player()
+{
+	SJson *json, *inventory, *inventory_tetris, *row, *item_id_tetris, *items, *item_id, *quantities;
+	SJson *item_positions, *item_pos, *rotations;
+	SJson *level, *level_name, *player_pos;
+
+	char *target_level;
+	int i, j, x, y;
+	int itemID, quantity, rotation;
+
+	x = 0;
+	y = 0;
+	itemID = 0;
+	quantity = 0;
+	rotation = 0;
+
+	slog("loading save");
+	json = sj_load("saves/save.json");
+
 	player_pos = sj_object_get_value(level, "playerPos");
 
 	sj_array_get_nth(player_pos, 1);
-	
+
 	sj_get_integer_value(sj_array_get_nth(player_pos, 0), &x);
 	sj_get_integer_value(sj_array_get_nth(player_pos, 1), &y);
-	
-	target_level = sj_get_string_value(level_name);
 
-	slog("%s", target_level);
-	slog("%i, %i", x, y);
-
-	level_transition(target_level, 0);
-	vector2d_copy(get_player()->position, vector2d(x, y));
+	y -= 100;
+//	vector2d_copy(get_player()->position, vector2d(x, y));
 
 	inventory = sj_object_get_value(json, "masterInventory");
 	inventory_tetris = sj_object_get_value(inventory, "tetrisInventory");
@@ -158,5 +183,5 @@ int save_load()
 		inventory_load(itemID, quantity, vector2d(x, y), rotation);
 	}
 	
-	return 1;
+	sj_free(json);
 }
