@@ -473,6 +473,7 @@ int player_get_current_item()
 void handle_inventory()
 {
 	const Uint8 *keys;
+	Vector2D offset;
 	if (!i_open)
 		return;
 
@@ -545,6 +546,8 @@ void handle_inventory()
 		if (current_item->itemID > 0)
 		{
 			slog("Removing %s", current_item->itemName);
+			offset = vector2d(player->position.x + 50, player->position.y + 10);
+			pickup_spawn(offset, current_item->itemName, 6, "", current_item->itemID);
 			inventory_remove_item(current_item);
 		}
 	}
