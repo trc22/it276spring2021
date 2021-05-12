@@ -1,7 +1,7 @@
 {
     "level":
     {
-        "bgImage" : ["images/backgrounds/layers0.png","images/backgrounds/layers1.png"],
+        "bgImage" : ["images/backgrounds/bg_cave.png","images/backgrounds/blank.png"],
         "tileSet" : "images/basetileset.png",
         "tileWidth":32,
         "tileHeight":32,

@@ -1,7 +1,7 @@
 {
     "level":
     {
-        "bgImage" : ["images/backgrounds/layers0.png","images/backgrounds/layers1.png"],
+        "bgImage" : ["images/backgrounds/bg_cave.png","images/backgrounds/blank.png"],
         "tileSet" : "images/basetileset.png",
         "tileWidth":32,
         "tileHeight":32,
@@ -37,13 +37,13 @@
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 			],
-		"playerSpawn":[200, 550],
+		"playerSpawn":[800, 550],
 		"enemies":[0, 0],
 		"enemySpawns":[[40, 550], [500, 500]]
 		"items": [1],
-		"itemSpawns":[[200,500]]
+		"itemSpawns":[[800,500]]
 		"interactables": [1, 2],
-		"interactSpawns": [[250, 500], [300, 500]],
+		"interactSpawns": [[1000, 500], [1200, 500]],
 		"needKey": [0, 0],
 		"switchEffect": [[0,0], [0,0]]
     }
