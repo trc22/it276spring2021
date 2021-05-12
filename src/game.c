@@ -193,16 +193,16 @@ int main(int argc, char * argv[])
 
 		if (selection == 1)
 		{
-			free(level);
+			level_free(level);
 			level = level_load("levels/exampleLevel.json", 0); //demo level
 			selection = -2;
 		}
 
 		if (selection == 3)
 		{
-			free(level);
+			level_free(level);
 			level = level_load("levels/customLevel.json", -1); //demo level
-			level_editor_init();
+			level_editor_init(level);
 			selection = -3;
 		}
 

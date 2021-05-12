@@ -127,6 +127,7 @@ Level *level_load(const char *filename, int levelID)
     level->tileMap = (TileTypes*)gfc_allocate_array(sizeof(TileTypes),count);
     if (!level->tileMap)
     {
+		slog("No tile map");
         level_free(level);
         sj_free(json);
         return NULL;
@@ -226,17 +227,17 @@ Level *level_load(const char *filename, int levelID)
 
 			sj_get_integer_value(sj_array_get_nth(has_key, i), &hasKey);
 
-			if (interact_type == 0)
+			if (interact_type == 1)
 			{
-				interactable_spawn(vector2d(x, y), IT_DOOR, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
+				interactable_spawn(vector2d(x, y), IT_DOOR, "levels/exampleLevel(1).json", hasKey, vector2d(interact_x, interact_y));
 				slog("Door spawned at: (%i, %i)", x, y);
 			}
-			else if (interact_type == 1)
+			else if (interact_type == 2)
 			{
 				interactable_spawn(vector2d(x, y), IT_SWITCH, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
 				slog("Switch spawned at: (%i, %i)", x, y);
 			}
-			else if (interact_type == 2)
+			else if (interact_type == 3)
 			{
 				interactable_spawn(vector2d(x, y), IT_SAVE, "levels/exampleLevel.json", hasKey, vector2d(interact_x, interact_y));
 				slog("Save point spawned at: (%i, %i)", x, y);
@@ -282,14 +283,18 @@ void level_update(Level *level)
 
 void level_free(Level *level)
 {
-    int i;
+	int i;
     if (!level)return;// nothing to do
-    
     if (level->tileMap != NULL)
     {
         gf2d_sprite_free(level->tileSet);
-        level->tileMap = NULL;
+        free(level->tileMap);
+		//memset(&level->tileMap, 0, sizeof(TileTypes));
     }
+	else
+	{
+		slog("Tile map is null");
+	}
     if (level->bgImageCount)
     {
         for (i = 0; i < level->bgImageCount;i++)
@@ -299,8 +304,14 @@ void level_free(Level *level)
 		gf2d_sprite_free(level->bgImage);
     }
     gf2d_sprite_free(level->tileSet);
-    
-    free(level);
+	gf2d_space_free(level->space);
+
+	/*if (gamelevel.backgroundMusic)
+	{
+		Mix_FreeMusic(gamelevel.backgroundMusic);
+	}*/
+	free(level);
+	slog("level cleared");
 }
 
 void level_draw(Level *level)
@@ -445,7 +456,7 @@ void level_transition(char* level_name, int level_id)
 {
 	entity_free_all();
 	slog("freed all ents");
-	free(get_current_level());
+	level_free(get_current_level());
 	slog("freed level");
 	level_load(level_name, level_id);
 	slog("loaded new level");

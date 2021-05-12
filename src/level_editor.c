@@ -438,9 +438,8 @@ void onTest(void *data)
 
 }
 
-void level_editor_init()
+void level_editor_init(Level *level)
 {
-	current_level = get_current_level();
 	json = sj_object_new();
 	levelJS = sj_object_new();
 	status = 0;
@@ -450,9 +449,11 @@ void level_editor_init()
 
 	_editor = window_level_editor("Level Editor:", onTile, onPlayer, onEnemy, onPickup, onInteract, onBackground, onTest, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 	inputTimer = 10;
+
+	current_level = level;
 }
 
-Level * level_editor_make()
+void level_editor_make()
 {
 	gf2d_window_free(_editor);
 	slog("making level");
@@ -481,10 +482,10 @@ Level * level_editor_make()
 
 	sj_object_insert(json, "level", levelJS);
 
-	//sj_save(json, "levels/customLevel.json");
+//	sj_save(json, "levels/customLevel.json");
+	sj_free(json);
 	slog("level saved");
-	free(current_level);
-	level_load("levels/customLevel.json", 1);
+	level_editor_test(current_level);
 }
 
 void level_editor_update()
@@ -527,9 +528,10 @@ void level_editor_update()
 		inputTimer++;
 }
 
-void level_editor_test(Level *level)
+Level *level_editor_test(Level *level)
 {
-
+	level_free(level);
+	return level_load("levels/customLevel.json", 0);
 }
 
 void new_yes_no_window(char * text)

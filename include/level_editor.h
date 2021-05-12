@@ -14,12 +14,12 @@ typedef enum
 	LE_TEST
 }LevelEditStatus;
 
-void level_editor_init();
+void level_editor_init(Level *level);
 
-Level * level_editor_make();
+void level_editor_make();
 
 void level_editor_update();
 
-void level_editor_test(Level *level);
+Level *level_editor_test(Level *level);
 
 #endif
