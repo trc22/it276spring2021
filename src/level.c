@@ -20,11 +20,13 @@ void level_add_shapes(Level *level);
 
 void level_player_collisions(Level *level, Entity *player);
 
+void level_particles(Level *level);
+
 Level *currentLevel;
 Collision collision;
 CollisionFilter filter = { 1 };
 
-Entity *ent_temp;
+int effect_timer;
 
 Level *level_new()
 {
@@ -247,13 +249,42 @@ Level *level_load(const char *filename, int levelID)
 	}
 
 	sj_free(json);
-	currentLevel = level;
+	if (get_player() != NULL)
+	{
+		level->pe = gf2d_particle_emitter_new_full(
+			1000,
+			0,
+			0,
+			PT_Pixel,
+			//vector2d(575, 340),
+			vector2d(575, 340),
+			vector2d(3, 0),
+			vector2d(1, 0),
+			vector2d(0.1, 0),
+			vector2d(0, 0),
+			vector2d(0, 0.01),
+			gfc_color(1, 0, 0, 1),
+			gfc_color(0, 0, 0, 0),
+			gfc_color(1, 0, 0, 1),
+			&get_player()->shape,
+			0,
+			0,
+			0,
+			"images/particle.png",
+			16,
+			16,
+			1,
+			0,
+			SDL_BLENDMODE_BLEND);
+	}
+	effect_timer = 1000;
 
+	currentLevel = level;
 	level_make_space();
 	level_add_shapes(level);
 	filter.worldclip = 1;
 	filter.touchlayer = 1;
-
+	currentLevel = level;
     return level;
 }
 
@@ -279,6 +310,17 @@ void level_update(Level *level)
 	gf2d_entity_pre_sync_all();
 	gf2d_space_update(currentLevel->space);
 	gf2d_entity_post_sync_all();
+
+	gf2d_particle_emitter_update(level->pe);
+
+	if (!level->pe || level->pe == NULL)
+		return;
+
+	if (effect_timer == 1000)
+		level_particles(level);
+	else
+		effect_timer++;
+
 }
 
 void level_free(Level *level)
@@ -305,7 +347,7 @@ void level_free(Level *level)
     }
     gf2d_sprite_free(level->tileSet);
 	gf2d_space_free(level->space);
-
+	gf2d_particle_emitter_free(level->pe);
 	/*if (gamelevel.backgroundMusic)
 	{
 		Mix_FreeMusic(gamelevel.backgroundMusic);
@@ -370,6 +412,7 @@ void level_draw(Level *level)
 		drawPosition.x -= offset.x;
 		drawPosition.y -= offset.y;
 	}
+	gf2d_particle_emitter_draw(level->pe);
 }
 
 void level_make_space()
@@ -391,7 +434,7 @@ void level_add_shapes(Level *level)
 		if (level->tileMap[i] == 0)continue;
 		position.x = ((i % level->levelWidth)*level->tileSet->frame_w);
 		position.y = ((i / level->levelWidth)*level->tileSet->frame_h);
-		gf2d_space_add_static_shape(currentLevel->space, (gf2d_shape_rect(position.x, position.y, level->tileWidth, level->tileHeight)));
+		gf2d_space_add_static_shape(level->space, (gf2d_shape_rect(position.x, position.y, level->tileWidth, level->tileHeight)));
 	}
 }
 
@@ -466,6 +509,16 @@ void level_transition(char* level_name, int level_id)
 Level *get_current_level()
 {
 	return currentLevel;
+}
+
+void level_particles(Level *level)
+{
+	float i;
+	i = gfc_random();
+	slog("particles");
+//	if (i < 0.5)
+	gf2d_particle_new_default(level->pe, 100);
+	effect_timer = 0;
 }
 
 /*file footer*/
