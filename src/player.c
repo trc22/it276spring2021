@@ -153,7 +153,7 @@ Entity *player_spawn(Vector2D position)
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
 	item_insert_tetris(get_item_by_id(8), vector2d(3, 1), 0);
 	item_insert_tetris(get_item_by_id(9), vector2d(1, 3), 0);
-//	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
+	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
 	item_insert_tetris(get_item_by_id(14), vector2d(4, 2), 0);
 
 	//inventory_remove_item(search_inventory(4));
@@ -615,6 +615,9 @@ void handle_weapons(Item *item)
 
 	if (player->velocity.x == 0)
 	{
+		if (item->quantity == 0)
+			return;
+
 		if (item->quantity > 0)
 			item->quantity--;
 		item->timer = 0;
@@ -622,14 +625,14 @@ void handle_weapons(Item *item)
 		switch (item->itemID)
 		{
 		case 4: //pistol
-			if (item->quantity == 0)
-				break;
+
 			weapon_fire_pistol();
 			gfc_sound_play(pistol_sfx, 0, 0.5, 2, 1);
 			break;
-	/*	case 6: //rifle
-			fire_rifle(item, player->position, player->rotation.z);
-			break;*/
+		case 6: //rifle
+			weapon_fire_rifle();
+			gfc_sound_play(pistol_sfx, 0, 0.5, 2, 1);
+			break;
 		default:
 			break;
 		}

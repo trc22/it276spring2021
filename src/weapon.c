@@ -57,6 +57,39 @@ void weapon_fire_pistol()
 	weapon_particles(position, velocity, variance);
 }
 
+void weapon_fire_rifle()
+{
+	Entity *player = get_player();
+	Vector2D position;
+	Vector2D velocity;
+	Vector2D variance;
+
+	int offset;
+
+	if (player->flip.x == 0)
+	{
+		offset = 36;
+		position = vector2d(player->position.x + 36, player->position.y + 20);
+		velocity = vector2d(4, 0);
+		variance = vector2d(1, 0);
+	}
+
+	else if (player->flip.x == -1)
+	{
+		offset = -4;
+		position = vector2d(player->position.x - 4, player->position.y + 20);
+		velocity = vector2d(-4, 0);
+		variance = vector2d(-1, 0);
+	}
+
+	weapon_fire_projectile(position, velocity, 100);
+
+	position.x -= (offset + 4);
+
+	weapon_particles(position, velocity, variance);
+
+}
+
 int projectile_touch(Entity *self, Entity *other)
 {
 
@@ -68,10 +101,13 @@ void projectile_think(Entity *self)
 {
 	if (self->canmove != 0)
 		self->inuse = 0;
+	if (!camera_point_on_screen(self->position))
+		self->inuse = 0;
 }
 
 void weapon_init_particles(char *sprite)
 {
+
 }
 
 void weapon_particles(Vector2D position, Vector2D velocity, Vector2D variance)
