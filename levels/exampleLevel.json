@@ -42,10 +42,9 @@
 		"enemySpawns":[[40, 550], [500, 500]]
 		"items": [1],
 		"itemSpawns":[[200,500]]
-		"interactables": [1],
-		"interactSpawns": [[260, 500]],
-		"needKey": [0],
-		"switchEffect": [[0,0]]
-		
+		"interactables": [1, 2],
+		"interactSpawns": [[250, 500], [300, 500]],
+		"needKey": [0, 0],
+		"switchEffect": [[0,0], [0,0]]
     }
 }

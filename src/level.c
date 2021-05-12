@@ -203,7 +203,7 @@ Level *level_load(const char *filename, int levelID)
 			if (item_id == 1)
 			{
 				slog("Item pickup at: (%i, %i)", x, y);
-				//	pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
+				pickup_spawn(vector2d(x, y), "flashlight", i, "pickup", 1);
 			}
 		}
 

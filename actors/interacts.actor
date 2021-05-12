@@ -1,0 +1,37 @@
+sprite: images/interacts.png
+frameWidth: 47
+frameHeight: 47
+framesPerLine: 4
+scale: 1,1
+color: 255,255,255,255
+colorSpecial: 255,255,255,255
+
+action: idle
+startFrame: 0
+endFrame: 0
+frameRate: 0
+type: loop
+
+action: switch
+startFrame: 0
+endFrame: 0
+frameRate: 0
+type: loop
+
+action: door
+startFrame: 1
+endFrame: 1
+frameRate: 0
+type: loop
+
+action: pickup
+startFrame: 2
+endFrame: 2
+frameRate: 0
+type: loop
+
+action: save
+startFrame: 3
+endFrame: 3
+frameRate: 0
+type: loop

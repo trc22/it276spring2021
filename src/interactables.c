@@ -72,14 +72,16 @@ Interactable *interactable_spawn(Vector2D location, int interact_type, char *des
 
 	if (interact_type == IT_DOOR)
 	{
-		ent = entity_spawn("actors/player.actor", "door", location);
+		ent = entity_spawn("actors/interacts.actor", "door", location);
+		gf2d_actor_set_action(&ent->actor, "door");
 		ent->touch = interact_door;
 		interactable->destination = destination;
 		interactable->require_key = need_key;
 	}
 	else if (interact_type == IT_SWITCH)
 	{
-		ent = entity_spawn("actors/player.actor", "switch", location);
+		ent = entity_spawn("actors/interacts.actor", "switch", location);
+		gf2d_actor_set_action(&ent->actor, "switch");
 		ent->touch = interact_switch;
 		interactable->destination = destination;
 		interactable->require_key = need_key;
@@ -87,7 +89,8 @@ Interactable *interactable_spawn(Vector2D location, int interact_type, char *des
 	}
 	else if (interact_type = IT_SAVE)
 	{
-		ent = entity_spawn("actors/player.actor", "switch", location);
+		ent = entity_spawn("actors/interacts.actor", "switch", location);
+		gf2d_actor_set_action(&ent->actor, "save");
 		ent->touch = interact_save;
 		interactable->destination = destination;
 	}

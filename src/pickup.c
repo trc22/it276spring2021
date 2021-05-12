@@ -74,7 +74,8 @@ Pickup *pickup_spawn(Vector2D location, char *pickup_name, int pickup_id, char* 
 	pickup = pickup_new();
 
 	vector2d_copy(pickup->position, location);
-	pickup->entity = entity_spawn("actors/player.actor", pickup_name, location);
+	pickup->entity = entity_spawn("actors/interacts.actor", pickup_name, location);
+	gf2d_actor_set_action(&pickup->entity->actor, "pickup");
 	pickup->entity->id = 3;
 	pickup->entity->pickup_id = pickup_id;
 	pickup->entity->touch = pickup_touch;
