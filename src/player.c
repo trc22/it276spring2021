@@ -151,6 +151,8 @@ Entity *player_spawn(Vector2D position)
 	init_inventory_tetris();
 	//item_insert_tetris(get_item_by_id(1), vector2d(4, 3), 0);
 	item_insert_tetris(get_item_by_id(4), vector2d(1, 1), 0);
+	item_insert_tetris(get_item_by_id(8), vector2d(3, 1), 0);
+	item_insert_tetris(get_item_by_id(9), vector2d(1, 3), 0);
 //	item_insert_tetris(get_item_by_id(6), vector2d(5, 5), 0);
 	item_insert_tetris(get_item_by_id(14), vector2d(4, 2), 0);
 
@@ -504,6 +506,7 @@ void handle_inventory()
 				else if (current_item->_usable)
 				{
 					slog("Using %s", current_item->itemName);
+					player_use_item(current_item);
 
 				}
 				current_item = get_item_by_id(0);
@@ -618,10 +621,9 @@ void handle_weapons(Item *item)
 
 		switch (item->itemID)
 		{
-		case 2: //Use light
-			//toggle_light();
-			break;
 		case 4: //pistol
+			if (item->quantity == 0)
+				break;
 			weapon_fire_pistol();
 			gfc_sound_play(pistol_sfx, 0, 0.5, 2, 1);
 			break;
@@ -642,6 +644,7 @@ Item *get_current_item()
 
 int player_use_item(Item *item)
 {
+	Item *temp_item;
 	if (movingItem || inventoryMode == 1)
 		return 0;
 
@@ -663,17 +666,28 @@ int player_use_item(Item *item)
 	if (!item->_inuse)
 		return 0;
 
-	switch (item->itemID)
+	if (item->_usable)
 	{
-		case 14:
+		switch (item->itemID)
+		{
+		case 1:
+			//Toggle light
+			break;
+		case 8:
+			temp_item = search_inventory(4);
+			slog("reloading");
+			if (temp_item == NULL)
+				return;
+			temp_item->quantity += item->quantity;
+			item->quantity -= item->quantity;
+			break;
+		case 9:
+			player->health += 20;
+			item->quantity--;
 			break;
 		default:
 			break;
-	}
-
-	if (item->_usable)
-	{
-		item->quantity--;
+		}
 		slog("%s: %i left", item->itemName, item->quantity);
 		if (item->quantity == 0)
 			inventory_remove_item(current_item);
